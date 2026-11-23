@@ -48,20 +48,15 @@ export default function ConversionFunnel({ data, isLoading }) {
 
   return (
     <div className="space-y-6">
-      {/* BARIS 1: POIN 11 - DETAILED CONVERSION RATES & DROP-OFF */}
+      {/* BARIS 1: DETAILED CONVERSION RATES & DROP-OFF */}
       <section className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2 mb-4">
-          <div>
-            <h3 className="text-base font-bold text-slate-900">
-              Rasio Konversi Langkah-ke-Langkah (Step-to-Step Conversion & Drop-off)
-            </h3>
-            <p className="text-xs text-slate-500">
-              Evaluasi persentase peserta yang melanjutkan antartahap berurutan dan titik penurunan terbesar.
-            </p>
-          </div>
-          <span className="text-xs font-bold text-[#037EF3] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 self-start sm:self-auto">
-            Conversion Rates
-          </span>
+        <div className="pb-3 border-b border-slate-100 mb-4">
+          <h3 className="text-base font-bold text-slate-900">
+            Rasio Konversi Langkah-ke-Langkah
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Evaluasi persentase peserta yang melanjutkan antartahap berurutan dan titik penurunan terbesar.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -90,7 +85,7 @@ export default function ConversionFunnel({ data, isLoading }) {
                   <span className="font-bold text-slate-900">Ke {formatNumber(step.to_count)}</span>
                 </div>
                 <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-slate-400">Drop-off:</span>
+                  <span className="text-slate-400">Penurunan:</span>
                   <span className={`font-bold px-1.5 py-0.5 rounded ${step.drop_rate > 50 ? 'bg-rose-50 text-rose-700' : 'bg-slate-200 text-slate-700'}`}>
                     {formatPercent(step.drop_rate)}
                   </span>
@@ -101,22 +96,16 @@ export default function ConversionFunnel({ data, isLoading }) {
         </div>
       </section>
 
-      {/* BARIS 2: POIN 12 - RATA-RATA HARI PROSES & POIN 13 - TAHAP PENOLAKAN */}
+      {/* BARIS 2: RATA-RATA HARI PROSES & TAHAP PENOLAKAN */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Poin 12: Rata-Rata Waktu Proses per Produk */}
         <div className="lg:col-span-6 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Rata-rata Durasi Pemrosesan (Hari)
-              </h3>
-              <p className="text-xs text-slate-500">
-                Lama hari dari pendaftaran awal hingga tiap tahapan selesai.
-              </p>
-            </div>
-            <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md self-start sm:self-auto">
-              Satuan Hari
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Rata-rata Durasi Pemrosesan (Hari)
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Lama hari dari pendaftaran awal hingga tiap tahapan seleksi.
+            </p>
           </div>
 
           <div className="h-72 w-full mt-4">
@@ -136,24 +125,18 @@ export default function ConversionFunnel({ data, isLoading }) {
           </div>
 
           <div className="pt-3 border-t border-slate-100 text-xs text-slate-500">
-            <span>Fase To Finish memerlukan waktu terlama (mencakup masa penugasan di luar negeri).</span>
+            <span>Fase To Finish memerlukan waktu terlama.</span>
           </div>
         </div>
 
-        {/* Poin 13: Tahap Terjadinya Penolakan */}
         <div className="lg:col-span-6 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Tahap Terjadinya Penolakan Peserta
-              </h3>
-              <p className="text-xs text-slate-500">
-                Sebaran penolakan: Pre-Accepted, Post-Accepted, Post-Approved.
-              </p>
-            </div>
-            <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md self-start sm:self-auto">
-              Stacked Column
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Tahap Terjadinya Penolakan Peserta
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Sebaran penolakan: Pre-Accepted, Post-Accepted, Post-Approved.
+            </p>
           </div>
 
           <div className="h-72 w-full mt-4">
@@ -164,33 +147,28 @@ export default function ConversionFunnel({ data, isLoading }) {
                 <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
                 <Tooltip formatter={(val, name) => [formatNumber(val) + ' Kasus', name]} contentStyle={{ backgroundColor: '#FFFFFF', borderRadius: '12px', border: '1px solid #E2E8F0', fontSize: '12px' }} />
                 <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
-                <Bar dataKey="pre_accepted" name="Sebelum Diterima (Pre-Accepted)" stackId="a" fill="#EF4444" />
-                <Bar dataKey="post_accepted" name="Setelah Diterima (Post-Accepted)" stackId="a" fill="#F59E0B" />
-                <Bar dataKey="post_approved" name="Setelah Disetujui (Post-Approved)" stackId="a" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="pre_accepted" name="Sebelum Diterima" stackId="a" fill="#EF4444" />
+                <Bar dataKey="post_accepted" name="Setelah Diterima" stackId="a" fill="#F59E0B" />
+                <Bar dataKey="post_approved" name="Setelah Disetujui" stackId="a" fill="#3B82F6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
           <div className="pt-3 border-t border-slate-100 text-xs text-slate-500">
-            <span>Mayoritas penolakan terjadi di fase awal seleksi administrasi berkas.</span>
+            <span>Mayoritas penolakan terjadi di fase awal seleksi berkas.</span>
           </div>
         </div>
       </section>
 
-      {/* BARIS 3: POIN 14 - SCATTER CHART KECEPATAN NEGARA TUJUAN */}
+      {/* BARIS 3: SCATTER CHART KECEPATAN NEGARA TUJUAN */}
       <section className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2 mb-4">
-          <div>
-            <h3 className="text-base font-bold text-slate-900">
-              Kecepatan Proses Seleksi vs Volume Pendaftaran Antar-Negara Mitra
-            </h3>
-            <p className="text-xs text-slate-500">
-              Sumbu X: Jumlah Pendaftar | Sumbu Y: Rata-rata Hari ke Accepted (Hari) | Ukuran: Volume Aplikasi
-            </p>
-          </div>
-          <span className="text-xs font-bold text-[#037EF3] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 self-start sm:self-auto">
-            Scatter Visual
-          </span>
+        <div className="pb-3 border-b border-slate-100 mb-4">
+          <h3 className="text-base font-bold text-slate-900">
+            Kecepatan Proses Seleksi vs Volume Pendaftaran Antar-Negara Mitra
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Sumbu X: Jumlah Pendaftar | Sumbu Y: Rata-rata Hari ke Accepted | Ukuran: Volume Aplikasi
+          </p>
         </div>
 
         <div className="h-80 w-full mt-2">
@@ -236,7 +214,6 @@ export default function ConversionFunnel({ data, isLoading }) {
 
         <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
           <span>Negara di kuadran kiri bawah mencatatkan waktu proses tercepat dengan efisiensi tinggi.</span>
-          <span className="font-semibold text-slate-700">Sampel 30 Negara Terbesar</span>
         </div>
       </section>
     </div>

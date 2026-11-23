@@ -48,10 +48,7 @@ export default function ApplicationTrends({ data, isLoading }) {
   const seasonalityMatrix = data?.seasonality_matrix || [];
   const preferenceMethod = data?.preference_method || [];
 
-  // Hitung nilai maksimum pendaftaran untuk skala warna heatmap
   const maxSeasonalityVal = seasonalityMatrix.reduce((max, cur) => Math.max(max, cur.total_apps || 0), 1);
-
-  // Buat daftar tahun unik dan bulan (1-12) untuk heatmap
   const matrixYears = Array.from(new Set(seasonalityMatrix.map(m => m.year))).sort();
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
@@ -68,20 +65,14 @@ export default function ApplicationTrends({ data, isLoading }) {
     <div className="space-y-6">
       {/* BARIS 1: LINE CHART TREN BULANAN & STACKED AREA STATUS */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Poin 6: Line Chart Perkembangan Pendaftaran */}
         <div className="lg:col-span-7 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Perkembangan Jumlah Pendaftaran Bulanan
-              </h3>
-              <p className="text-xs text-slate-500">
-                Kurva dinamika volume pendaftar pertukaran pemuda (2021–2025).
-              </p>
-            </div>
-            <span className="text-xs font-bold text-[#037EF3] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 self-start sm:self-auto">
-              Line Spline
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Perkembangan Jumlah Pendaftaran Bulanan
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Kurva dinamika volume pendaftar pertukaran pemuda periode 2021–2025.
+            </p>
           </div>
 
           <div className="h-72 w-full mt-4">
@@ -121,25 +112,18 @@ export default function ApplicationTrends({ data, isLoading }) {
           </div>
 
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Sumbu X: Tahun-Bulan (ISO 8601)</span>
-            <span className="font-semibold text-slate-700">Aksen AIESEC Blue #037EF3</span>
+            <span>Sumbu X: Tahun-Bulan</span>
           </div>
         </div>
 
-        {/* Poin 7: Stacked Area Chart Komposisi Status */}
         <div className="lg:col-span-5 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Dinamika Komposisi Status Peserta
-              </h3>
-              <p className="text-xs text-slate-500">
-                Perbandingan bulanan: Accepted, Finished, dan Rejected.
-              </p>
-            </div>
-            <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md self-start sm:self-auto">
-              Stacked Area
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Dinamika Komposisi Status Peserta
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Perbandingan bulanan peserta Accepted, Finished, dan Rejected.
+            </p>
           </div>
 
           <div className="h-72 w-full mt-4">
@@ -161,27 +145,21 @@ export default function ApplicationTrends({ data, isLoading }) {
           </div>
 
           <div className="pt-3 border-t border-slate-100 text-xs text-slate-500">
-            <span>Proporsi penolakan mendominasi volume pendaftaran CRM.</span>
+            <span>Dinamika sebaran status akhir peserta.</span>
           </div>
         </div>
       </section>
 
-      {/* BARIS 2: CLUSTERED COLUMN PER PRODUK & PREFERENSI METODE/DURASI */}
+      {/* BARIS 2: CLUSTERED COLUMN PER PRODUK & PREFERENSI DURASI */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Poin 8: Clustered Column Pertumbuhan Tahunan Produk */}
         <div className="lg:col-span-7 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Pertumbuhan Pendaftaran Tahunan per Produk
-              </h3>
-              <p className="text-xs text-slate-500">
-                Perbandingan volume tahunan program GTa, GTe, dan GV (2021–2025).
-              </p>
-            </div>
-            <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md self-start sm:self-auto">
-              dim_product
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Pertumbuhan Pendaftaran Tahunan per Program
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Perbandingan volume tahunan program GTa, GTe, dan GV (2021–2025).
+            </p>
           </div>
 
           <div className="h-72 w-full mt-4">
@@ -210,20 +188,14 @@ export default function ApplicationTrends({ data, isLoading }) {
           </div>
         </div>
 
-        {/* Poin 10: 100% Stacked Bar Preferensi Durasi */}
         <div className="lg:col-span-5 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Preferensi Tipe Durasi Program
-              </h3>
-              <p className="text-xs text-slate-500">
-                Komparasi durasi Short-term vs Long-term pada setiap produk.
-              </p>
-            </div>
-            <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md self-start sm:self-auto">
-              100% Stacked
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Preferensi Tipe Durasi Program
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Komparasi durasi Short-term vs Long-term pada setiap produk.
+            </p>
           </div>
 
           <div className="my-6 space-y-4">
@@ -233,7 +205,6 @@ export default function ApplicationTrends({ data, isLoading }) {
                   <span className="text-slate-800">{item.product_name}</span>
                   <span className="text-slate-500">Total: {formatNumber(item.total_apps)}</span>
                 </div>
-                {/* 100% Bar Visual */}
                 <div className="w-full bg-slate-200 h-4 rounded-full overflow-hidden flex">
                   <div
                     style={{ width: `${item.short_term_pct}%` }}
@@ -270,23 +241,17 @@ export default function ApplicationTrends({ data, isLoading }) {
         </div>
       </section>
 
-      {/* BARIS 3: POIN 9 - MATRIX HEATMAP SEASONALITY */}
+      {/* BARIS 3: MATRIX HEATMAP SEASONALITY */}
       <section className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2 mb-4">
-          <div>
-            <h3 className="text-base font-bold text-slate-900">
-              Pola Musim Puncak Aktivitas Pendaftaran (Seasonality Matrix Heatmap)
-            </h3>
-            <p className="text-xs text-slate-500">
-              Identifikasi periode puncak pendaftaran (Summer Peak Mei–Juli dan Winter Peak November–Januari).
-            </p>
-          </div>
-          <span className="text-xs font-bold text-[#037EF3] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 self-start sm:self-auto">
-            12 Bulan x 5 Tahun
-          </span>
+        <div className="pb-3 border-b border-slate-100 mb-4">
+          <h3 className="text-base font-bold text-slate-900">
+            Pola Musim Puncak Aktivitas Pendaftaran (Seasonality Heatmap)
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Identifikasi periode puncak pendaftaran (Summer Peak Mei–Juli dan Winter Peak November–Januari).
+          </p>
         </div>
 
-        {/* Heatmap Grid Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-center text-xs border-collapse">
             <thead>
@@ -331,7 +296,7 @@ export default function ApplicationTrends({ data, isLoading }) {
               <span className="w-3.5 h-3.5 rounded bg-blue-400"></span>
               <span className="w-3.5 h-3.5 rounded bg-[#037EF3]"></span>
             </div>
-            <span className="text-[10px] text-slate-700 font-bold">Puncak (Peak)</span>
+            <span className="text-[10px] text-slate-700 font-bold">Puncak</span>
           </div>
         </div>
       </section>

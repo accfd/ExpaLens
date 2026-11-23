@@ -54,13 +54,13 @@ export default function Rejections({ data, isLoading }) {
 
   return (
     <div className="space-y-6">
-      {/* BARIS 1: POIN 19 - DYNAMIC RECOMMENDED ACTION CARD */}
+      {/* BARIS 1: RECOMMENDED ACTION CARD */}
       <section className="bg-[#F0F6FF] rounded-2xl p-6 border-l-4 border-[#037EF3] border-y border-r border-blue-200/60 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-[10px] font-extrabold uppercase tracking-wider bg-blue-100 text-[#037EF3] px-2.5 py-0.5 rounded-full border border-blue-200">
-                Poin 19: Rekomendasi Tindakan Operasional Terotomatisasi
+                Rekomendasi Tindakan Operasional
               </span>
               <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
                 Prioritas: {recommendedAction.priority_level}
@@ -86,20 +86,15 @@ export default function Rejections({ data, isLoading }) {
         </div>
       </section>
 
-      {/* BARIS 2: POIN 17 - TOP REJECTION REASONS BAR CHART */}
+      {/* BARIS 2: TOP REJECTION REASONS BAR CHART */}
       <section className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2 mb-4">
-          <div>
-            <h3 className="text-base font-bold text-slate-900">
-              Peringkat Alasan Penolakan Peserta (Top Rejection Reasons)
-            </h3>
-            <p className="text-xs text-slate-500">
-              Distribusi 10 alasan penolakan aplikasi pelamar paling sering terjadi di CRM Expa.
-            </p>
-          </div>
-          <span className="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200 self-start sm:self-auto">
-            dim_rejection_reason
-          </span>
+        <div className="pb-3 border-b border-slate-100 mb-4">
+          <h3 className="text-base font-bold text-slate-900">
+            Peringkat Alasan Penolakan Peserta
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Distribusi 10 alasan penolakan aplikasi pelamar paling sering terjadi di CRM Expa.
+          </p>
         </div>
 
         <div className="h-80 w-full mt-2">
@@ -127,22 +122,16 @@ export default function Rejections({ data, isLoading }) {
         </div>
       </section>
 
-      {/* BARIS 3: POIN 18A - SEBARAN PER PRODUK & POIN 18B - TREN FLUKTUASI BULANAN */}
+      {/* BARIS 3: SEBARAN PER PRODUK & TREN FLUKTUASI BULANAN */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Poin 18A: Alasan Penolakan per Program */}
         <div className="lg:col-span-7 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Penyebab Penolakan Berdasarkan Program Pertukaran
-              </h3>
-              <p className="text-xs text-slate-500">
-                Komposisi kasus per lini produk (GTa, GTe, GV).
-              </p>
-            </div>
-            <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md self-start sm:self-auto">
-              Stacked Column
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Penyebab Penolakan Berdasarkan Program Pertukaran
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Komposisi kasus per lini produk (GTa, GTe, GV).
+            </p>
           </div>
 
           <div className="h-72 w-full mt-4">
@@ -172,20 +161,14 @@ export default function Rejections({ data, isLoading }) {
           </div>
         </div>
 
-        {/* Poin 18B: Tren Fluktuasi Penolakan Bulanan */}
         <div className="lg:col-span-5 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Fluktuasi Penolakan Bulanan
-              </h3>
-              <p className="text-xs text-slate-500">
-                Tren jumlah penolakan aplikasi dari waktu ke waktu.
-              </p>
-            </div>
-            <span className="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200 self-start sm:self-auto">
-              Trend Line
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Fluktuasi Penolakan Bulanan
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Tren jumlah penolakan aplikasi dari waktu ke waktu.
+            </p>
           </div>
 
           <div className="h-72 w-full mt-4">
@@ -201,7 +184,7 @@ export default function Rejections({ data, isLoading }) {
           </div>
 
           <div className="pt-3 border-t border-slate-100 text-xs text-slate-500">
-            <span>Peningkatan penolakan berbanding lurus dengan musim puncak pendaftaran (Peak).</span>
+            <span>Peningkatan penolakan berbanding lurus dengan musim puncak pendaftaran.</span>
           </div>
         </div>
       </section>

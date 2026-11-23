@@ -51,23 +51,17 @@ export default function Destinations({ data, isLoading }) {
 
   return (
     <div className="space-y-6">
-      {/* BARIS 1: POIN 15 - GEOGRAPHIC DISTRIBUTION SUMMARY */}
+      {/* BARIS 1: GEOGRAPHIC DISTRIBUTION SUMMARY */}
       <section className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2 mb-4">
-          <div>
-            <h3 className="text-base font-bold text-slate-900">
-              Persebaran Global Negara Tujuan Pendaftar (Choropleth Distribution)
-            </h3>
-            <p className="text-xs text-slate-500">
-              Sebaran volume pelamar mahasiswa Universitas Andalas ke berbagai negara mitra dunia.
-            </p>
-          </div>
-          <span className="text-xs font-bold text-[#037EF3] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 self-start sm:self-auto">
-            Global Coverage
-          </span>
+        <div className="pb-3 border-b border-slate-100 mb-4">
+          <h3 className="text-base font-bold text-slate-900">
+            Persebaran Global Negara Tujuan Pendaftar
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Sebaran volume pelamar mahasiswa Universitas Andalas ke berbagai negara mitra dunia.
+          </p>
         </div>
 
-        {/* Grid Kartu Negara Utama */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {choroplethMap.slice(0, 6).map((c, idx) => (
             <div key={idx} className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex flex-col justify-between">
@@ -90,20 +84,15 @@ export default function Destinations({ data, isLoading }) {
         </div>
       </section>
 
-      {/* BARIS 2: POIN 16A - TOP HOST MCS BAR CHART */}
+      {/* BARIS 2: TOP HOST MCS BAR CHART */}
       <section className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2 mb-4">
-          <div>
-            <h3 className="text-base font-bold text-slate-900">
-              Peringkat 10 Besar Negara Tujuan Terfavorit (Top Host MC)
-            </h3>
-            <p className="text-xs text-slate-500">
-              Volume pendaftar, jumlah peserta diterima (Accepted), dan kelulusan program (Finished).
-            </p>
-          </div>
-          <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md self-start sm:self-auto">
-            dim_host.host_mc
-          </span>
+        <div className="pb-3 border-b border-slate-100 mb-4">
+          <h3 className="text-base font-bold text-slate-900">
+            Peringkat 10 Besar Negara Tujuan Terfavorit
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Volume pendaftar, jumlah peserta diterima (Accepted), dan kelulusan program (Finished).
+          </p>
         </div>
 
         <div className="h-80 w-full mt-2">
@@ -131,18 +120,17 @@ export default function Destinations({ data, isLoading }) {
         </div>
       </section>
 
-      {/* BARIS 3: POIN 16B - DRILL-DOWN MATRIKS KOMITE LOKAL TUJUAN */}
+      {/* BARIS 3: DRILL-DOWN MATRIKS KOMITE LOKAL TUJUAN */}
       <section className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3 mb-4">
           <div>
             <h3 className="text-base font-bold text-slate-900">
-              Rincian Performa Komite Lokal & Kampus Mitra Tujuan (Host LC Drill-down)
+              Rincian Performa Komite Lokal & Kampus Mitra Tujuan
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 mt-0.5">
               Data terperinci volume aplikasi, penerimaan, dan tingkat kelulusan per kampus mitra.
             </p>
           </div>
-          {/* Kotak Pencarian Komite Lokal */}
           <div className="relative w-full sm:w-64">
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
@@ -155,7 +143,6 @@ export default function Destinations({ data, isLoading }) {
           </div>
         </div>
 
-        {/* Tabel Data Drill-down */}
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
@@ -191,7 +178,6 @@ export default function Destinations({ data, isLoading }) {
 
         <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 mt-2">
           <span>Menampilkan {Math.min(filteredLcs.length, 15)} komite lokal teratas</span>
-          <span className="font-semibold text-slate-700">Sumber: dim_host</span>
         </div>
       </section>
     </div>

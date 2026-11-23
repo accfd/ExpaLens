@@ -80,11 +80,8 @@ export default function FilterBar({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-bold text-slate-900">
-                Penyaring Data & Parameter Analisis (Slicers)
+                Penyaring Data & Parameter Analisis
               </h3>
-              <span className="text-[10px] font-bold text-[#037EF3] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-                Poin 5
-              </span>
               {activeFiltersCount > 0 && (
                 <span className="text-[10px] font-extrabold text-white bg-[#037EF3] px-2 py-0.5 rounded-full">
                   {activeFiltersCount} Aktif
@@ -92,7 +89,7 @@ export default function FilterBar({
               )}
             </div>
             <p className="text-xs text-slate-500 hidden sm:block">
-              Saring metrik berdasarkan waktu, jenis program, kawasan, negara, komite lokal, dan status aplikasi.
+              Saring metrik berdasarkan waktu, program, kawasan, negara, komite lokal, dan status aplikasi.
             </p>
           </div>
         </div>
@@ -197,7 +194,7 @@ export default function FilterBar({
           {/* 4. Slicer Negara Tujuan */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-2">
-              Negara Tujuan (Host MC)
+              Negara Tujuan
             </label>
             <select
               value={filters.countries?.[0] || ''}
@@ -214,7 +211,7 @@ export default function FilterBar({
           {/* 5. Slicer Komite Lokal */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-2">
-              Komite Lokal (Host LC)
+              Komite Lokal
             </label>
             <select
               value={filters.host_lcs?.[0] || ''}

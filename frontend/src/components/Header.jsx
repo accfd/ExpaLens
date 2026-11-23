@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Database,
   RefreshCw,
   Menu,
   Download,
@@ -9,35 +8,29 @@ import {
 
 const PAGE_META = {
   overview: {
-    badge: 'Halaman 1',
-    title: 'Ringkasan Utama: Kinerja Departemen Outgoing Exchange',
-    desc: 'Tinjauan komprehensif performa pendaftaran, distribusi tahapan seleksi peserta, capaian program, dan tingkat kelulusan peserta pertukaran pemuda internasional.'
+    title: 'Ringkasan Utama Kinerja Outgoing Exchange',
+    desc: 'Tinjauan performa pendaftaran, distribusi tahapan seleksi peserta, capaian program, dan tingkat kelulusan peserta pertukaran pemuda internasional.'
   },
   trends: {
-    badge: 'Halaman 2',
-    title: 'Tren Pendaftaran: Dinamika Waktu dan Musim Puncak',
+    title: 'Tren Pendaftaran dan Musim Puncak',
     desc: 'Analisis deret waktu pendaftaran bulanan, dinamika status peserta, pola musim puncak (peak seasons), dan preferensi durasi program.'
   },
   funnel: {
-    badge: 'Halaman 3',
-    title: 'Tahapan Seleksi: Efisiensi Konversi dan Hambatan',
+    title: 'Tahapan Seleksi dan Efisiensi Konversi',
     desc: 'Evaluasi rasio perpindahan peserta antartahap, rata-rata hari pemrosesan, titik terjadinya penolakan, dan perbandingan kecepatan antarnegara mitra.'
   },
   destinations: {
-    badge: 'Halaman 4',
-    title: 'Negara Tujuan: Sebaran Global dan Kemitraan Kampus',
-    desc: 'Sebaran geografis negara tujuan pelamar Universitas Andalas dan rincian performa komite lokal/universitas mitra di seluruh dunia.'
+    title: 'Peta dan Sebaran Negara Tujuan',
+    desc: 'Sebaran geografis negara tujuan pelamar Universitas Andalas dan performa komite lokal/universitas mitra di seluruh dunia.'
   },
   rejections: {
-    badge: 'Halaman 5',
-    title: 'Alasan Penolakan: Mitigasi Kasus dan Solusi Operasional',
-    desc: 'Identifikasi akar penyebab penolakan aplikasi pelamar dan mesin rekomendasi taktis terotomatisasi bagi tim Customer Experience.'
+    title: 'Analisis Penolakan dan Rekomendasi Solusi',
+    desc: 'Identifikasi akar penyebab penolakan aplikasi pelamar dan rekomendasi tindakan perbaikan bagi tim Customer Experience.'
   }
 };
 
 export default function Header({
   activeTab,
-  isDbConnected,
   onRefresh,
   isLoading,
   onToggleMobileMenu,
@@ -71,30 +64,22 @@ export default function Header({
             </button>
 
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#037EF3] bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
-                  {meta.badge}
-                </span>
-                <span className="text-[10px] sm:text-xs font-medium text-slate-500 truncate max-w-xs sm:max-w-none">
-                  AIESEC in Universitas Andalas - OGX BI
-                </span>
-              </div>
-              <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                 {meta.title}
               </h1>
-              <p className="text-xs text-slate-600 mt-0.5 hidden sm:block">
+              <p className="text-xs text-slate-600 mt-1 hidden sm:block">
                 {meta.desc}
               </p>
             </div>
           </div>
 
-          {/* Action Tools & Status */}
+          {/* Action Tools */}
           <div className="flex items-center gap-2 sm:gap-3 self-end lg:self-center">
             {/* PWA Install Button */}
             {canInstallPwa && (
               <button
                 onClick={onInstallPwa}
-                className="flex items-center gap-1.5 bg-[#0A2540] hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-bold transition-all min-h-[44px] cursor-pointer shadow-xs"
+                className="flex items-center gap-1.5 bg-[#0A2540] hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all min-h-[40px] cursor-pointer shadow-xs"
                 title="Pasang Aplikasi ExpaLens BI di Perangkat Anda"
               >
                 <Download className="w-3.5 h-3.5 text-blue-400" />
@@ -102,22 +87,15 @@ export default function Header({
               </button>
             )}
 
-            {/* DB Status Badge */}
-            <div className="hidden sm:flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg text-emerald-800 text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <Database className="w-3.5 h-3.5 text-emerald-600" />
-              <span>PostgreSQL aiesec_dw</span>
-            </div>
-
             {/* Refresh Button */}
             <button
               onClick={onRefresh}
               disabled={isLoading}
-              className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-semibold border border-slate-300 transition-colors cursor-pointer disabled:opacity-50 min-h-[44px]"
+              className="flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold border border-slate-200 transition-colors cursor-pointer disabled:opacity-50 min-h-[40px]"
               title="Segarkan Data Kueri"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-[#037EF3]' : ''}`} />
-              <span className="hidden sm:inline">Segarkan</span>
+              <span className="hidden sm:inline">Segarkan Data</span>
             </button>
           </div>
         </div>

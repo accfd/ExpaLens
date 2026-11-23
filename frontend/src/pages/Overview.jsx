@@ -24,7 +24,6 @@ import {
   LabelList
 } from 'recharts';
 
-// Helper pemformat angka lokal Indonesia
 const formatNumber = (num) => {
   if (num === null || num === undefined) return '0';
   return Number(num).toLocaleString('id-ID');
@@ -40,7 +39,7 @@ export default function Overview({ data, isLoading }) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3 text-slate-500">
         <div className="w-8 h-8 border-4 border-[#037EF3] border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-sm font-semibold">Memuat data dari PostgreSQL aiesec_dw...</p>
+        <p className="text-sm font-semibold">Memuat data analitik...</p>
       </div>
     );
   }
@@ -63,7 +62,7 @@ export default function Overview({ data, isLoading }) {
     is_positive: true
   };
 
-  // Funnel 5 Tahapan Resmi AIESEC: Applied -> Accepted -> Approved -> Realized -> Finished
+  // Funnel 5 Tahapan Resmi AIESEC
   const funnelSteps = [
     {
       stageNumber: 1,
@@ -111,8 +110,7 @@ export default function Overview({ data, isLoading }) {
       bgColor: 'bg-purple-600',
       textColor: 'text-purple-600',
       borderColor: 'border-purple-300',
-      dropOff: null,
-      note: 'Stempel tanggal berangkat diisi Host LC'
+      dropOff: null
     },
     {
       stageNumber: 5,
@@ -124,12 +122,10 @@ export default function Overview({ data, isLoading }) {
       bgColor: 'bg-emerald-600',
       textColor: 'text-emerald-600',
       borderColor: 'border-emerald-300',
-      dropOff: null,
-      note: 'Termasuk proyek semi-remote & evaluasi akhir'
+      dropOff: null
     }
   ];
 
-  // Hitung sudut jarum speedometer gauge
   const clampedFinishRate = Math.min(Math.max(finishRate, 0), 100);
   const gaugeAngle = -90 + (clampedFinishRate / 100) * 180;
 
@@ -140,12 +136,9 @@ export default function Overview({ data, isLoading }) {
         {/* Kolom Kiri: Hero Card Midnight Navy */}
         <div className="lg:col-span-4 bg-[#0A2540] text-white rounded-2xl p-6 shadow-md border border-slate-800 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-700">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-700/80">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
                 TOTAL PENDAFTARAN
-              </span>
-              <span className="text-[10px] font-semibold bg-blue-500/20 text-[#037EF3] px-2 py-0.5 rounded-full border border-blue-400/30">
-                fact_exchange_application
               </span>
             </div>
 
@@ -202,20 +195,15 @@ export default function Overview({ data, isLoading }) {
           </div>
         </div>
 
-        {/* Kolom Kanan: Customer Funnel Visual (Lengkap 5 Tahap AIESEC) */}
+        {/* Kolom Kanan: Customer Funnel Visual */}
         <div className="lg:col-span-8 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Distribusi Peserta pada Tahapan Seleksi (Customer Funnel)
-              </h3>
-              <p className="text-xs text-slate-500">
-                Alur resmi 5 tahapan AIESEC: Applied, Accepted, Approved, Realized, dan Finished.
-              </p>
-            </div>
-            <span className="text-xs font-bold text-[#037EF3] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
-              Poin 2: Funnel Chart
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Distribusi Peserta pada Tahapan Seleksi (Customer Funnel)
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Alur retensi peserta dari pendaftaran awal hingga menyelesaikan masa program.
+            </p>
           </div>
 
           {/* Symmetrical Centered Funnel Tiers */}
@@ -269,7 +257,7 @@ export default function Overview({ data, isLoading }) {
                         -{formatPercent(step.dropOff)} Penurunan
                       </span>
                     ) : idx === 3 ? (
-                      <span className="text-[9px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200" title="Host LC langsung menandai Finished pada proyek semi-remote tanpa mencatat tanggal Realized">
+                      <span className="text-[9px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200">
                         Fase Penyelesaian Program
                       </span>
                     ) : null}
@@ -280,14 +268,14 @@ export default function Overview({ data, isLoading }) {
             ))}
           </div>
 
-          {/* Catatan Transparansi Data CRM */}
+          {/* Keterangan Data */}
           <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-2">
             <div className="flex items-center gap-1.5 text-slate-600">
               <Info className="w-3.5 h-3.5 text-[#037EF3] shrink-0" />
               <span>Realized (418) mencatat stempel tanggal keberangkatan fisik; Finished (642) mencakup proyek semi-remote.</span>
             </div>
             <span className="font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200 text-[10px]">
-              Drop-off terbesar: Applied ke Accepted (-97,9%)
+              Penurunan terbesar: Applied ke Accepted (-97,9%)
             </span>
           </div>
         </div>
@@ -417,18 +405,13 @@ export default function Overview({ data, isLoading }) {
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Kolom Kiri: Clustered Column Chart */}
         <div className="lg:col-span-7 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Capaian Tahapan Seleksi Berdasarkan Jenis Program
-              </h3>
-              <p className="text-xs text-slate-500">
-                Perbandingan volume peserta Accepted, Approved, Realized, dan Finished per program pertukaran.
-              </p>
-            </div>
-            <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md">
-              Poin 3: Clustered Column
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Capaian Tahapan Seleksi Berdasarkan Jenis Program
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Perbandingan volume peserta Accepted, Approved, Realized, dan Finished per program pertukaran.
+            </p>
           </div>
 
           <div className="h-80 w-full mt-4">
@@ -480,24 +463,18 @@ export default function Overview({ data, isLoading }) {
 
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
             <span>GTa: Global Talent, GTe: Global Teacher, GV: Global Volunteer</span>
-            <span className="font-semibold text-slate-700">Sumber: fact_exchange_application</span>
           </div>
         </div>
 
         {/* Kolom Kanan: Radial Gauge Chart */}
         <div className="lg:col-span-5 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Tingkat Keberhasilan Program (Finish Rate)
-              </h3>
-              <p className="text-xs text-slate-500">
-                Persentase peserta menyelesaikan program dibandingkan yang diterima.
-              </p>
-            </div>
-            <span className="text-xs font-bold text-[#037EF3] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
-              Poin 4: Gauge Visual
-            </span>
+          <div className="pb-3 border-b border-slate-100">
+            <h3 className="text-base font-bold text-slate-900">
+              Tingkat Keberhasilan Program (Finish Rate)
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Persentase peserta menyelesaikan program dibandingkan yang diterima.
+            </p>
           </div>
 
           {/* Semi-circle Speedometer SVG Gauge */}
@@ -579,8 +556,7 @@ export default function Overview({ data, isLoading }) {
           </div>
 
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Formula: (SUM(is_finished) / SUM(is_accepted)) * 100%</span>
-            <span className="font-semibold text-slate-700">Garis putus-putus: Target 50,0%</span>
+            <span>Garis putus-putus: Target departemen 50,0%</span>
           </div>
         </div>
       </section>
