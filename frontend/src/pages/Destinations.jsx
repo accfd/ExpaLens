@@ -152,9 +152,9 @@ export default function Destinations({ data, isLoading }) {
             className="w-full h-full"
             style={{ width: '100%', height: '100%', background: '#F8FAFC' }}
           >
-            {/* Tile Layer Datar Bersih CartoDB Positron */}
+            {/* Tile Layer Peta Datar Asli Bebas Watermark (OpenStreetMap) */}
             <TileLayer
-              url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               maxZoom={19}
             />
 
