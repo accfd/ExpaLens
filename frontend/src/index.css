@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+  --color-aiesec-blue: #037EF3;
+  --color-dark-teal: #0A8EA0;
+  --color-teacher-orange: #F48924;
+  --color-coral-red: #F85A40;
+  --color-midnight-navy: #0A2540;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: #F8FAFC;
+  color: #0F172A;
+  -webkit-font-smoothing: antialiased;
+}
