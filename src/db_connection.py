@@ -1,6 +1,6 @@
 """
 Modul Koneksi Basis Data PostgreSQL (aiesec_dw) & Caching Streamlit
-Mendukung koneksi dengan atau tanpa password lokal secara aman.
+Mendukung koneksi dengan atau tanpa kata sandi secara aman dan efisien.
 """
 
 import os
@@ -21,8 +21,8 @@ DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 @st.cache_resource(show_spinner="Menyambungkan ke database PostgreSQL...")
 def get_db_engine():
     """
-    Membuat dan me-return SQLAlchemy Engine dengan koneksi caching.
-    Mendukung format koneksi dengan password maupun password kosong (passwordless).
+    Membuat dan mengembalikan SQLAlchemy Engine dengan koneksi ter-cache.
+    Mendukung format koneksi dengan kata sandi maupun tanpa kata sandi.
     """
     if DB_PASSWORD and DB_PASSWORD.strip():
         db_url = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -50,11 +50,39 @@ def check_db_status() -> bool:
     except Exception:
         return False
 
-def _build_filter_clause(years=None, products=None, statuses=None, exclude_zero_year=False):
+@st.cache_data(ttl=3600)
+def get_filter_options():
     """
-    Membangun klausa WHERE SQL dan dict parameter berdasarkan filter aktif sidebar.
-    Menangani rentang tahun (2021-2025) untuk visualisasi time-series serta
-    mempertahankan total 75.520 aplikasi saat all-years terpilih pada Overview/Destinations.
+    Mengambil opsi referensi unik untuk kawasan, negara, dan komite lokal dari dim_host.
+    """
+    engine = get_db_engine()
+    if engine is None:
+        return {"regions": [], "countries_by_region": {}, "lcs_by_country": {}}
+    
+    q = """
+    SELECT DISTINCT host_region, host_mc, host_lc 
+    FROM dim_host 
+    WHERE host_region IS NOT NULL AND host_mc IS NOT NULL AND host_lc IS NOT NULL
+    ORDER BY host_region, host_mc, host_lc;
+    """
+    with engine.connect() as conn:
+        df = pd.read_sql_query(text(q), con=conn)
+        
+    regions = sorted(df["host_region"].dropna().unique().tolist())
+    countries_by_region = df.groupby("host_region")["host_mc"].unique().apply(lambda x: sorted(list(set(x)))).to_dict()
+    lcs_by_country = df.groupby("host_mc")["host_lc"].unique().apply(lambda x: sorted(list(set(x)))).to_dict()
+    
+    return {
+        "regions": regions,
+        "countries_by_region": countries_by_region,
+        "lcs_by_country": lcs_by_country
+    }
+
+def _build_filter_clause(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None, exclude_zero_year=False):
+    """
+    Membangun klausa WHERE SQL dan kamus parameter berdasarkan filter aktif bilah sisi.
+    Menangani rentang tahun (2021-2025) untuk visualisasi deret waktu serta
+    mempertahankan total 75.520 aplikasi saat seluruh tahun dipilih.
     """
     conditions = []
     params = {}
@@ -88,6 +116,24 @@ def _build_filter_clause(years=None, products=None, statuses=None, exclude_zero_
         for i, s in enumerate(statuses):
             params[f"s_{i}"] = str(s)
             
+    if regions:
+        placeholders = [f":reg_{i}" for i in range(len(regions))]
+        conditions.append(f"h.host_region IN ({', '.join(placeholders)})")
+        for i, reg in enumerate(regions):
+            params[f"reg_{i}"] = str(reg)
+
+    if countries:
+        placeholders = [f":mc_{i}" for i in range(len(countries))]
+        conditions.append(f"h.host_mc IN ({', '.join(placeholders)})")
+        for i, mc in enumerate(countries):
+            params[f"mc_{i}"] = str(mc)
+
+    if host_lcs:
+        placeholders = [f":lc_{i}" for i in range(len(host_lcs))]
+        conditions.append(f"h.host_lc IN ({', '.join(placeholders)})")
+        for i, lc in enumerate(host_lcs):
+            params[f"lc_{i}"] = str(lc)
+            
     where_sql = ("WHERE " + " AND ".join(conditions)) if conditions else ""
     return where_sql, params
 
@@ -96,9 +142,9 @@ def _build_filter_clause(years=None, products=None, statuses=None, exclude_zero_
 # ==============================================================================
 
 @st.cache_data(ttl=3600, show_spinner="Memuat ringkasan KPI Overview...")
-def get_overview_data(years=None, products=None, statuses=None):
+def get_overview_data(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil metrik ringkasan kartu KPI utama untuk Halaman 1 Overview."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return {}
@@ -115,6 +161,7 @@ def get_overview_data(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql};
     """
     
@@ -134,10 +181,68 @@ def get_overview_data(years=None, products=None, statuses=None):
     row["finish_rate"] = (total_fin / total_acc * 100) if total_acc > 0 else 0.0
     return row
 
+@st.cache_data(ttl=3600, show_spinner="Memuat kalkulasi YoY...")
+def get_yoy_growth(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
+    """
+    Menghitung persentase pertumbuhan Year-over-Year (YoY) pendaftaran aplikasi
+    berdasarkan tahun kalender terbaru terhadap tahun sebelumnya.
+    """
+    engine = get_db_engine()
+    if engine is None:
+        return {"current_year": 2024, "prev_year": 2023, "yoy_pct": 0.0, "is_positive": True}
+        
+    where_sql, params = _build_filter_clause(None, products, statuses, regions, countries, host_lcs, exclude_zero_year=True)
+    
+    q = f"""
+    SELECT 
+        d.year,
+        COUNT(f.apl_id) as total_apps
+    FROM fact_exchange_application f
+    JOIN dim_date d ON f.applied_date_id = d.date_id
+    JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
+    {where_sql}
+    GROUP BY d.year
+    ORDER BY d.year ASC;
+    """
+    with engine.connect() as conn:
+        df = pd.read_sql_query(text(q), con=conn, params=params)
+        
+    if df.empty:
+        return {"current_year": 2024, "prev_year": 2023, "yoy_pct": 0.0, "is_positive": True}
+        
+    year_map = dict(zip(df["year"], df["total_apps"]))
+    
+    # Menentukan tahun komparasi
+    if years and len(years) == 1 and years[0] > 2021:
+        target_year = years[0]
+        prev_year = target_year - 1
+    else:
+        # Default komparasi tahun kalender penuh 2024 terhadap 2023
+        target_year = 2024
+        prev_year = 2023
+        
+    current_val = year_map.get(target_year, 0)
+    prev_val = year_map.get(prev_year, 0)
+    
+    if prev_val > 0:
+        yoy_pct = ((current_val - prev_val) / prev_val) * 100
+    else:
+        yoy_pct = 0.0
+        
+    return {
+        "current_year": target_year,
+        "prev_year": prev_year,
+        "current_val": current_val,
+        "prev_val": prev_val,
+        "yoy_pct": round(yoy_pct, 1),
+        "is_positive": yoy_pct >= 0
+    }
+
 @st.cache_data(ttl=3600, show_spinner="Memuat breakdown produk Overview...")
-def get_product_breakdown_overview(years=None, products=None, statuses=None):
+def get_product_breakdown_overview(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil volume pendaftaran per produk untuk Hero Card Halaman 1."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -149,6 +254,7 @@ def get_product_breakdown_overview(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql}
     GROUP BY p.product_name
     ORDER BY total_apps DESC;
@@ -157,9 +263,9 @@ def get_product_breakdown_overview(years=None, products=None, statuses=None):
         return pd.read_sql_query(text(q), con=conn, params=params)
 
 @st.cache_data(ttl=3600, show_spinner="Memuat capaian program Overview...")
-def get_program_achievements(years=None, products=None, statuses=None):
-    """Mengambil capaian tahapan (Accepted, Approved, Finished) per produk."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+def get_program_achievements(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
+    """Mengambil capaian tahapan (Accepted, Approved, Realized, Finished) per produk."""
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -174,6 +280,7 @@ def get_program_achievements(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql}
     GROUP BY p.product_name
     ORDER BY p.product_name;
@@ -182,9 +289,9 @@ def get_program_achievements(years=None, products=None, statuses=None):
         return pd.read_sql_query(text(q), con=conn, params=params)
 
 @st.cache_data(ttl=3600, show_spinner="Memuat tren pendaftaran bulanan...")
-def get_monthly_application_trends(years=None, products=None, statuses=None):
+def get_monthly_application_trends(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil volume aplikasi dan sebaran status per bulan untuk Halaman 2 Trends."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=True)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=True)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -202,6 +309,7 @@ def get_monthly_application_trends(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql}
     GROUP BY d.year, d.month, d.month_name
     ORDER BY d.year ASC, d.month ASC;
@@ -213,9 +321,9 @@ def get_monthly_application_trends(years=None, products=None, statuses=None):
     return df
 
 @st.cache_data(ttl=3600, show_spinner="Memuat tren tahunan per produk...")
-def get_yearly_product_trends(years=None, products=None, statuses=None):
+def get_yearly_product_trends(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil volume pendaftaran tahunan per program untuk Halaman 2."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=True)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=True)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -228,6 +336,7 @@ def get_yearly_product_trends(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql}
     GROUP BY d.year, p.product_name
     ORDER BY d.year ASC, p.product_name ASC;
@@ -236,9 +345,9 @@ def get_yearly_product_trends(years=None, products=None, statuses=None):
         return pd.read_sql_query(text(q), con=conn, params=params)
 
 @st.cache_data(ttl=3600, show_spinner="Memuat matriks seasonality...")
-def get_seasonality_heatmap_data(years=None, products=None, statuses=None):
+def get_seasonality_heatmap_data(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil matriks kepadatan aplikasi (Bulan vs Tahun) untuk Seasonality Heatmap."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=True)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=True)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -252,6 +361,7 @@ def get_seasonality_heatmap_data(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql}
     GROUP BY d.year, d.month, d.month_name
     ORDER BY d.year ASC, d.month ASC;
@@ -260,9 +370,9 @@ def get_seasonality_heatmap_data(years=None, products=None, statuses=None):
         return pd.read_sql_query(text(q), con=conn, params=params)
 
 @st.cache_data(ttl=3600, show_spinner="Memuat preferensi durasi produk...")
-def get_duration_preferences(years=None, products=None, statuses=None):
+def get_duration_preferences(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil perbandingan tipe durasi program untuk Halaman 2."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -275,6 +385,7 @@ def get_duration_preferences(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql}
     GROUP BY p.product_name, p.duration_type;
     """
@@ -282,9 +393,9 @@ def get_duration_preferences(years=None, products=None, statuses=None):
         return pd.read_sql_query(text(q), con=conn, params=params)
 
 @st.cache_data(ttl=3600, show_spinner="Memuat metrik durasi tahapan funnel...")
-def get_funnel_durations(years=None, products=None, statuses=None):
+def get_funnel_durations(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil rata-rata hari pada masing-masing tahapan untuk Halaman 3 Funnel."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return {}
@@ -299,6 +410,7 @@ def get_funnel_durations(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql};
     """
     with engine.connect() as conn:
@@ -306,9 +418,9 @@ def get_funnel_durations(years=None, products=None, statuses=None):
     return df.iloc[0].to_dict() if not df.empty else {}
 
 @st.cache_data(ttl=3600, show_spinner="Memuat durasi per produk...")
-def get_durations_by_product(years=None, products=None, statuses=None):
+def get_durations_by_product(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil rata-rata durasi tahapan per program GV, GTa, GTe untuk Halaman 3."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -323,6 +435,7 @@ def get_durations_by_product(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql}
     GROUP BY p.product_name;
     """
@@ -330,9 +443,9 @@ def get_durations_by_product(years=None, products=None, statuses=None):
         return pd.read_sql_query(text(q), con=conn, params=params)
 
 @st.cache_data(ttl=3600, show_spinner="Memuat kecepatan vs volume negara...")
-def get_country_speed_vs_volume(years=None, products=None, statuses=None):
+def get_country_speed_vs_volume(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil kecepatan proses vs volume pendaftaran antarnegara untuk Halaman 3."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -356,9 +469,9 @@ def get_country_speed_vs_volume(years=None, products=None, statuses=None):
         return pd.read_sql_query(text(q), con=conn, params=params)
 
 @st.cache_data(ttl=3600, show_spinner="Memuat data peta destinasi dunia...")
-def get_destinations_map_data(years=None, products=None, statuses=None):
+def get_destinations_map_data(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil data agregat per negara mitra untuk Choropleth Map Halaman 4."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -382,9 +495,9 @@ def get_destinations_map_data(years=None, products=None, statuses=None):
         return pd.read_sql_query(text(q), con=conn, params=params)
 
 @st.cache_data(ttl=3600, show_spinner="Memuat rincian Host LC...")
-def get_host_lc_drilldown(country_name, years=None, products=None, statuses=None):
+def get_host_lc_drilldown(country_name, years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil rincian performa kampus/komite lokal (Host LC) di suatu negara untuk Halaman 4."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -414,9 +527,9 @@ def get_host_lc_drilldown(country_name, years=None, products=None, statuses=None
         return pd.read_sql_query(text(q), con=conn, params=params)
 
 @st.cache_data(ttl=3600, show_spinner="Memuat data alasan penolakan...")
-def get_rejections_ranking(years=None, products=None, statuses=None):
+def get_rejections_ranking(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil peringkat alasan penolakan (di luar 'Not Rejected') untuk Halaman 5."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -430,6 +543,7 @@ def get_rejections_ranking(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     JOIN dim_rejection_reason r ON f.reason_id = r.reason_id
     {where_sql} {reason_filter}
     GROUP BY r.reason_text
@@ -439,9 +553,9 @@ def get_rejections_ranking(years=None, products=None, statuses=None):
         return pd.read_sql_query(text(q), con=conn, params=params)
 
 @st.cache_data(ttl=3600, show_spinner="Memuat alasan penolakan per produk...")
-def get_rejections_by_product(years=None, products=None, statuses=None):
+def get_rejections_by_product(years=None, products=None, statuses=None, regions=None, countries=None, host_lcs=None):
     """Mengambil sebaran alasan penolakan per produk untuk Halaman 5."""
-    where_sql, params = _build_filter_clause(years, products, statuses, exclude_zero_year=False)
+    where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs, exclude_zero_year=False)
     engine = get_db_engine()
     if engine is None:
         return pd.DataFrame()
@@ -456,6 +570,7 @@ def get_rejections_by_product(years=None, products=None, statuses=None):
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
+    JOIN dim_host h ON f.host_lc = h.host_lc
     JOIN dim_rejection_reason r ON f.reason_id = r.reason_id
     {where_sql} {reason_filter}
     GROUP BY r.reason_text, p.product_name

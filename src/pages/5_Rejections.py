@@ -109,7 +109,7 @@ with col_r2:
         st.info("Tidak ada data sebaran alasan per program.")
 
 # No. 19: Dynamic Recommendation Engine Box (Sesuai PRD.md & DESIGN.md)
-st.markdown("### 💡 No. 19: Rekomendasi Tindakan Taktis Operasional (Recommended Action)")
+st.markdown("### No. 19: Rekomendasi Tindakan Taktis Operasional (Recommended Action)")
 
 if not rejection_df.empty:
     top_reason_detected = rejection_df.iloc[0]["Reason"]
@@ -119,7 +119,7 @@ if not rejection_df.empty:
     st.markdown(f"""
     <div class="action-box">
         <div style="font-size: 12px; font-weight: 700; color: #037EF3; text-transform: uppercase; letter-spacing: 0.05em;">
-            🚨 MASALAH UTAMA TERDETEKSI (PERINGKAT 1)
+            MASALAH UTAMA TERDETEKSI (PERINGKAT 1)
         </div>
         <div style="font-size: 20px; font-weight: 700; color: #0A2540; margin: 4px 0 8px 0;">
             {top_reason_detected} ({top_reason_count:,} Kasus Terjadi)

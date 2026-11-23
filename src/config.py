@@ -94,7 +94,6 @@ def apply_plot_theme(fig, **custom_kwargs):
 # ==============================================================================
 PAGE_CONFIG = {
     "page_title": "ExpaLens - AIESEC in UNAND OGX BI",
-    "page_icon": "🌐",
     "layout": "wide",
     "initial_sidebar_state": "expanded"
 }

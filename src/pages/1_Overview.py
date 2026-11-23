@@ -1,7 +1,10 @@
 """
 Halaman 1: Ringkasan Utama (Overview)
-Sesuai: PRD.md Bab 5.3, Tabel 3 Milestone 2, dan DESIGN.md (AIESEC Blue Book)
-Dashboard Eksekutif Terpadu & Terhubung Langsung ke PostgreSQL aiesec_dw
+Departemen Outgoing Exchange - AIESEC in Universitas Andalas
+
+Sesuai: PRD.md Bab 5.3, Tabel 3 Milestone 2, dan DESIGN.md (AIESEC Blue Book).
+Terhubung secara langsung dan reaktif ke basis data PostgreSQL aiesec_dw.
+Tanpa penggunaan emotikon.
 """
 
 import streamlit as st
@@ -14,21 +17,37 @@ from config import (
 )
 from utils import load_css, render_global_sidebar, format_number, format_percent, format_days
 from db_connection import (
-    get_overview_data, get_product_breakdown_overview, get_program_achievements
+    get_overview_data, get_product_breakdown_overview, get_program_achievements, get_yoy_growth
 )
 
-# 1. Injeksi Desain CSS & Filter Sidebar
+# 1. Memuat Kustomisasi CSS dan Bilah Sisi Global
 load_css()
 sidebar_filters = render_global_sidebar()
 
-# 2. Pengambilan Data Riil Berdasarkan Filter Sidebar Aktif
+# 2. Pengambilan Data Riil Berdasarkan Parameter Filter Aktif
 years = sidebar_filters["years"]
 products = sidebar_filters["products"]
+regions = sidebar_filters["regions"]
+countries = sidebar_filters["countries"]
+host_lcs = sidebar_filters["host_lcs"]
 statuses = sidebar_filters["statuses"]
 
-ov_data = get_overview_data(years=years, products=products, statuses=statuses)
-prod_breakdown = get_product_breakdown_overview(years=years, products=products, statuses=statuses)
-achieve_df = get_program_achievements(years=years, products=products, statuses=statuses)
+ov_data = get_overview_data(
+    years=years, products=products, statuses=statuses,
+    regions=regions, countries=countries, host_lcs=host_lcs
+)
+prod_breakdown = get_product_breakdown_overview(
+    years=years, products=products, statuses=statuses,
+    regions=regions, countries=countries, host_lcs=host_lcs
+)
+achieve_df = get_program_achievements(
+    years=years, products=products, statuses=statuses,
+    regions=regions, countries=countries, host_lcs=host_lcs
+)
+yoy_info = get_yoy_growth(
+    years=years, products=products, statuses=statuses,
+    regions=regions, countries=countries, host_lcs=host_lcs
+)
 
 # Ekstraksi Variabel Metrik
 total_apps_val = ov_data.get("total_applications", 0)
@@ -39,7 +58,7 @@ total_finished_val = ov_data.get("total_finished", 0)
 finish_rate_val = ov_data.get("finish_rate", 0.0)
 avg_days_accept = ov_data.get("avg_days_to_accept", 0.0)
 
-# Pemetaan Volume Produk
+# Pemetaan Volume Program
 prod_counts = {"GV (New)": 0, "GTa": 0, "GTe": 0}
 if not prod_breakdown.empty:
     for _, row in prod_breakdown.iterrows():
@@ -47,23 +66,23 @@ if not prod_breakdown.empty:
         if p_name in prod_counts:
             prod_counts[p_name] = row["total_apps"]
 
-# 3. Header Section Bersih & Eksekutif
+# 3. Header Halaman Resmi
 st.markdown("""
 <div class="header-container">
-    <div class="header-title">Executive Overview: OGX Performance</div>
+    <div class="header-title">Ringkasan Utama: Kinerja Departemen Outgoing Exchange</div>
     <div class="header-subtitle">
-        Tinjauan komprehensif performa pendaftaran, capaian tahapan seleksi, dan efisiensi konversi Departemen Outgoing Exchange AIESEC in UNAND.
+        Tinjauan komprehensif performa pendaftaran, distribusi tahapan seleksi peserta, capaian program, dan tingkat kelulusan peserta pertukaran pemuda internasional.
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# 4. BARIS 1: Hero Card & Funnel Chart (Rasio 1 : 2.2)
+# 4. Baris 1: Kartu Utama (Hero Card) dan Customer Funnel (Rasio 1 : 2.2)
 col_hero, col_funnel = st.columns([1, 2.2])
 
 with col_hero:
     st.markdown(f"""
     <div class="hero-card">
-        <div class="hero-card-title">TOTAL PENDAFTARAN (APPLICATIONS)</div>
+        <div class="hero-card-title">TOTAL PENDAFTARAN</div>
         <div class="hero-card-value">{format_number(total_apps_val)}</div>
         <table class="hero-card-table">
             <tr>
@@ -92,7 +111,7 @@ with col_funnel:
     st.markdown("""
     <div class="chart-container">
         <div class="chart-header">
-            <div class="chart-title">Corong Konversi Seleksi Utama (Customer Funnel)</div>
+            <div class="chart-title">Distribusi Peserta pada Tahapan Seleksi (Customer Funnel)</div>
             <div class="chart-subtitle">Distribusi volume peserta dan persentase retensi kumulatif dari tahap pendaftaran hingga penyelesaian program.</div>
         </div>
     """, unsafe_allow_html=True)
@@ -116,7 +135,7 @@ with col_funnel:
     st.plotly_chart(fig_funnel, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# 5. BARIS 2: 4 Kartu KPI Eksekutif Bersebelahan (Grid 4 Kolom)
+# 5. Baris 2: Kartu Indikator Kinerja Utama dan Pertumbuhan Tahunan / YoY (Grid 4 Kolom)
 kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
 with kpi1:
@@ -125,7 +144,7 @@ with kpi1:
         <div class="metric-card-label">Total Realized</div>
         <div class="metric-card-num" style="color: #0F172A;">{format_number(total_realized_val)}</div>
         <div class="metric-card-desc">Peserta Berangkat ke Luar Negeri</div>
-        <span class="metric-card-badge" style="background-color: #DCFCE7; color: #15803D;">● Berangkat Aktif</span>
+        <span class="metric-card-badge" style="background-color: #DCFCE7; color: #15803D;">Realisasi Aktif</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -135,7 +154,7 @@ with kpi2:
         <div class="metric-card-label">Total Finished</div>
         <div class="metric-card-num" style="color: #0F172A;">{format_number(total_finished_val)}</div>
         <div class="metric-card-desc">Peserta Menyelesaikan Program</div>
-        <span class="metric-card-badge" style="background-color: #EFF6FF; color: #1D4ED8;">● Lulus Evaluasi</span>
+        <span class="metric-card-badge" style="background-color: #EFF6FF; color: #1D4ED8;">Kelulusan Evaluasi</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -145,29 +164,36 @@ with kpi3:
         <div class="metric-card-label">Finish Rate</div>
         <div class="metric-card-num" style="color: {AIESEC_BLUE};">{format_percent(finish_rate_val)}</div>
         <div class="metric-card-desc">Rasio Kelulusan dari Diterima</div>
-        <span class="metric-card-badge" style="background-color: #FEF3C7; color: #B45309;">Target: ≥50.0%</span>
+        <span class="metric-card-badge" style="background-color: #FEF3C7; color: #B45309;">Target Minimal 50,0%</span>
     </div>
     """, unsafe_allow_html=True)
 
 with kpi4:
+    yoy_sign = "+" if yoy_info["is_positive"] else ""
+    yoy_formatted = f"{yoy_sign}{yoy_info['yoy_pct']}%".replace(".", ",")
+    yoy_bg = "#DCFCE7" if yoy_info["is_positive"] else "#FEE2E2"
+    yoy_color = "#15803D" if yoy_info["is_positive"] else "#B91C1C"
+    
     st.markdown(f"""
     <div class="metric-card">
-        <div class="metric-card-label">Avg Selection Time</div>
+        <div class="metric-card-label">Rata-Rata Waktu Seleksi</div>
         <div class="metric-card-num" style="color: #0F172A;">{format_days(avg_days_accept)}</div>
-        <div class="metric-card-desc">Applied → Accepted</div>
-        <span class="metric-card-badge" style="background-color: #F1F5F9; color: #475569;">Durasi Seleksi Awal</span>
+        <div class="metric-card-desc">Applied ke Accepted</div>
+        <span class="metric-card-badge" style="background-color: {yoy_bg}; color: {yoy_color};">
+            Pertumbuhan YoY: {yoy_formatted} ({yoy_info['current_year']} vs {yoy_info['prev_year']})
+        </span>
     </div>
     """, unsafe_allow_html=True)
 
-# 6. BARIS 3: Dua Grafik Seimbang (Grid 2 Kolom 50% : 50%)
+# 6. Baris 3: Capaian Program dan Rasio Kelulusan (Grid 2 Kolom 50% : 50%)
 col_chart_left, col_chart_right = st.columns(2)
 
 with col_chart_left:
     st.markdown("""
     <div class="chart-container">
         <div class="chart-header">
-            <div class="chart-title">Capaian Tahapan per Program Pertukaran</div>
-            <div class="chart-subtitle">Perbandingan jumlah peserta pada tahap Accepted, Approved, Realized, dan Finished untuk GTa, GTe, dan GV.</div>
+            <div class="chart-title">Capaian Tahapan Seleksi Berdasarkan Jenis Program</div>
+            <div class="chart-subtitle">Perbandingan volume peserta pada tahap Accepted, Approved, Realized, dan Finished untuk GTa, GTe, dan GV.</div>
         </div>
     """, unsafe_allow_html=True)
     
@@ -178,7 +204,7 @@ with col_chart_left:
             x=achieve_df["product_name"],
             y=achieve_df["accepted"],
             marker_color=AIESEC_BLUE,
-            text=achieve_df["accepted"].apply(lambda x: f"{int(x):,}" if x > 0 else ""),
+            text=achieve_df["accepted"].apply(lambda x: format_number(x) if x > 0 else ""),
             textposition="outside",
             textfont=dict(size=11, family="Lato, sans-serif")
         ))
@@ -187,7 +213,7 @@ with col_chart_left:
             x=achieve_df["product_name"],
             y=achieve_df["approved"],
             marker_color=DARK_TEAL,
-            text=achieve_df["approved"].apply(lambda x: f"{int(x):,}" if x > 0 else ""),
+            text=achieve_df["approved"].apply(lambda x: format_number(x) if x > 0 else ""),
             textposition="outside",
             textfont=dict(size=11, family="Lato, sans-serif")
         ))
@@ -196,7 +222,7 @@ with col_chart_left:
             x=achieve_df["product_name"],
             y=achieve_df["realized"],
             marker_color=TEACHER_ORANGE,
-            text=achieve_df["realized"].apply(lambda x: f"{int(x):,}" if x > 0 else ""),
+            text=achieve_df["realized"].apply(lambda x: format_number(x) if x > 0 else ""),
             textposition="outside",
             textfont=dict(size=11, family="Lato, sans-serif")
         ))
@@ -205,7 +231,7 @@ with col_chart_left:
             x=achieve_df["product_name"],
             y=achieve_df["finished"],
             marker_color="#10B981",
-            text=achieve_df["finished"].apply(lambda x: f"{int(x):,}" if x > 0 else ""),
+            text=achieve_df["finished"].apply(lambda x: format_number(x) if x > 0 else ""),
             textposition="outside",
             textfont=dict(size=11, family="Lato, sans-serif")
         ))
@@ -227,8 +253,8 @@ with col_chart_right:
     st.markdown("""
     <div class="chart-container">
         <div class="chart-header">
-            <div class="chart-title">Keberhasilan Kelulusan (Finish Rate)</div>
-            <div class="chart-subtitle">Persentase peserta yang menyelesaikan program dibandingkan total peserta diterima (Target: ≥50%).</div>
+            <div class="chart-title">Tingkat Keberhasilan Penyelesaian Program (Finish Rate)</div>
+            <div class="chart-subtitle">Persentase peserta yang menyelesaikan program dibandingkan total peserta diterima (Target: minimal 50,0%).</div>
         </div>
     """, unsafe_allow_html=True)
     
