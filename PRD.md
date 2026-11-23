@@ -56,15 +56,15 @@ Sistem ExpaLens dirancang untuk melayani tiga peran fungsional utama di Departem
 
 | Peran Pengguna | Pertanyaan Bisnis Utama | Informasi yang Dibutuhkan | Key Performance Indicators (KPI) Utama |
 | :--- | :--- | :--- | :--- |
-| **Local Committee Vice President (LCVP) OGX** | 1. Bagaimana performa pendaftaran secara keseluruhan, dan apakah bertumbuh dibandingkan tahun lalu (YoY)?<br>2. Program mana di antara GV, GTa, dan GTe yang memiliki tingkat penyelesaian terbaik?<br>3. Kapan periode puncak (*peak season*) pendaftaran terjadi untuk alokasi sumber daya promosi? | • Jumlah seluruh pendaftar kumulatif.<br>• Rekapitulasi peserta di tiap tahap funnel.<br>• Tren pertumbuhan pendaftaran tahunan.<br>• Persentase keberhasilan per program.<br>• Indeks musiman pendaftaran bulanan. | • **Total Applications** (Volume Pendaftaran)<br>• **YoY Growth Rate (%)** (Pertumbuhan Tahunan)<br>• **Program Finish Rate (%)** ($\text{Finished} \div \text{Accepted}$)<br>• **Overall Avg Process Time** (Rata-rata Durasi Hari)<br>• **Seasonal Peak Index** (Summer & Winter Peak Volume) |
+| **Local Committee Vice President (LCVP) OGX** | 1. Bagaimana performa pendaftaran secara keseluruhan, dan apakah bertumbuh dibandingkan tahun lalu (YoY)?<br>2. Program mana di antara GV, GTa, dan GTe yang memiliki tingkat penyelesaian terbaik?<br>3. Kapan periode puncak (*peak season*) pendaftaran terjadi untuk alokasi sumber daya promosi? | • Jumlah seluruh pendaftar kumulatif.<br>• Rekapitulasi peserta di tiap tahap funnel.<br>• Tren pertumbuhan pendaftaran tahunan.<br>• Persentase keberhasilan per program.<br>• Indeks musiman pendaftaran bulanan. | • **Total Applications** (Volume Pendaftaran)<br>• **YoY Growth Rate (%)** (Pertumbuhan Tahunan)<br>• **Program Finish Rate (%)** (Finished ÷ Accepted)<br>• **Overall Avg Process Time** (Rata-rata Durasi Hari)<br>• **Seasonal Peak Index** (Summer & Winter Peak Volume) |
 | **Manajer Program Pertukaran (GV, GTa, GTe)** | 1. Berapa kontribusi volume pendaftaran masing-masing program terhadap total aplikasi?<br>2. Apakah peserta lebih meminati metode pelaksanaan *Semi-Remote* atau *On-site*?<br>3. Apakah tren durasi program condong ke *Short-term* atau *Long-term*?<br>4. Negara mana yang paling banyak diminati pendaftar program tertentu? | • Komposisi pendaftaran per produk (GV, GTa, GTe).<br>• Sebaran metode pelaksanaan (*is_remote*).<br>• Sebaran durasi program (*duration_type*).<br>• Matriks negara tujuan berdasarkan produk. | • **Applications per Program** (Volume per Produk)<br>• **Remote vs On-site Ratio (%)**<br>• **Short-term vs Long-term Ratio (%)**<br>• **Product Conversion Rate (%)** |
-| **Tim Quality Assurance & Customer Experience (QA & CX)** | 1. Seberapa lancar peserta berpindah antar tahapan (*Applied* $\rightarrow$ *Finished*), dan di mana titik penurunan terbesar (*drop-off*)?<br>2. Berapa rata-rata lama waktu pemrosesan pada masing-masing tahapan seleksi?<br>3. Negara atau *Host LC* mana yang memiliki waktu proses tercepat vs terlambat?<br>4. Apa alasan penolakan yang paling sering terjadi, dan perbaikan operasional apa yang perlu segera dilakukan? | • Persentase konversi tiap tahapan *customer funnel*.<br>• Rata-rata hari pada tahapan *Accept*, *Approve*, *Realize*, *Finish*, dan *Reject*.<br>• Hubungan volume vs kecepatan proses per negara mitra.<br>• Peringkat alasan penolakan dan tren bulanannya.<br>• Rekomendasi tindakan dinamis. | • **Funnel Stage Conversion Rate (%)** (App-to-Acc, Acc-to-Appr, Appr-to-Real, Real-to-Fin)<br>• **Average Days to Convert** (`days_to_accept`, `days_to_approve`, `days_to_realize`, `days_to_finish`, `days_to_reject`)<br>• **Country Avg Process Speed (Days)**<br>• **Top Rejection Reasons Count & Share (%)**<br>• **Rejection Rate by Stage (%)** |
+| **Tim Quality Assurance & Customer Experience (QA & CX)** | 1. Seberapa lancar peserta berpindah antar tahapan (*Applied* → *Finished*), dan di mana titik penurunan terbesar (*drop-off*)?<br>2. Berapa rata-rata lama waktu pemrosesan pada masing-masing tahapan seleksi?<br>3. Negara atau *Host LC* mana yang memiliki waktu proses tercepat vs terlambat?<br>4. Apa alasan penolakan yang paling sering terjadi, dan perbaikan operasional apa yang perlu segera dilakukan? | • Persentase konversi tiap tahapan *customer funnel*.<br>• Rata-rata hari pada tahapan *Accept*, *Approve*, *Realize*, *Finish*, dan *Reject*.<br>• Hubungan volume vs kecepatan proses per negara mitra.<br>• Peringkat alasan penolakan dan tren bulanannya.<br>• Rekomendasi tindakan dinamis. | • **Funnel Stage Conversion Rate (%)** (App-to-Acc, Acc-to-Appr, Appr-to-Real, Real-to-Fin)<br>• **Average Days to Convert** (`days_to_accept`, `days_to_approve`, `days_to_realize`, `days_to_finish`, `days_to_reject`)<br>• **Country Avg Process Speed (Days)**<br>• **Top Rejection Reasons Count & Share (%)**<br>• **Rejection Rate by Stage (%)** |
 
 ---
 
 ## 3. Arsitektur & Infrastruktur Teknis
 
-ExpaLens mengadopsi arsitektur *Business Intelligence modern berbasis kode* (**Code-First & Fully Open-Source**) yang meniadakan ketergantungan pada alat visualisasi komersial berlisensi tertutup seperti Power BI. Arsitektur ini menjamin portabilitas, keamanan data, fleksibilitas integrasi, dan biaya implementasi nol rupiah ($0 software license).
+ExpaLens mengadopsi arsitektur *Business Intelligence modern berbasis kode* (**Code-First & Fully Open-Source**) yang meniadakan ketergantungan pada alat visualisasi komersial berlisensi tertutup seperti Power BI. Arsitektur ini menjamin portabilitas, keamanan data, fleksibilitas integrasi, dan biaya implementasi nol rupiah (tanpa biaya lisensi perangkat lunak / free open-source).
 
 ### 3.1 Diagram Alur Data Arsitektur (End-to-End Workflow)
 
@@ -141,11 +141,11 @@ Berdasarkan dokumen Milestone 3 (Tabel 4.12) dan implementasi pada `Pipeline_ETL
    * `is_finished = 1` jika `Date Finished` terisi, selain itu `0`
    * `is_rejected = 1` jika `Date Rejected` terisi, selain itu `0`
 9. **Kalkulasi Metrik Durasi Tahapan (*days_to_\**):**
-   * $\text{days\_to\_accept} = \text{Date Accepted} - \text{Date Applied}$
-   * $\text{days\_to\_approve} = \text{Date Approved} - \text{Date Accepted}$
-   * $\text{days\_to\_realize} = \text{Date Approved} - \text{Date Realized}$ (atau sebaliknya sesuai kelogisan selisih hari $\ge 0$)
-   * $\text{days\_to\_finish} = \text{Date Finished} - \text{Date Realized}$
-   * $\text{days\_to\_reject} = \text{Date Rejected} - \text{Date Applied}$  
+   * `days_to_accept` = `Date Accepted` - `Date Applied`
+   * `days_to_approve` = `Date Approved` - `Date Accepted`
+   * `days_to_realize` = `Date Realized` - `Date Approved` (selisih hari ≥ 0)
+   * `days_to_finish` = `Date Finished` - `Date Realized`
+   * `days_to_reject` = `Date Rejected` - `Date Applied`  
    *(Catatan: Nilai selisih negatif atau null akibat tanggal tidak lengkap diset menjadi `None`/`NULL`).*
 10. **Standarisasi Kategori Remote:** Menilai kolom `Semi-Remote OP` untuk menghasilkan flag boolean `is_remote` (`True` jika memuat kata "remote", selain itu `False`).
 11. **Imputasi Nilai Alasan Penolakan:** Nilai kosong (*null/NaN*) pada kolom `Rejection reason` diisi (*imputed*) dengan teks standar `'Not Rejected'` untuk aplikasi yang diterima/lolos.
@@ -318,7 +318,7 @@ Bilah samping (*Sidebar*) memuat kontrol penyaringan data global yang secara rea
   2. **No. 2: Distribusi jumlah peserta pada setiap tahapan seleksi (customer funnel)**
      * *Jenis Visualisasi:* Funnel Chart (Diimplementasikan dengan Plotly `go.Funnel`).
      * *Data yang Dibutuhkan:* `fact_exchange_application` (`is_applied`, `is_accepted`, `is_approved`, `is_finished`, `is_rejected`).
-     * *Tujuan Analisis:* Menampilkan volume absolut dan persentase retensi kumulatif dari tahap *Applied* (100%) $\rightarrow$ *Accepted* $\rightarrow$ *Approved* $\rightarrow$ *Realized* $\rightarrow$ *Finished*, serta memperlihatkan jumlah peserta yang gugur di tiap tahap.
+     * *Tujuan Analisis:* Menampilkan volume absolut dan persentase retensi kumulatif dari tahap *Applied* (100%) → *Accepted* → *Approved* → *Realized* → *Finished*, serta memperlihatkan jumlah peserta yang gugur di tiap tahap.
   3. **No. 3: Perbandingan pencapaian setiap tahapan seleksi berdasarkan jenis program pertukaran**
      * *Jenis Visualisasi:* Clustered Column Chart (Diimplementasikan dengan Plotly `px.bar` dengan `barmode='group'`).
      * *Data yang Dibutuhkan:* `fact_exchange_application` (`is_accepted`, `is_approved`, `is_finished`) dan `dim_product` (`product`).
@@ -326,7 +326,7 @@ Bilah samping (*Sidebar*) memuat kontrol penyaringan data global yang secara rea
   4. **No. 4: Persentase keberhasilan penyelesaian program berdasarkan jumlah peserta yang telah diterima (Finish Rate)**
      * *Jenis Visualisasi:* Gauge Chart (Diimplementasikan dengan Plotly `go.Indicator` mode gauge).
      * *Data yang Dibutuhkan:* `fact_exchange_application` (`is_accepted`, `is_finished`) dan `dim_product` (`product`).
-     * *Tujuan Analisis:* Menampilkan rasio kelulusan ($\sum \text{is\_finished} \div \sum \text{is\_accepted} \times 100\%$) dengan rentang gauge 0–100% dan indikator ambang batas keberhasilan departemen (Merah: $<50\%$, Kuning: $50-69\%$, Hijau: $\ge 70\%$).
+     * *Tujuan Analisis:* Menampilkan rasio kelulusan (∑ is_finished ÷ ∑ is_accepted × 100%) dengan rentang gauge 0–100% dan indikator ambang batas keberhasilan departemen (Merah: < 50%, Kuning: 50–69%, Hijau: ≥ 70%).
   5. **No. 5: Penyaringan data berdasarkan waktu, program, negara tujuan, kampus atau komite lokal tujuan, dan status pendaftaran**
      * *Jenis Visualisasi:* Slicer dan Filter Visual (Disediakan pada Bilah Sisi Global Streamlit).
 
@@ -368,7 +368,7 @@ Bilah samping (*Sidebar*) memuat kontrol penyaringan data global yang secara rea
   4. **No. 9: Pola kenaikan dan penurunan aktivitas pendaftaran berdasarkan bulan dan tahun (Seasonality)**
      * *Jenis Visualisasi:* Matrix Heatmap (Diimplementasikan dengan Plotly `go.Heatmap`).
      * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`, indikator tahapan funnel) dan `dim_date` (`year`, `month_name`).
-     * *Tujuan Analisis:* Memetakan intensitas kepadatan aplikasi pada matriks 12 bulan $\times$ 5 tahun kalender guna mengidentifikasi secara presisi periode puncak pendaftaran pertukaran: *Summer Peak* (Mei–Juli) dan *Winter Peak* (November–Januari).
+     * *Tujuan Analisis:* Memetakan intensitas kepadatan aplikasi pada matriks 12 bulan × 5 tahun kalender guna mengidentifikasi secara presisi periode puncak pendaftaran pertukaran: *Summer Peak* (Mei–Juli) dan *Winter Peak* (November–Januari).
   5. **No. 10: Perbandingan metode pelaksanaan program (Semi-Remote dan On-site) serta tipe durasi program (Short-term dan Long-term)**
      * *Jenis Visualisasi:* 100% Stacked Bar Chart (Diimplementasikan dengan Plotly `px.bar` dengan `barmode='relative'`).
      * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`) dan `dim_product` (`product`, `is_remote`, `duration_type`).
@@ -403,10 +403,10 @@ Bilah samping (*Sidebar*) memuat kontrol penyaringan data global yang secara rea
      * *Jenis Visualisasi:* Funnel Chart (Diimplementasikan dengan Plotly `go.Funnel`).
      * *Data yang Dibutuhkan:* `fact_exchange_application` (`is_applied`, `is_accepted`, `is_approved`, `is_realized`, `is_finished`).
      * *Tujuan Analisis:* Menghitung rasio konversi per tahapan transisi langsung:
-       * $\text{Applied} \rightarrow \text{Accepted} = \sum \text{is\_accepted} \div \sum \text{is\_applied}$
-       * $\text{Accepted} \rightarrow \text{Approved} = \sum \text{is\_approved} \div \sum \text{is\_accepted}$
-       * $\text{Approved} \rightarrow \text{Realized} = \sum \text{is\_realized} \div \sum \text{is\_approved}$
-       * $\text{Realized} \rightarrow \text{Finished} = \sum \text{is\_finished} \div \sum \text{is\_realized}$
+       * `Applied → Accepted` = `∑ is_accepted ÷ ∑ is_applied`
+       * `Accepted → Approved` = `∑ is_approved ÷ ∑ is_accepted`
+       * `Approved → Realized` = `∑ is_realized ÷ ∑ is_approved`
+       * `Realized → Finished` = `∑ is_finished ÷ ∑ is_realized`
        Serta mendeteksi titik hambatan (*bottleneck*) dengan penurunan peserta terbesar.
   2. **No. 12: Rata-rata waktu yang dibutuhkan peserta pada setiap tahapan seleksi berdasarkan jenis program**
      * *Jenis Visualisasi:* Clustered Bar Chart (Diimplementasikan dengan Plotly `px.bar` horizontal/clustered).
@@ -561,7 +561,7 @@ Meskipun naskah Milestone 1–3 telah mencantumkan Streamlit dan Plotly, beberap
 | Dokumen | Bagian / Bab | Uraian Teks / Kondisi Saat Ini | Penyesuaian yang Diperlukan ke Streamlit + Plotly |
 | :--- | :--- | :--- | :--- |
 | **Milestone 1** | Bab 4.2.1.1 (Tabel 2 - Technical Infrastructure) | Kolom implementasi masih mencantumkan terminologi *hardware/software client* generik. | Tegaskan bahwa antarmuka tidak memerlukan instalasi desktop client berlisensi (seperti Power BI Desktop), melainkan dijalankan melalui peramban web (*web browser*) berbasis *Streamlit server* lokal atau cloud. |
-| **Milestone 2** | Bab 4.3.4 (Tabel 3 - Dashboard Requirements) | Masih menggunakan istilah visual khas Power BI seperti: `Card Visual`, `KPI Visual`, `Slicer`, `Matrix Visual`, dan `Clustered Column Chart`. | Sesuaikan terminologi visual dengan komponen Streamlit dan Plotly:<br>• `Card Visual` $\rightarrow$ `st.metric` Scorecard Component.<br>• `Slicer / Filter Visual` $\rightarrow$ `st.sidebar.selectbox` / `st.sidebar.multiselect`.<br>• `Clustered Column Chart` $\rightarrow$ Plotly `px.bar` (dengan argumen `barmode='group'`).<br>• `Matrix Heatmap` $\rightarrow$ Plotly `go.Heatmap`.<br>• `Matrix Visual / Table Drill-down` $\rightarrow$ `st.dataframe` interaktif dengan filter dinamis. |
+| **Milestone 2** | Bab 4.3.4 (Tabel 3 - Dashboard Requirements) | Masih menggunakan istilah visual khas Power BI seperti: `Card Visual`, `KPI Visual`, `Slicer`, `Matrix Visual`, dan `Clustered Column Chart`. | Sesuaikan terminologi visual dengan komponen Streamlit dan Plotly:<br>• `Card Visual` → `st.metric` Scorecard Component.<br>• `Slicer / Filter Visual` → `st.sidebar.selectbox` / `st.sidebar.multiselect`.<br>• `Clustered Column Chart` → Plotly `px.bar` (dengan argumen `barmode='group'`).<br>• `Matrix Heatmap` → Plotly `go.Heatmap`.<br>• `Matrix Visual / Table Drill-down` → `st.dataframe` interaktif dengan filter dinamis. |
 | **Milestone 2** | Bab 4.3.4 (Halaman 5 - No. 19) | Masih menyebutkan wadah teks rekomendasi sebagai `Text Box Dinamis`. | Sesuaikan dengan komponen notifikasi interaktif Streamlit (`st.info`, `st.warning`, atau `st.container` kustom berbasis HTML/CSS) yang dihubungkan langsung ke fungsi logika Python evaluasi alasan penolakan. |
 | **Milestone 3** | Bab 4.4.1.2 (Tabel 4.2 - Arsitektur Fisik) | Menjelaskan alur fisik pemuatan data ke PostgreSQL dan konsumsi ke Streamlit. | Tambahkan catatan bahwa konektivitas Streamlit ke PostgreSQL memanfaatkan fitur `@st.cache_data(ttl=3600)` dan `@st.cache_resource` untuk mencegah kueri berulang (*query overhead*) ke basis data saat pengguna berinteraksi dengan slider filter. |
 | **Milestone 3** | Bab 4.4.2.3 & 4.4.2.4 (Tabel 4.6 & 4.10) | Tabel 4.6 mencantumkan `product` (`VARCHAR`) sebagai Primary Key, dan Tabel 4.10 mencantumkan `product` sebagai Foreign Key. Selain itu, Tabel 4.9 mencantumkan `date_id` bertipe `DATE`. | Selaraskan dengan implementasi riil `Pipeline_ETL.ipynb`:<br>1. Gunakan `product_id` bertipe integer sebagai PK `dim_product` dan FK di `fact_exchange_application`.<br>2. Gunakan integer `YYYYMMDD` untuk `date_id` dan `applied_date_id`.<br>3. Catat bahwa kolom `company_name` di Tabel 4.10 bersifat opsional/dihapus pada data bersih karena tingginya nilai kosong pada dataset mentah. |
