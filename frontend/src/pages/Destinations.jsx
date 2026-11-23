@@ -53,30 +53,35 @@ export default function Destinations({ data, isLoading }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  if (isLoading && !data) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3 text-slate-500">
-        <div className="w-8 h-8 border-4 border-[#037EF3] border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-sm font-semibold">Memuat data sebaran negara dan komite tujuan...</p>
-      </div>
-    );
-  }
-
   const choroplethMap = data?.choropleth_map || [];
   const topHostMcs = data?.top_host_mcs || [];
   const hostLcDrilldown = data?.host_lc_drilldown || [];
 
-  // Peta data negara untuk pencarian cepat di choropleth map
+  // Peta data negara untuk pencarian cepat di choropleth map (hook dipanggil selalu tanpa kondisi)
   const countryDataMap = useMemo(() => {
     const map = new Map();
     choroplethMap.forEach(item => {
-      // Simpan berdasarkan nama resmi dan alternatif
       if (item.country_name) map.set(item.country_name.toLowerCase(), item);
       if (item.topo_name) map.set(item.topo_name.toLowerCase(), item);
       if (item.country_code_iso3) map.set(item.country_code_iso3.toUpperCase(), item);
     });
     return map;
   }, [choroplethMap]);
+
+  // Filter interaktif Host LC (hook dipanggil selalu tanpa kondisi)
+  const filteredLcs = useMemo(() => {
+    return hostLcDrilldown.filter(item => {
+      const matchSearch =
+        item.host_lc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.country_name.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchSelectedCountry = selectedCountry 
+        ? item.country_name.toLowerCase() === selectedCountry.toLowerCase()
+        : true;
+
+      return matchSearch && matchSelectedCountry;
+    });
+  }, [hostLcDrilldown, searchTerm, selectedCountry]);
 
   // Fungsi penentuan warna gradasi AIESEC Blue Tone System
   const getCountryColor = (countryInfo) => {
@@ -103,20 +108,14 @@ export default function Destinations({ data, isLoading }) {
     setMapPosition({ coordinates: [20, 20], zoom: 1 });
   };
 
-  // Filter interaktif Host LC berdasarkan pencarian dan negara yang diklik di peta
-  const filteredLcs = useMemo(() => {
-    return hostLcDrilldown.filter(item => {
-      const matchSearch =
-        item.host_lc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.country_name.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchSelectedCountry = selectedCountry 
-        ? item.country_name.toLowerCase() === selectedCountry.toLowerCase()
-        : true;
-
-      return matchSearch && matchSelectedCountry;
-    });
-  }, [hostLcDrilldown, searchTerm, selectedCountry]);
+  if (isLoading && !data) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3 text-slate-500">
+        <div className="w-8 h-8 border-4 border-[#037EF3] border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-sm font-semibold">Memuat data sebaran negara dan komite tujuan...</p>
+      </div>
+    );
+  }
 
   // Paginasi tabel
   const totalPages = Math.ceil(filteredLcs.length / itemsPerPage) || 1;
