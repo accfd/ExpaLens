@@ -102,7 +102,56 @@ export default function Destinations({ data, isLoading }) {
 
   return (
     <div className="space-y-6">
-      {/* BARIS 1: FLAT INTERACTIVE WORLD MAP (REACT LEAFLET) */}
+      {/* BARIS 1: POIN 16A - PERINGKAT 10 BESAR NEGARA TUJUAN (CLUSTERED BAR CHART) */}
+      <section className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
+        <div className="pb-3 border-b border-slate-100 mb-4">
+          <h3 className="text-base font-bold text-slate-900">
+            Peringkat 10 Besar Negara Tujuan Terfavorit
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Perbandingan volume pendaftar total, peserta diterima (Accepted), dan kelulusan program (Finished).
+          </p>
+        </div>
+
+        <div className="h-80 w-full mt-2">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart 
+              data={topHostMcs.slice(0, 10)} 
+              layout="vertical"
+              margin={{ top: 10, right: 30, left: 40, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
+              <XAxis type="number" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis 
+                type="category" 
+                dataKey="country_name" 
+                tick={{ fill: '#0F172A', fontSize: 12, fontWeight: 'bold' }} 
+                axisLine={{ stroke: '#CBD5E1' }} 
+                tickLine={false}
+                width={100}
+              />
+              <RechartsTooltip 
+                formatter={(val, name) => [formatNumber(val) + ' Peserta', name]} 
+                contentStyle={{ 
+                  backgroundColor: '#FFFFFF', 
+                  borderRadius: '12px', 
+                  border: '1px solid #E2E8F0', 
+                  fontSize: '12px',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                }} 
+              />
+              <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
+              <Bar dataKey="total_apps" name="Total Pendaftar" fill="#94A3B8" radius={[0, 4, 4, 0]}>
+                <LabelList dataKey="total_apps" position="right" formatter={formatNumber} style={{ fontSize: '10px', fill: '#64748B', fontWeight: 'bold' }} />
+              </Bar>
+              <Bar dataKey="accepted" name="Accepted (Diterima)" fill="#037EF3" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="finished" name="Finished (Selesai)" fill="#10B981" radius={[0, 4, 4, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </section>
+
+      {/* BARIS 2: POIN 15 - FLAT INTERACTIVE WORLD MAP (REACT LEAFLET) */}
       <section className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
           <div>
@@ -264,55 +313,6 @@ export default function Destinations({ data, isLoading }) {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* BARIS 2: POIN 16A - PERINGKAT 10 BESAR NEGARA TUJUAN (CLUSTERED BAR CHART) */}
-      <section className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
-        <div className="pb-3 border-b border-slate-100 mb-4">
-          <h3 className="text-base font-bold text-slate-900">
-            Peringkat 10 Besar Negara Tujuan Terfavorit
-          </h3>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Perbandingan volume pendaftar total, peserta diterima (Accepted), dan kelulusan program (Finished).
-          </p>
-        </div>
-
-        <div className="h-80 w-full mt-2">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart 
-              data={topHostMcs.slice(0, 10)} 
-              layout="vertical"
-              margin={{ top: 10, right: 30, left: 40, bottom: 10 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
-              <XAxis type="number" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis 
-                type="category" 
-                dataKey="country_name" 
-                tick={{ fill: '#0F172A', fontSize: 12, fontWeight: 'bold' }} 
-                axisLine={{ stroke: '#CBD5E1' }} 
-                tickLine={false}
-                width={100}
-              />
-              <RechartsTooltip 
-                formatter={(val, name) => [formatNumber(val) + ' Peserta', name]} 
-                contentStyle={{ 
-                  backgroundColor: '#FFFFFF', 
-                  borderRadius: '12px', 
-                  border: '1px solid #E2E8F0', 
-                  fontSize: '12px',
-                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                }} 
-              />
-              <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-              <Bar dataKey="total_apps" name="Total Pendaftar" fill="#94A3B8" radius={[0, 4, 4, 0]}>
-                <LabelList dataKey="total_apps" position="right" formatter={formatNumber} style={{ fontSize: '10px', fill: '#64748B', fontWeight: 'bold' }} />
-              </Bar>
-              <Bar dataKey="accepted" name="Accepted (Diterima)" fill="#037EF3" radius={[0, 4, 4, 0]} />
-              <Bar dataKey="finished" name="Finished (Selesai)" fill="#10B981" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
         </div>
       </section>
 
