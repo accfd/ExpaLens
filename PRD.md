@@ -232,227 +232,273 @@ Terdapat beberapa perbedaan minor antara naskah Milestone 2–3 dengan kode impl
 
 ## 5. Spesifikasi 5 Halaman Dashboard (Sesuai Bab 4.3.4 Milestone 2)
 
-Aplikasi dashboard ExpaLens dibangun menggunakan struktur *multi-page app* Streamlit dengan pustaka grafik interaktif *Plotly*. Seluruh halaman dilengkapi dengan filter global dinamis yang diletakkan pada bilah samping (*Sidebar*).
+Dashboard Business Intelligence dirancang menggunakan bahasa pemrograman Python dengan *framework* Streamlit dan pustaka grafik interaktif Plotly untuk membantu pengurus Departemen Outgoing Exchange AIESEC in UNAND memahami performa pendaftaran peserta secara cepat. Informasi yang sebelumnya harus dihitung dan direkap secara manual disajikan dalam bentuk angka, grafik, tabel, dan peta yang saling terhubung dalam lima halaman utama:
+1. **Halaman 1: Ringkasan Utama (Overview)**
+2. **Halaman 2: Tren Pendaftaran (Application Trends)**
+3. **Halaman 3: Tahapan Seleksi dan Kelulusan (Conversion Funnel)**
+4. **Halaman 4: Peta dan Negara Tujuan (Destinations)**
+5. **Halaman 5: Alasan Penolakan Peserta (Rejections)**
 
-### 5.1 Komponen Bilah Sisi (Global Sidebar Filters)
-Bilah samping memuat filter global yang terhubung secara reaktif ke kueri data:
-* **Rentang Tahun (Year Filter):** Multiselect tahun (2021, 2022, 2023, 2024, 2025). Default: *Select All*.
-* **Program Pertukaran (Product Filter):** Multiselect program (`GV (New)`, `GTa`, `GTe`). Default: *Select All*.
-* **Kawasan Global (Host Region Filter):** Multiselect kawasan benua tujuan (Asia Pacific, Europe, Americas, MEA).
-* **Negara Tujuan (Host MC Filter):** Multiselect negara mitra tujuan. Opsi disaring dinamis berdasarkan kawasan yang dipilih.
-* **Status Aplikasi (Status Filter):** Multiselect status akhir (*accepted*, *approved*, *finished*, *rejected*).
+Setiap halaman dilengkapi visualisasi yang disesuaikan dengan kebutuhan informasi dan filter interaktif untuk memilih waktu, jenis program, negara tujuan, kampus atau komite lokal tujuan, serta status pendaftaran.
 
 ---
 
-### 5.2 Halaman 1: Ringkasan Utama (Overview)
+### 5.1 Matriks Kebutuhan Informasi & Dashboard (Tabel 3 Milestone 2)
+
+Berikut adalah tabel rujukan kebutuhan informasi, cakupan data, jenis visualisasi, dan tujuan analitik untuk seluruh visual pada dashboard ExpaLens:
+
+#### **Tabel 3. Analisis Kebutuhan Informasi dan Dashboard**
+
+| No | Kebutuhan Informasi | Data yang Dibutuhkan | Jenis Visualisasi | Tujuan Analisis |
+| :---: | :--- | :--- | :--- | :--- |
+| **Halaman 1: Ringkasan Utama (Overview)** | | | | |
+| 1 | Ringkasan indikator kinerja utama dan perbandingan pertumbuhan pendaftaran dibandingkan tahun sebelumnya (Year-over-Year / YoY). | `fact_exchange_application` (`apl_id`, `is_accepted`, `is_approved`, `is_finished`, `is_rejected`, `days_to_accept`) dan `dim_date` (`year`). | Card Visual dan KPI Visual. | Menampilkan jumlah seluruh pendaftaran, jumlah peserta yang mencapai setiap tahapan utama, rata-rata waktu pemrosesan, serta persentase kenaikan atau penurunan jumlah pendaftaran dibandingkan tahun sebelumnya. |
+| 2 | Distribusi jumlah peserta pada setiap tahapan seleksi (customer funnel). | `fact_exchange_application` (`is_applied`, `is_accepted`, `is_approved`, `is_finished`, `is_rejected`). | Funnel Chart. | Mengetahui jumlah peserta yang berhasil mencapai setiap tahapan, mulai dari pendaftaran hingga selesai program, serta melihat penurunan jumlah peserta pada setiap tahapannya. |
+| 3 | Perbandingan pencapaian setiap tahapan seleksi berdasarkan jenis program pertukaran. | `fact_exchange_application` (`is_accepted`, `is_approved`, `is_finished`) dan `dim_product` (`product`). | Clustered Column Chart. | Membandingkan jumlah peserta yang diterima, disetujui, dan menyelesaikan program GV, GTa, dan GTe untuk mengetahui program dengan hasil terbaik. |
+| 4 | Persentase keberhasilan penyelesaian program berdasarkan jumlah peserta yang telah diterima (Finish Rate). | `fact_exchange_application` (`is_accepted`, `is_finished`) dan `dim_product` (`product`). | Gauge Chart. | Mengetahui persentase peserta yang berhasil menyelesaikan program dibandingkan dengan seluruh peserta yang telah diterima pada masing-masing program. |
+| 5 | Penyaringan data berdasarkan waktu, program, negara tujuan, kampus atau komite lokal tujuan, dan status pendaftaran. | `dim_date` (`year`), `dim_product` (`product`), `dim_host` (`host_mc`, `host_lc`), dan `fact_exchange_application` (`status`). | Slicer dan Filter Visual. | Memudahkan pengguna memilih data berdasarkan kebutuhan tertentu sehingga seluruh grafik pada dashboard dapat menampilkan informasi yang lebih spesifik. |
+| **Halaman 2: Tren Pendaftaran (Application Trends)** | | | | |
+| 6 | Perkembangan jumlah pendaftaran peserta setiap bulan. | `fact_exchange_application` (`apl_id`) dan `dim_date` (`year`, `month`, `month_name`). | Line Chart. | Mengetahui perubahan jumlah pendaftaran setiap bulan serta melihat kapan jumlah pendaftar mengalami kenaikan atau penurunan. |
+| 7 | Perubahan jumlah peserta pada setiap status utama, yaitu Accepted, Finished, dan Rejected, setiap bulan. | `fact_exchange_application` (`is_accepted`, `is_finished`, `is_rejected`) dan `dim_date` (`year`, `month`). | Stacked Area Chart. | Membandingkan perkembangan jumlah peserta yang diterima, menyelesaikan program, dan ditolak dari bulan ke bulan. |
+| 8 | Perbandingan perkembangan jumlah pendaftaran setiap program dari tahun ke tahun. | `fact_exchange_application` (`apl_id`), `dim_product` (`product`), dan `dim_date` (`year`). | Clustered Column Chart. | Mengetahui program GV, GTa, atau GTe yang mengalami peningkatan maupun penurunan jumlah pendaftar setiap tahunnya. |
+| 9 | Pola kenaikan dan penurunan aktivitas pendaftaran berdasarkan bulan dan tahun (Seasonality). | `fact_exchange_application` (`apl_id`, indikator tahapan funnel) dan `dim_date` (`year`, `month_name`). | Matrix Heatmap. | Mengidentifikasi bulan dengan jumlah pendaftaran tertinggi dan terendah pada setiap tahun, termasuk periode puncak summer peak dan winter peak. |
+| 10 | Perbandingan metode pelaksanaan program (Semi-Remote dan On-site) serta tipe durasi program (Short-term dan Long-term). | `fact_exchange_application` (`apl_id`) dan `dim_product` (`product`, `is_remote`, `duration_type`). | 100% Stacked Bar Chart. | Mengetahui metode pelaksanaan dan tipe durasi program yang paling banyak dipilih peserta serta membandingkan preferensinya pada setiap program. |
+| **Halaman 3: Tahapan Seleksi dan Kelulusan (Conversion Funnel)** | | | | |
+| 11 | Persentase perpindahan peserta dari satu tahapan seleksi ke tahapan berikutnya (conversion rate). | `fact_exchange_application` (`is_applied`, `is_accepted`, `is_approved`, `is_realized`, `is_finished`). | Funnel Chart. | Mengukur persentase peserta yang berhasil melanjutkan ke setiap tahapan seleksi, mulai dari Applied hingga Finished, serta mengetahui tahapan dengan penurunan jumlah peserta terbesar. |
+| 12 | Rata-rata waktu yang dibutuhkan peserta pada setiap tahapan seleksi berdasarkan jenis program. | `fact_exchange_application` (`days_to_accept`, `days_to_approve`, `days_to_realize`, `days_to_finish`) dan `dim_product` (`product`). | Clustered Bar Chart. | Membandingkan rata-rata jumlah hari yang dibutuhkan pada setiap tahapan seleksi untuk mengetahui bagian proses yang membutuhkan waktu paling lama. |
+| 13 | Perbandingan tahapan terjadinya penolakan peserta berdasarkan jenis program (Rejection Stage Analysis). | `fact_exchange_application` (`is_rejected` dan tanggal setiap tahapan seleksi) serta `dim_product` (`product`). | Stacked Column Chart. | Mengetahui pada tahapan mana peserta paling banyak mengalami penolakan, baik sebelum Accepted, setelah Accepted, maupun setelah Approved, serta membandingkannya antarprogram. |
+| 14 | Perbandingan kecepatan proses seleksi antarnegara tujuan dan hubungannya dengan jumlah pendaftaran. | `fact_exchange_application` (`apl_id`, `days_to_accept`) dan `dim_host` (`host_mc`). | Scatter Chart. | Mengetahui negara tujuan dengan proses seleksi paling cepat atau paling lambat serta melihat apakah jumlah pendaftaran yang tinggi berhubungan dengan lamanya waktu pemrosesan. |
+| **Halaman 4: Peta dan Negara Tujuan (Destinations)** | | | | |
+| 15 | Persebaran jumlah pendaftaran peserta berdasarkan negara tujuan di berbagai wilayah dunia. | `fact_exchange_application` (`apl_id`, indikator tahapan funnel) dan `dim_host` (`host_mc`, `host_region`). | Choropleth Map (Plotly). | Menampilkan persebaran negara tujuan berdasarkan jumlah pendaftaran sehingga pengguna dapat mengetahui negara yang paling banyak diminati peserta. |
+| 16 | Peringkat negara tujuan berdasarkan jumlah pendaftaran serta rincian performa kampus atau komite lokal tujuan (Host LC Drill-down). | `fact_exchange_application` (`apl_id`, `is_accepted`, `is_approved`, `is_finished`) dan `dim_host` (`host_mc`, `host_lc`). | Clustered Bar Chart dan Drill-down Matrix. | Mengetahui negara tujuan dengan jumlah pendaftar terbanyak serta melihat rincian jumlah pendaftaran dan keberhasilan program pada masing-masing kampus atau komite lokal di negara tersebut. |
+| **Halaman 5: Alasan Penolakan Peserta (Rejections)** | | | | |
+| 17 | Distribusi dan peringkat alasan penolakan peserta berdasarkan jumlah kasus (Top Rejection Reasons). | `fact_exchange_application` (`apl_id`, `is_rejected`) dan `dim_rejection_reason` (`reason_text`). | Clustered Bar Chart. | Mengetahui alasan penolakan yang paling sering terjadi sehingga tim dapat menentukan masalah utama yang perlu diperhatikan. |
+| 18 | Perbandingan alasan penolakan berdasarkan jenis program dan perkembangan jumlah penolakan dari waktu ke waktu. | `fact_exchange_application` (`apl_id`, `is_rejected`), `dim_rejection_reason` (`reason_text`), `dim_product` (`product`), dan `dim_date` (`year`, `month`). | Stacked Column Chart dan Line Chart. | Membandingkan penyebab penolakan pada program GV, GTa, dan GTe serta mengetahui perubahan jumlah penolakan setiap bulan dan tahun. |
+| 19 | Rekomendasi tindakan perbaikan berdasarkan alasan penolakan yang paling banyak terjadi (Recommended Action). | `dim_rejection_reason` (`reason_text`) dan fungsi logika Python dinamis untuk menghasilkan teks rekomendasi. | Card Visual dan Text Box Dinamis. | Menampilkan saran tindakan yang dapat dilakukan tim Customer Experience berdasarkan alasan penolakan terbanyak yang sedang dipilih pada dashboard sehingga tim dapat menentukan langkah perbaikan yang sesuai. |
+
+---
+
+### 5.2 Komponen Bilah Sisi (Global Sidebar Filters - Sesuai Kebutuhan No. 5)
+Bilah samping (*Sidebar*) memuat kontrol penyaringan data global yang secara reaktif memperbarui kueri data pada seluruh halaman dashboard:
+* **Rentang Waktu / Tahun (`dim_date.year`):** Komponen `st.sidebar.multiselect` untuk memilih tahun pendaftaran (2021, 2022, 2023, 2024, 2025). Default: *Semua Tahun*.
+* **Program Pertukaran (`dim_product.product`):** Komponen `st.sidebar.multiselect` untuk memilih program (`GV (New)`, `GTa`, `GTe`). Default: *Semua Program*.
+* **Kawasan Tujuan (`dim_host.host_region`):** Komponen `st.sidebar.multiselect` untuk memilih kawasan dunia (Asia Pacific, Europe, Americas, MEA).
+* **Negara Tujuan (`dim_host.host_mc`):** Komponen `st.sidebar.multiselect` negara mitra, disaring dinamis sesuai kawasan yang dipilih.
+* **Komite Lokal Tujuan (`dim_host.host_lc`):** Komponen `st.sidebar.multiselect` universitas mitra, disaring dinamis sesuai negara yang dipilih.
+* **Status Pendaftaran (`fact_exchange_application.status`):** Komponen `st.sidebar.multiselect` status akhir (*accepted*, *approved*, *finished*, *rejected*).
+
+---
+
+### 5.3 Halaman 1: Ringkasan Utama (Overview)
 * **Tujuan Halaman:** Memberikan visibilitas instan kepada LCVP dan jajaran pimpinan mengenai kesehatan operasional program OGX secara agregat, tren pertumbuhan pendaftaran, serta persentase penyelesaian akhir.
 
 ```
 +------------------------------------------------------------------------------------+
-|                               HALAMAN 1: OVERVIEW                                  |
+|                         HALAMAN 1: RINGKASAN UTAMA (OVERVIEW)                      |
 +------------------------------------------------------------------------------------+
-| [KPI Cards]                                                                        |
+| [No. 1: Card Visual & KPI Visual]                                                  |
 | Total Applications | Total Accepted | Total Finished | Finish Rate | YoY Growth    |
-+----------------------------------+-------------------------------------------------+
-| [Visual 1: Funnel Chart]         | [Visual 2: Clustered Column Chart]              |
-| Overall Customer Funnel Progress | Stage Achievement by Product (GV, GTa, GTe)    |
-| (Applied -> Finished)            |                                                 |
-+----------------------------------+-------------------------------------------------+
-| [Visual 3: Gauge Chart]                                                            |
-| Program Finish Rate (%) Gauge (Finished ÷ Accepted) with target benchmark          |
++------------------------------------+-----------------------------------------------+
+| [No. 2: Funnel Chart]              | [No. 3: Clustered Column Chart]               |
+| Distribusi Jumlah Peserta Funnel   | Capaian Tahapan Seleksi per Program           |
+| (Applied -> Finished)              | (GV, GTa, GTe: Accepted, Approved, Finished)  |
++------------------------------------+-----------------------------------------------+
+| [No. 4: Gauge Chart]                                                               |
+| Persentase Keberhasilan Penyelesaian Program (Finish Rate = Finished ÷ Accepted)   |
++------------------------------------------------------------------------------------+
+| [No. 5: Slicer dan Filter Visual (Sidebar Global)]                                 |
 +------------------------------------------------------------------------------------+
 ```
 
-* **Rincian Metrik & Komponen Visual:**
-  1. **Top KPI Scorecard Cards (`st.metric`):**
-     * *Total Applications:* Total pendaftaran (`COUNT(apl_id)`).
-     * *Accepted Participants:* Total peserta diterima (`SUM(is_accepted)`).
-     * *Approved Participants:* Total dokumen disetujui (`SUM(is_approved)`).
-     * *Finished Participants:* Total alumni program (`SUM(is_finished)`).
-     * *Overall Finish Rate (%):* Rasio kelulusan ($\sum \text{is\_finished} \div \sum \text{is\_accepted} \times 100\%$).
-     * *YoY Application Growth (%):* Persentase kenaikan/penurunan pendaftaran dibanding tahun kalender sebelumnya.
-  2. **Visual 1: Overall Customer Funnel Chart (Plotly `go.Funnel`):**
-     * Menampilkan volume peserta dan persentase retensi kumulatif dari tahap *Applied* (100%) $\rightarrow$ *Accepted* $\rightarrow$ *Approved* $\rightarrow$ *Realized* $\rightarrow$ *Finished*.
-     * Menampilkan jumlah peserta yang gugur/tereliminasi pada setiap transisi tahapan.
-  3. **Visual 2: Clustered Column Chart - Capaian Tahapan per Program (Plotly `px.bar` barmode='group'):**
-     * Sumbu X: Jenis Produk (`GV (New)`, `GTa`, `GTe`).
-     * Sumbu Y: Jumlah Peserta.
-     * Bar Series: *Accepted*, *Approved*, *Finished*.
-  4. **Visual 3: Finish Rate Gauge Chart (Plotly `go.Indicator` gauge):**
-     * Menampilkan jarum speedometer performa penyelesaian program dengan skala 0–100%, dilengkapi ambang batas target organisasi (hijau $\ge 70\%$, kuning $50-69\%$, merah $<50\%$).
-* **Perilaku Dinamis:**
-  * Bila pengguna memilih satu program tertentu pada filter, seluruh kartu KPI dan Funnel Chart otomatis menghitung ulang nilai khusus program tersebut.
+* **Spesifikasi Detail Komponen Visual:**
+  1. **No. 1: Ringkasan indikator kinerja utama dan perbandingan pertumbuhan pendaftaran dibandingkan tahun sebelumnya (Year-over-Year / YoY)**
+     * *Jenis Visualisasi:* Card Visual dan KPI Visual (Diimplementasikan dengan `st.metric`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`, `is_accepted`, `is_approved`, `is_finished`, `is_rejected`, `days_to_accept`) dan `dim_date` (`year`).
+     * *Metrik:* Total Applications (`COUNT(apl_id)`), Accepted (`SUM(is_accepted)`), Approved (`SUM(is_approved)`), Finished (`SUM(is_finished)`), Rejected (`SUM(is_rejected)`), Overall Avg Process Time (`AVG(days_to_accept)`), serta delta persentase pertumbuhan pendaftaran YoY terhadap tahun kalender sebelumnya.
+  2. **No. 2: Distribusi jumlah peserta pada setiap tahapan seleksi (customer funnel)**
+     * *Jenis Visualisasi:* Funnel Chart (Diimplementasikan dengan Plotly `go.Funnel`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`is_applied`, `is_accepted`, `is_approved`, `is_finished`, `is_rejected`).
+     * *Tujuan Analisis:* Menampilkan volume absolut dan persentase retensi kumulatif dari tahap *Applied* (100%) $\rightarrow$ *Accepted* $\rightarrow$ *Approved* $\rightarrow$ *Realized* $\rightarrow$ *Finished*, serta memperlihatkan jumlah peserta yang gugur di tiap tahap.
+  3. **No. 3: Perbandingan pencapaian setiap tahapan seleksi berdasarkan jenis program pertukaran**
+     * *Jenis Visualisasi:* Clustered Column Chart (Diimplementasikan dengan Plotly `px.bar` dengan `barmode='group'`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`is_accepted`, `is_approved`, `is_finished`) dan `dim_product` (`product`).
+     * *Tujuan Analisis:* Membandingkan perolehan peserta diterima, disetujui, dan menyelesaikan program pada GV, GTa, dan GTe untuk mengidentifikasi lini produk dengan performa terbaik.
+  4. **No. 4: Persentase keberhasilan penyelesaian program berdasarkan jumlah peserta yang telah diterima (Finish Rate)**
+     * *Jenis Visualisasi:* Gauge Chart (Diimplementasikan dengan Plotly `go.Indicator` mode gauge).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`is_accepted`, `is_finished`) dan `dim_product` (`product`).
+     * *Tujuan Analisis:* Menampilkan rasio kelulusan ($\sum \text{is\_finished} \div \sum \text{is\_accepted} \times 100\%$) dengan rentang gauge 0–100% dan indikator ambang batas keberhasilan departemen (Merah: $<50\%$, Kuning: $50-69\%$, Hijau: $\ge 70\%$).
+  5. **No. 5: Penyaringan data berdasarkan waktu, program, negara tujuan, kampus atau komite lokal tujuan, dan status pendaftaran**
+     * *Jenis Visualisasi:* Slicer dan Filter Visual (Disediakan pada Bilah Sisi Global Streamlit).
 
 ---
 
-### 5.3 Halaman 2: Tren Pendaftaran (Application Trends)
-* **Tujuan Halaman:** Menganalisis dinamika volume pendaftaran peserta dari waktu ke waktu, mendeteksi pola musiman (*summer peak* & *winter peak*), serta mengevaluasi preferensi metode program (*remote vs on-site*).
+### 5.4 Halaman 2: Tren Pendaftaran (Application Trends)
+* **Tujuan Halaman:** Menganalisis dinamika volume pendaftaran peserta dari waktu ke waktu, mendeteksi pola musiman (*summer peak* & *winter peak*), serta mengevaluasi preferensi metode dan durasi program.
 
 ```
 +------------------------------------------------------------------------------------+
-|                         HALAMAN 2: APPLICATION TRENDS                              |
+|                    HALAMAN 2: TREN PENDAFTARAN (APPLICATION TRENDS)                |
 +------------------------------------------------------------------------------------+
-| [Visual 1: Monthly Trend Line Chart]                                               |
-| Perkembangan Jumlah Aplikasi Pendaftaran Tiap Bulan (2021-2025)                    |
-+----------------------------------+-------------------------------------------------+
-| [Visual 2: Stacked Area Chart]   | [Visual 3: Grouped Bar Chart]                   |
-| Komposisi Status Bulanan         | Tren Tahunan Volume per Program                 |
-| (Accepted, Finished, Rejected)   | (GV, GTa, GTe per Tahun)                        |
-+----------------------------------+-------------------------------------------------+
-| [Visual 4: Seasonality Heatmap]  | [Visual 5: 100% Stacked Bar Chart]              |
-| Matriks Bulan vs Tahun           | Preferensi Durasi & Pelaksanaan                 |
-| (Intensitas Warna Aplikasi)      | (Remote vs On-site & Short vs Long-term)        |
+| [No. 6: Line Chart]                                                                |
+| Perkembangan Jumlah Pendaftaran Peserta Setiap Bulan (2021-2025)                   |
++------------------------------------+-----------------------------------------------+
+| [No. 7: Stacked Area Chart]        | [No. 8: Clustered Column Chart]               |
+| Perubahan Komposisi Status Bulanan | Perbandingan Perkembangan Jumlah Pendaftaran  |
+| (Accepted, Finished, Rejected)     | Setiap Program dari Tahun ke Tahun            |
++------------------------------------+-----------------------------------------------+
+| [No. 9: Matrix Heatmap]            | [No. 10: 100% Stacked Bar Chart]              |
+| Pola Aktivitas Musiman Pendaftaran | Perbandingan Metode (Semi-Remote vs On-site)  |
+| (Bulan vs Tahun - Seasonality)     | dan Tipe Durasi Program (Short vs Long-term)  |
 +------------------------------------------------------------------------------------+
 ```
 
-* **Rincian Metrik & Komponen Visual:**
-  1. **Visual 1: Monthly Application Volume Line Chart (Plotly `px.line`):**
-     * Sumbu X: Garis waktu berkesinambungan (Tahun-Bulan).
-     * Sumbu Y: Jumlah Pendaftaran (`apl_id`).
-     * Dilengkapi garis rata-rata bulanan dan penanda titik lonjakan (*peak markers*).
-  2. **Visual 2: Monthly Funnel Status Composition Stacked Area Chart (Plotly `px.area`):**
-     * Menampilkan volume bulanan yang terbagi secara proporsional berdasarkan tiga status akhir: *Accepted*, *Finished*, dan *Rejected*.
-  3. **Visual 3: Yearly Product Growth Clustered Column Chart (Plotly `px.bar`):**
-     * Sumbu X: Tahun (2021–2025).
-     * Sumbu Y: Volume Aplikasi.
-     * Kelompok Bar: Produk GV, GTa, GTe untuk melihat tren pergeseran minat produk antar-tahun.
-  4. **Visual 4: Seasonality Application Heatmap Matrix (Plotly `go.Heatmap`):**
-     * Sumbu X: Bulan kalender (Januari s/d Desember).
-     * Sumbu Y: Tahun (2021 s/d 2025).
-     * Skala Warna (Color Scale): Mengindikasikan intensitas kepadatan aplikasi. Visual ini memvalidasi periode *Summer Peak* (Mei–Juli) dan *Winter Peak* (November–Januari).
-  5. **Visual 5: Program Execution & Duration 100% Stacked Bar Chart (Plotly `px.bar` barmode='relative'):**
-     * Menampilkan proporsi persentase peserta yang memilih metode *Semi-Remote* vs *On-site*, serta tipe durasi *Short-term* vs *Long-term* di tiap lini produk.
+* **Spesifikasi Detail Komponen Visual:**
+  1. **No. 6: Perkembangan jumlah pendaftaran peserta setiap bulan**
+     * *Jenis Visualisasi:* Line Chart (Diimplementasikan dengan Plotly `px.line`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`) dan `dim_date` (`year`, `month`, `month_name`).
+     * *Tujuan Analisis:* Mengamati fluktuasi pendaftaran bulanan secara kontinu dan mengidentifikasi titik waktu terjadinya lonjakan atau penurunan minat pendaftar.
+  2. **No. 7: Perubahan jumlah peserta pada setiap status utama, yaitu Accepted, Finished, dan Rejected, setiap bulan**
+     * *Jenis Visualisasi:* Stacked Area Chart (Diimplementasikan dengan Plotly `px.area`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`is_accepted`, `is_finished`, `is_rejected`) dan `dim_date` (`year`, `month`).
+     * *Tujuan Analisis:* Membandingkan proporsi dan volume peserta yang diterima, menyelesaikan program, dan ditolak secara kumulatif dari bulan ke bulan.
+  3. **No. 8: Perbandingan perkembangan jumlah pendaftaran setiap program dari tahun ke tahun**
+     * *Jenis Visualisasi:* Clustered Column Chart (Diimplementasikan dengan Plotly `px.bar` dengan `barmode='group'`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`), `dim_product` (`product`), dan `dim_date` (`year`).
+     * *Tujuan Analisis:* Membandingkan pertumbuhan tahunan antarprogram untuk mengetahui program mana yang mengalami kenaikan tren peminat secara konsisten.
+  4. **No. 9: Pola kenaikan dan penurunan aktivitas pendaftaran berdasarkan bulan dan tahun (Seasonality)**
+     * *Jenis Visualisasi:* Matrix Heatmap (Diimplementasikan dengan Plotly `go.Heatmap`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`, indikator tahapan funnel) dan `dim_date` (`year`, `month_name`).
+     * *Tujuan Analisis:* Memetakan intensitas kepadatan aplikasi pada matriks 12 bulan $\times$ 5 tahun kalender guna mengidentifikasi secara presisi periode puncak pendaftaran pertukaran: *Summer Peak* (Mei–Juli) dan *Winter Peak* (November–Januari).
+  5. **No. 10: Perbandingan metode pelaksanaan program (Semi-Remote dan On-site) serta tipe durasi program (Short-term dan Long-term)**
+     * *Jenis Visualisasi:* 100% Stacked Bar Chart (Diimplementasikan dengan Plotly `px.bar` dengan `barmode='relative'`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`) dan `dim_product` (`product`, `is_remote`, `duration_type`).
+     * *Tujuan Analisis:* Mengevaluasi preferensi pendaftar terhadap opsi pelaksanaan program (Semi-Remote vs On-site) serta durasi program (Short-term vs Long-term) di setiap program pertukaran.
 
 ---
 
-### 5.4 Halaman 3: Tahapan Seleksi & Kelulusan (Conversion Funnel)
-* **Tujuan Halaman:** Mengidentifikasi titik kebocoran seleksi (*funnel leakages*), mengukur efisiensi durasi waktu pemrosesan (*process speed*), serta menemukan anomali durasi pada negara tertentu.
+### 5.5 Halaman 3: Tahapan Seleksi dan Kelulusan (Conversion Funnel)
+* **Tujuan Halaman:** Mengukur efisiensi pergerakan peserta antartahapan, mendeteksi titik penurunan peserta (*drop-off*), mengukur durasi waktu pemrosesan (*process speed*), serta menemukan anomali kecepatan proses antarnegara.
 
 ```
 +------------------------------------------------------------------------------------+
-|                          HALAMAN 3: CONVERSION FUNNEL                              |
+|             HALAMAN 3: TAHAPAN SELEKSI DAN KELULUSAN (CONVERSION FUNNEL)           |
 +------------------------------------------------------------------------------------+
-| [KPI Cards: Average Conversion Times]                                              |
+| [Top KPI Metrics: Rata-Rata Waktu Pemrosesan dalam Hari]                           |
 | Avg Days to Accept | Avg Days to Approve | Avg Days to Realize | Avg Days to Finish|
-+----------------------------------+-------------------------------------------------+
-| [Visual 1: Step-by-Step Funnel]  | [Visual 2: Clustered Horizontal Bar Chart]      |
-| Conversion Rate Antartahapan     | Rata-rata Durasi Hari per Tahapan & per Program |
-| (Drop-off Rate di Setiap Tahap)  | (Days to Accept/Approve/Realize/Finish/Reject)  |
-+----------------------------------+-------------------------------------------------+
-| [Visual 3: Rejection Stage Stacked Bar]                                            |
-| Titik Terjadinya Penolakan (Pre-Accepted, Post-Accepted, Post-Approved)            |
++------------------------------------+-----------------------------------------------+
+| [No. 11: Funnel Chart]             | [No. 12: Clustered Bar Chart]                 |
+| Persentase Perpindahan Peserta     | Rata-rata Waktu yang Dibutuhkan Peserta pada  |
+| Antartahapan (Conversion Rate)     | Setiap Tahapan Seleksi berdasarkan Program    |
++------------------------------------+-----------------------------------------------+
+| [No. 13: Stacked Column Chart]                                                     |
+| Perbandingan Tahapan Terjadinya Penolakan Peserta (Rejection Stage Analysis)       |
 +------------------------------------------------------------------------------------+
-| [Visual 4: Country Process Speed vs Application Volume Scatter Plot]               |
-| Sumbu X: Rata-rata Hari Pemrosesan | Sumbu Y: Total Aplikasi | Bubble: Host MC     |
+| [No. 14: Scatter Chart]                                                            |
+| Perbandingan Kecepatan Proses Seleksi Antarnegara Tujuan vs Jumlah Pendaftaran     |
 +------------------------------------------------------------------------------------+
 ```
 
-* **Rincian Metrik & Komponen Visual:**
-  1. **Top Metric Cards - Rata-rata Durasi Proses (`st.metric`):**
-     * *Avg Days to Accept:* Rata-rata hari dari *Applied* ke *Accepted*.
-     * *Avg Days to Approve:* Rata-rata hari penyelesaian berkas administrasi.
-     * *Avg Days to Realize:* Rata-rata masa tunggu keberangkatan ke luar negeri.
-     * *Avg Days to Finish:* Rata-rata durasi aktual pelaksanaan proyek hingga kepulangan.
-     * *Avg Days to Reject:* Rata-rata hari hingga diterbitkannya surat penolakan.
-  2. **Visual 1: Funnel Conversion & Drop-off Chart (Plotly `go.Funnel`):**
-     * Menghitung rasio konversi antar-tahap langsung (*step conversion rate*):
-       * $\text{App-to-Acc} = \text{Accepted} \div \text{Applied}$
-       * $\text{Acc-to-Appr} = \text{Approved} \div \text{Accepted}$
-       * $\text{Appr-to-Real} = \text{Realized} \div \text{Approved}$
-       * $\text{Real-to-Fin} = \text{Finished} \div \text{Realized}$
-  3. **Visual 2: Average Process Time by Product Clustered Bar Chart (Plotly `px.bar`):**
-     * Membandingkan durasi rata-rata hari pada masing-masing tahapan untuk mengevaluasi apakah program GTa/GTe (profesional/pengajar) membutuhkan waktu verifikasi berkas lebih lama dibandingkan GV (volunteer).
-  4. **Visual 3: Rejection Stage Analysis Stacked Column Chart (Plotly `px.bar`):**
-     * Mengelompokkan waktu penolakan aplikasi:
-       * *Stage 1 Rejection (Pre-Accepted):* Ditolak sebelum sempat diterima seleksi awal.
-       * *Stage 2 Rejection (Post-Accepted):* Ditolak setelah diterima (gagal berkas/wawancara lanjut).
-       * *Stage 3 Rejection (Post-Approved):* Ditolak setelah disetujui (kendala visa atau pembatalan mendadak).
-  5. **Visual 4: Process Speed vs Volume Scatter Plot (Plotly `px.scatter`):**
-     * Sumbu X: Rata-rata durasi penerimaan dalam hari (`AVG(days_to_accept)`).
-     * Sumbu Y: Total pendaftaran ke negara tersebut (`COUNT(apl_id)`).
-     * Titik Gelembung (*Bubble*): Negara Tujuan (*Host MC*), dengan ukuran gelembung proporsional terhadap jumlah aplikasi.
-     * Kegunaan: Mengidentifikasi kuadran negara "Favorit & Cepat", "Favorit tapi Lambat", atau "Jarang Dilirik tapi Sangat Cepat".
+* **Spesifikasi Detail Komponen Visual:**
+  1. **No. 11: Persentase perpindahan peserta dari satu tahapan seleksi ke tahapan berikutnya (conversion rate)**
+     * *Jenis Visualisasi:* Funnel Chart (Diimplementasikan dengan Plotly `go.Funnel`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`is_applied`, `is_accepted`, `is_approved`, `is_realized`, `is_finished`).
+     * *Tujuan Analisis:* Menghitung rasio konversi per tahapan transisi langsung:
+       * $\text{Applied} \rightarrow \text{Accepted} = \sum \text{is\_accepted} \div \sum \text{is\_applied}$
+       * $\text{Accepted} \rightarrow \text{Approved} = \sum \text{is\_approved} \div \sum \text{is\_accepted}$
+       * $\text{Approved} \rightarrow \text{Realized} = \sum \text{is\_realized} \div \sum \text{is\_approved}$
+       * $\text{Realized} \rightarrow \text{Finished} = \sum \text{is\_finished} \div \sum \text{is\_realized}$
+       Serta mendeteksi titik hambatan (*bottleneck*) dengan penurunan peserta terbesar.
+  2. **No. 12: Rata-rata waktu yang dibutuhkan peserta pada setiap tahapan seleksi berdasarkan jenis program**
+     * *Jenis Visualisasi:* Clustered Bar Chart (Diimplementasikan dengan Plotly `px.bar` horizontal/clustered).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`days_to_accept`, `days_to_approve`, `days_to_realize`, `days_to_finish`) dan `dim_product` (`product`).
+     * *Tujuan Analisis:* Membandingkan rata-rata durasi hari di tiap tahap seleksi pada masing-masing program GV, GTa, dan GTe untuk menemukan proses yang paling memakan waktu.
+  3. **No. 13: Perbandingan tahapan terjadinya penolakan peserta berdasarkan jenis program (Rejection Stage Analysis)**
+     * *Jenis Visualisasi:* Stacked Column Chart (Diimplementasikan dengan Plotly `px.bar`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`is_rejected` dan tanggal setiap tahapan seleksi) serta `dim_product` (`product`).
+     * *Tujuan Analisis:* Mengetahui fase terjadinya penolakan peserta: *Pre-Accepted* (sebelum seleksi awal lolos), *Post-Accepted* (setelah diterima namun gagal di dokumen/wawancara lanjutan), atau *Post-Approved* (setelah disetujui namun gagal berangkat).
+  4. **No. 14: Perbandingan kecepatan proses seleksi antarnegara tujuan dan hubungannya dengan jumlah pendaftaran**
+     * *Jenis Visualisasi:* Scatter Chart (Diimplementasikan dengan Plotly `px.scatter`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`, `days_to_accept`) dan `dim_host` (`host_mc`).
+     * *Tujuan Analisis:* Memetakan hubungan korelasi antara tingginya volume pendaftaran ke suatu negara mitra dengan rata-rata kecepatan durasi penerimaan seleksi (`AVG(days_to_accept)`).
 
 ---
 
-### 5.5 Halaman 4: Peta & Negara Tujuan (Destinations)
-* **Tujuan Halaman:** Menyajikan persebaran geografis peserta pertukaran ke seluruh dunia serta menyediakan fitur penelusuran berjenjang (*drill-down*) dari level negara (*Host MC*) hingga level komite universitas mitra (*Host LC*).
+### 5.6 Halaman 4: Peta dan Negara Tujuan (Destinations)
+* **Tujuan Halaman:** Menyajikan persebaran geografis peserta pertukaran internasional serta menyediakan fitur analisis penelusuran berjenjang (*drill-down*) dari level negara hingga entitas komite lokal universitas mitra (*Host LC*).
 
 ```
 +------------------------------------------------------------------------------------+
-|                            HALAMAN 4: DESTINATIONS                                 |
+|                   HALAMAN 4: PETA DAN NEGARA TUJUAN (DESTINATIONS)                 |
 +------------------------------------------------------------------------------------+
-| [Visual 1: Global Choropleth Map (Plotly)]                                         |
-| Peta Dunia Berdasarkan Kepadatan Pendaftaran Peserta (ISO-3 Code Mapping)          |
-| Tooltip: Nama Negara, Total Pendaftar, Jumlah Diterima, Jumlah Selesai             |
-+----------------------------------+-------------------------------------------------+
-| [Visual 2: Top 10 Host MC Bar]   | [Interactivity: Host LC Drill-down Selector]    |
-| Peringkat Negara Terpopuler      | Pilih Negara -> Tampilkan Kinerja Komite Lokal  |
-+----------------------------------+-------------------------------------------------+
-| [Visual 3: Host LC Drill-Down Data Table / Matrix]                                 |
-| Tabel Rincian Kinerja Host LC di Negara Terpilih:                                  |
-| Host LC Name | Total Apps | Accepted | Approved | Finished | Finish Rate | Avg Days|
+| [No. 15: Choropleth Map (Plotly)]                                                  |
+| Persebaran Jumlah Pendaftaran Peserta Berdasarkan Negara Tujuan di Wilayah Dunia   |
+| (Tooltip: Host MC, Total Aplikasi, Accepted, Finished)                             |
++------------------------------------+-----------------------------------------------+
+| [No. 16A: Clustered Bar Chart]     | [No. 16B: Interaktivitas Pemilih Host MC]     |
+| Peringkat Negara Tujuan Berdasarkan| Pilih Negara Tujuan -> Tampilkan Rincian      |
+| Jumlah Pendaftaran (Top 10 Host MC)| Kinerja Kampus/Komite Lokal Tujuan            |
++------------------------------------+-----------------------------------------------+
+| [No. 16C: Drill-down Matrix / Data Table]                                          |
+| Rincian Performa Kampus atau Komite Lokal Tujuan (Host LC Drill-Down):             |
+| Host LC | Total Apps | Accepted | Approved | Finished | Finish Rate | Avg Days Acc |
 +------------------------------------------------------------------------------------+
 ```
 
-* **Rincian Metrik & Komponen Visual:**
-  1. **Visual 1: Interactive Global Choropleth Map (Plotly `px.choropleth`):**
-     * Pemetaan geografis menggunakan kode negara standar dunia (ISO Alpha-3).
-     * Skala Warna (*Color Gradient*): Menunjukkan volume pendaftaran (`Total Applications`).
-     * Hover Tooltip Kustom: Menampilkan nama negara, total pendaftar, jumlah peserta diterima (*Accepted*), dan jumlah alumni lulus (*Finished*).
-     * Proyeksi Peta: Natural Earth / Robinson interaktif (dapat digeser, diputar, dan di-zoom).
-  2. **Visual 2: Top 10 Destination Countries Horizontal Bar Chart (Plotly `px.bar`):**
-     * Peringkat 10 negara mitra dengan volume pendaftar tertinggi asal UNAND.
-  3. **Visual 3 & Komponen Interaktif: Host LC Drill-Down Matrix (`st.selectbox` + `st.dataframe` / Plotly Bar):**
-     * Pengguna dapat memilih satu negara mitra dari *dropdown* interaktif atau mengklik bar chart negara.
-     * Sistem secara dinamis memuat tabel rincian komite lokal/universitas mitra (*Host LC*) di negara tersebut, menampilkan:
-       * Nama Komite Lokal (*Host LC*)
-       * Total Aplikasi Masuk
-       * Jumlah Peserta Diterima & Disetujui
-       * Jumlah Peserta Menyelesaikan Program
-       * Rasio Penyelesaian (*Finish Rate %*)
-       * Rata-rata Durasi Pemrosesan (*Avg Days to Accept*)
-     * Manfaat: Membantu tim OGX memilih mitra universitas luar negeri yang paling responsif dan berkinerja tinggi untuk kerja sama jangka panjang (*partnership matching*).
+* **Spesifikasi Detail Komponen Visual:**
+  1. **No. 15: Persebaran jumlah pendaftaran peserta berdasarkan negara tujuan di berbagai wilayah dunia**
+     * *Jenis Visualisasi:* Choropleth Map (Plotly) (Diimplementasikan dengan Plotly `px.choropleth`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`, indikator tahapan funnel) dan `dim_host` (`host_mc`, `host_region`).
+     * *Tujuan Analisis:* Menampilkan peta tematik dunia berbasis kode ISO-3 yang mencerminkan intensitas volume pendaftaran, dilengkapi tooltip detail jumlah peserta diterima dan selesai di setiap negara.
+  2. **No. 16: Peringkat negara tujuan berdasarkan jumlah pendaftaran serta rincian performa kampus atau komite lokal tujuan (Host LC Drill-down)**
+     * *Jenis Visualisasi:* Clustered Bar Chart dan Drill-down Matrix (Diimplementasikan dengan kombinasi Plotly `px.bar` peringkat Top 10 Host MC dan tabel interaktif `st.dataframe` / `st.selectbox`).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`, `is_accepted`, `is_approved`, `is_finished`) dan `dim_host` (`host_mc`, `host_lc`).
+     * *Tujuan Analisis:* Mengidentifikasi 10 negara tujuan terpopuler, kemudian memungkinkan pengguna melakukan *drill-down* memilih satu negara untuk melihat daftar lengkap universitas/komite lokal mitra (*Host LC*) di negara tersebut beserta metrik jumlah aplikasi, peserta lulus, rasio penyelesaian, dan kecepatan waktu proses.
 
 ---
 
-### 5.6 Halaman 5: Alasan Penolakan Peserta (Rejections)
-* **Tujuan Halaman:** Memberikan pemahaman mendalam mengenai faktor penyebab kegagalan aplikasi pendaftaran dan menyajikan rekomendasi tindakan taktis (*Actionable Recommendations*) secara otomatis melalui logika cerdas Python.
+### 5.7 Halaman 5: Alasan Penolakan Peserta (Rejections)
+* **Tujuan Halaman:** Menganalisis penyebab kegagalan aplikasi pendaftaran dan menyajikan rekomendasi tindakan taktis (*Actionable Recommendations*) secara otomatis melalui logika cerdas Python.
 
 ```
 +------------------------------------------------------------------------------------+
-|                             HALAMAN 5: REJECTIONS                                  |
+|                  HALAMAN 5: ALASAN PENOLAKAN PESERTA (REJECTIONS)                  |
 +------------------------------------------------------------------------------------+
-| [Visual 1: Top Rejection Reasons Bar Chart]                                        |
-| Peringkat Alasan Penolakan Berdasarkan Frekuensi Kasus                             |
-+----------------------------------+-------------------------------------------------+
-| [Visual 2: Rejections by Product]| [Visual 3: Monthly Rejection Trend Line]        |
-| Komposisi Alasan per GV/GTa/GTe  | Tren Penolakan dari Waktu ke Waktu              |
-+----------------------------------+-------------------------------------------------+
-| [Dynamic Recommendation Engine: Card Visual & Dynamic Action Box]                 |
-| Mengidentifikasi Rejection Reason Terbanyak pada Filter Terpilih                   |
-| -> Menampilkan Ringkasan Akar Masalah (Root Cause Analysis)                        |
-| -> Menghasilkan Rekomendasi Solusi Operasional Konkret untuk Tim CX/QA            |
+| [No. 17: Clustered Bar Chart]                                                      |
+| Distribusi dan Peringkat Alasan Penolakan Peserta (Top Rejection Reasons)          |
++------------------------------------+-----------------------------------------------+
+| [No. 18A: Stacked Column Chart]    | [No. 18B: Line Chart]                         |
+| Perbandingan Alasan Penolakan      | Perkembangan Jumlah Penolakan dari Waktu      |
+| Berdasarkan Jenis Program          | ke Waktu (Monthly Rejection Trend)            |
++------------------------------------+-----------------------------------------------+
+| [No. 19: Card Visual dan Text Box Dinamis]                                         |
+| Rekomendasi Tindakan Perbaikan Berdasarkan Alasan Penolakan Terbanyak (Recommended |
+| Action Engine Berbasis Logika Python Dinamis untuk Tim CX & QA)                    |
 +------------------------------------------------------------------------------------+
 ```
 
-* **Rincian Metrik & Komponen Visual:**
-  1. **Visual 1: Top Rejection Reasons Ranked Horizontal Bar Chart (Plotly `px.bar`):**
-     * Menampilkan urutan frekuensi alasan penolakan dari yang paling sering terjadi (di luar kategori `'Not Rejected'`), dilengkapi jumlah kasus dan persentase kontribusi terhadap total penolakan.
-  2. **Visual 2: Rejections by Exchange Product Clustered Bar Chart (Plotly `px.bar`):**
-     * Membandingkan penyebab penolakan utama pada program GV (faktor umum/komitmen), GTa (kualifikasi keterampilan profesional/resume), dan GTe (kemahiran bahasa asing/latar belakang edukasi).
-  3. **Visual 3: Monthly Rejection Trend Line Chart (Plotly `px.line`):**
-     * Menampilkan grafik garis fluktuasi jumlah penolakan setiap bulan untuk memantau apakah program intervensi perbaikan berkas di bulan tertentu berhasil menurunkan angka penolakan.
-  4. **Komponen Cerdas: Dynamic Recommendation Engine (`st.info` / `st.warning` / Custom HTML Card):**
-     * Berdasarkan alasan penolakan urutan pertama (*Top 1 Reason*) pada dataset yang sedang difilter, engine logika Python secara otomatis merender rekomendasi operasional terstruktur:
+* **Spesifikasi Detail Komponen Visual:**
+  1. **No. 17: Distribusi dan peringkat alasan penolakan peserta berdasarkan jumlah kasus (Top Rejection Reasons)**
+     * *Jenis Visualisasi:* Clustered Bar Chart (Diimplementasikan dengan Plotly `px.bar` horizontal).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`, `is_rejected`) dan `dim_rejection_reason` (`reason_text`).
+     * *Tujuan Analisis:* Mengurutkan alasan penolakan pendaftaran dari frekuensi tertinggi hingga terendah (tidak termasuk kategori `'Not Rejected'`) untuk menemukan sumber masalah utama kegagalan peserta.
+  2. **No. 18: Perbandingan alasan penolakan berdasarkan jenis program dan perkembangan jumlah penolakan dari waktu ke waktu**
+     * *Jenis Visualisasi:* Stacked Column Chart dan Line Chart (Diimplementasikan dengan Plotly `px.bar` komposisi alasan per produk dan Plotly `px.line` tren waktu penolakan).
+     * *Data yang Dibutuhkan:* `fact_exchange_application` (`apl_id`, `is_rejected`), `dim_rejection_reason` (`reason_text`), `dim_product` (`product`), dan `dim_date` (`year`, `month`).
+     * *Tujuan Analisis:* Mengetahui variasi kendala penolakan antarprogram (GV vs GTa vs GTe) dan memantau apakah angka penolakan mengalami tren penurunan setelah dilakukan langkah perbaikan.
+  3. **No. 19: Rekomendasi tindakan perbaikan berdasarkan alasan penolakan yang paling banyak terjadi (Recommended Action)**
+     * *Jenis Visualisasi:* Card Visual dan Text Box Dinamis (Diimplementasikan dengan fungsi logika Python dinamis dan wadah notifikasi visual `st.info` / `st.warning` / custom UI container).
+     * *Data yang Dibutuhkan:* `dim_rejection_reason` (`reason_text`) dan fungsi logika Python dinamis untuk menghasilkan teks rekomendasi.
+     * *Tujuan Analisis:* Menampilkan saran tindakan konkret yang dapat segera dieksekusi oleh tim Customer Experience & Quality Assurance berdasarkan alasan penolakan peringkat pertama yang terdeteksi pada filter aktif.
 
-| Alasan Penolakan Teratas (*Top Rejection Reason*) | Analisis Masalah Pokok | Rekomendasi Tindakan Dinamis untuk Tim QA & Customer Experience |
+#### Matriks Engine Rekomendasi Tindakan Dinamis (Recommended Action Engine)
+
+| Alasan Penolakan Teratas (*Top Rejection Reason*) | Identifikasi Akar Masalah | Rekomendasi Tindakan Operasional untuk Tim CX & QA |
 | :--- | :--- | :--- |
-| **Did not show up for interview / unresponsive** | Calon peserta tidak hadir wawancara atau hilang kontak (*ghosting*). | • Bentuk sistem pengingat otomatis (*WhatsApp/Email automated reminder*) H-1 dan H-2 jam sebelum jadwal wawancara.<br>• Terapkan kebijakan konfirmasi kehadiran ulang (*re-confirmation form*) sebelum jadwal ditetapkan resmi. |
-| **Does not match opportunity requirements / skills** | Peserta melamar pada proyek yang kualifikasinya tidak sesuai dengan latar belakangnya. | • Perkuat sesi *Consultation & Profile Review* sebelum peserta melakukan submit aplikasi ke CRM Expa.<br>• Buat panduan kurasi CV khusus sesuai standar industri negara tujuan (terutama program GTa & GTe). |
-| **Visa / Passport issues** | Peserta terkendala masa berlaku paspor, izin orang tua, atau penolakan visa kedutaan. | • Tetapkan syarat kepemilikan paspor aktif minimal 6 bulan sebelum peserta diizinkan mendaftar ke tahapan seleksi.<br>• Sediakan *Country Visa Briefing Kit* dan pendampingan dokumen legalitas seawal mungkin. |
-| **Financial / Budget constraints** | Peserta mengundurkan diri karena kendala biaya tiket penerbangan atau biaya hidup di luar negeri. | • Berikan transparansi simulasi rincian biaya hidup (*cost of living breakdown*) di awal proses konsultasi program.<br>• Jalin kemitraan dengan penyedia beasiswa atau sponsor lokal untuk skema subsidi dana keberangkatan. |
-| **Selected another opportunity** | Peserta lebih memilih proyek lain atau magang alternatif di dalam negeri. | • Percepat durasi pemrosesan seleksi (*fast-track review*) agar peserta memperoleh kepastian status sebelum menerima tawaran lain. |
+| **Did not show up for interview / unresponsive** | Calon peserta tidak menghadiri sesi wawancara atau hilang kontak (*ghosting*). | • Implementasikan sistem pengingat pesan otomatis (*WhatsApp/Email reminder*) H-1 dan H-2 jam sebelum jadwal wawancara.<br>• Terapkan formulir konfirmasi kehadiran ulang (*re-confirmation form*) minimal 6 jam sebelum sesi wawancara dimulai. |
+| **Does not match opportunity requirements / skills** | Profil keterampilan atau jurusan peserta tidak selaras dengan kualifikasi proyek tujuan. | • Wajibkan sesi *Consultation & Profile Review* bersama Manajer Program sebelum calon peserta mengajukan aplikasi resmi di portal CRM Expa.<br>• Buat panduan kurasi CV/Resume standar internasional yang disesuaikan dengan negara tujuan. |
+| **Visa / Passport issues** | Terkendala masa berlaku paspor kedaluwarsa atau penolakan pengajuan visa kedutaan. | • Tetapkan syarat administratif wajib paspor aktif minimal 6 bulan sejak hari pendaftaran.<br>• Terbitkan *Country Visa Kit* dan berikan asistensi pengurusan berkas legalitas sejak tahap *Accepted*. |
+| **Financial / Budget constraints** | Peserta membatalkan keikutsertaan akibat kendala biaya tiket pesawat atau biaya hidup di negara tujuan. | • Berikan simulasi rincian estimasi biaya hidup (*cost of living breakdown*) secara transparan pada awal proses konsultasi.<br>• Bangun kemitraan dengan sponsor atau penyedia beasiswa lokal untuk skema subsidi parsial. |
+| **Selected another opportunity** | Peserta beralih ke program alternatif atau peluang magang lain di dalam negeri. | • Percepat waktu respon seleksi (*fast-track application review*) agar kepastian status peserta diberikan sebelum mereka memilih tawaran lain. |
 
 ---
 
