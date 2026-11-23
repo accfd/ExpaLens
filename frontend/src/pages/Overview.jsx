@@ -328,30 +328,30 @@ export default function Overview({ data, isLoading }) {
           </div>
         </div>
 
-        {/* Kartu 3: Finish Rate */}
+        {/* Kartu 3: Pertumbuhan Tahunan (YoY Growth) */}
         <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
-              FINISH RATE
+              PERTUMBUHAN TAHUNAN (YOY)
             </span>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#037EF3] flex items-center justify-center">
-              <Target className="w-4 h-4" />
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${yoy.is_positive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+              {yoy.is_positive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
             </div>
           </div>
           <div className="my-3">
-            <div className="text-3xl font-black text-[#037EF3] tracking-tight">
-              {formatPercent(finishRate)}
+            <div className={`text-3xl font-black tracking-tight ${yoy.is_positive ? 'text-emerald-600' : 'text-rose-600'}`}>
+              {yoy.is_positive ? '+' : ''}{formatPercent(yoy.yoy_pct)}
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Rasio Kelulusan dari Peserta Diterima
+              Perbandingan Aplikasi {yoy.current_year} vs {yoy.prev_year}
             </p>
           </div>
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[11px] font-bold text-[#037EF3] bg-blue-50 px-2 py-0.5 rounded">
-              Target Departemen: 50,0%
+            <span className="text-[11px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
+              {formatNumber(yoy.current_val)} vs {formatNumber(yoy.prev_val)}
             </span>
-            <span className={`text-xs font-bold ${finishRate >= 50 ? 'text-emerald-600' : 'text-amber-600'}`}>
-              {finishRate >= 50 ? 'Tercapai' : 'Perlu Perhatian'}
+            <span className={`text-xs font-bold ${yoy.is_positive ? 'text-emerald-600' : 'text-rose-600'}`}>
+              {yoy.is_positive ? 'Meningkat' : 'Menurun'}
             </span>
           </div>
         </div>
@@ -459,10 +459,10 @@ export default function Overview({ data, isLoading }) {
         <div className="lg:col-span-5 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
           <div className="pb-3 border-b border-slate-100">
             <h3 className="text-base font-bold text-slate-900">
-              Tingkat Keberhasilan Program (Finish Rate)
+              Persentase Keberhasilan Penyelesaian Program (Finish Rate)
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
-              Persentase peserta menyelesaikan program dibandingkan yang diterima.
+              Rasio peserta yang berhasil menyelesaikan program dibandingkan dengan seluruh peserta yang telah diterima.
             </p>
           </div>
 
@@ -470,46 +470,31 @@ export default function Overview({ data, isLoading }) {
           <div className="my-4 flex flex-col items-center justify-center">
             <div className="relative w-72 h-40 overflow-hidden flex items-end justify-center">
               <svg viewBox="0 0 200 110" className="w-full h-full">
-                {/* Zona Merah: 0% - 30% */}
+                {/* Latar Belakang Track Netral */}
                 <path
-                  d="M 20 100 A 80 80 0 0 1 35.2 53"
+                  d="M 20 100 A 80 80 0 0 1 180 100"
                   fill="none"
-                  stroke="#EF4444"
+                  stroke="#E2E8F0"
                   strokeWidth="18"
                   strokeLinecap="round"
                 />
-                {/* Zona Kuning: 30% - 60% */}
+                {/* Arc Progres AIESEC Blue */}
                 <path
-                  d="M 35.2 53 A 80 80 0 0 1 124.7 23.9"
+                  d="M 20 100 A 80 80 0 0 1 180 100"
                   fill="none"
-                  stroke="#F59E0B"
-                  strokeWidth="18"
-                />
-                {/* Zona Hijau: 60% - 100% */}
-                <path
-                  d="M 124.7 23.9 A 80 80 0 0 1 180 100"
-                  fill="none"
-                  stroke="#10B981"
+                  stroke="#037EF3"
                   strokeWidth="18"
                   strokeLinecap="round"
+                  strokeDasharray="251.3"
+                  strokeDashoffset={251.3 * (1 - clampedFinishRate / 100)}
+                  className="transition-all duration-700 ease-out"
                 />
 
-                {/* Garis Ambang Batas Target di 50% */}
-                <line
-                  x1="100"
-                  y1="100"
-                  x2="100"
-                  y2="20"
-                  stroke="#334155"
-                  strokeWidth="2.5"
-                  strokeDasharray="4 2"
-                />
-
-                {/* Jarum Indikator AIESEC Blue */}
+                {/* Jarum Indikator Midnight Navy */}
                 <g transform={`rotate(${gaugeAngle}, 100, 100)`}>
                   <polygon
                     points="97,100 103,100 100,28"
-                    fill="#037EF3"
+                    fill="#0A2540"
                   />
                   <circle cx="100" cy="100" r="7" fill="#0A2540" />
                   <circle cx="100" cy="100" r="3" fill="#FFFFFF" />
@@ -526,26 +511,11 @@ export default function Overview({ data, isLoading }) {
                 {formatNumber(totalFinished)} Selesai dari {formatNumber(totalAccepted)} Diterima
               </p>
             </div>
-
-            {/* Zona Semantik Legend */}
-            <div className="grid grid-cols-3 gap-2 w-full mt-4 text-[11px] text-center">
-              <div className="bg-rose-50 border border-rose-200 rounded-lg p-1.5">
-                <span className="block font-bold text-rose-700">0% - 30%</span>
-                <span className="text-rose-600 text-[10px]">Di Bawah Standar</span>
-              </div>
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-1.5">
-                <span className="block font-bold text-amber-700">30% - 60%</span>
-                <span className="text-amber-600 text-[10px]">Sedang / Waspada</span>
-              </div>
-              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-1.5">
-                <span className="block font-bold text-emerald-700">60% - 100%</span>
-                <span className="text-emerald-600 text-[10px]">Memenuhi Target</span>
-              </div>
-            </div>
           </div>
 
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Garis putus-putus: Target departemen 50,0%</span>
+            <span>Kalkulasi: (Total Finished / Total Accepted) x 100%</span>
+            <span className="font-semibold text-slate-700">Skala 0% - 100%</span>
           </div>
         </div>
       </section>
