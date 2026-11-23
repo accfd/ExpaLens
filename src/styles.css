@@ -1,0 +1,138 @@
+/* ==============================================================================
+   EXPALLENS STREAMLIT THEME (AIESEC BLUE BOOK SPECIFICATION)
+   ============================================================================== */
+
+/* Impor Font Resmi AIESEC: Lato dari Google Fonts (Blue Book Halaman 15) */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap');
+
+/* Latar Belakang Kanvas Utama (AIESEC Light Gray #F3F4F7) */
+.stApp {
+    background-color: #F3F4F7;
+    font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Sidebar Styling */
+section[data-testid="stSidebar"] {
+    background-color: #FFFFFF;
+    border-right: 1px solid #CACCD1;
+}
+
+/* Header Section */
+.header-container {
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #CACCD1;
+}
+.header-title {
+    font-size: 30px;
+    font-weight: 900;
+    color: #0F172A;
+    margin-bottom: 4px;
+    font-family: 'Lato', sans-serif;
+}
+.header-subtitle {
+    font-size: 14px;
+    color: #52565E;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* Hero Metric Card (Midnight Navy #0A2540) */
+.hero-card {
+    background: linear-gradient(135deg, #0A2540 0%, #001F3F 100%);
+    border-radius: 16px;
+    padding: 24px;
+    color: #FFFFFF;
+    box-shadow: 0 10px 15px -3px rgba(10, 37, 64, 0.2);
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.hero-card-title {
+    font-size: 13px;
+    color: #93C5FD;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.hero-card-value {
+    font-size: 38px;
+    font-weight: 900;
+    color: #FFFFFF;
+    margin: 8px 0 16px 0;
+    font-family: 'Lato', sans-serif;
+}
+.hero-card-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+.hero-card-table td {
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Standard Metric Card */
+.metric-card {
+    background-color: #FFFFFF;
+    border: 1px solid #CACCD1;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 15px;
+}
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px -2px rgba(3, 126, 243, 0.12);
+    border-color: #037EF3;
+}
+.metric-card-label {
+    font-size: 13px;
+    color: #52565E;
+    font-weight: 700;
+}
+.metric-card-num {
+    font-size: 26px;
+    font-weight: 900;
+    color: #0F172A;
+    margin-top: 4px;
+    font-family: 'Lato', sans-serif;
+}
+
+/* Card Visual Container untuk Grafik Plotly */
+.chart-container {
+    background-color: #FFFFFF;
+    border: 1px solid #CACCD1;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+}
+.chart-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 12px;
+    font-family: 'Lato', sans-serif;
+}
+
+/* Action Recommendation Box (Halaman 5) */
+.action-box {
+    background-color: #F0F6FF;
+    border-left: 4px solid #037EF3;
+    border-radius: 0 12px 12px 0;
+    padding: 20px;
+    margin-top: 15px;
+}
+.action-box-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0A2540;
+    margin-bottom: 6px;
+    font-family: 'Lato', sans-serif;
+}
+.action-box-desc {
+    font-size: 13px;
+    color: #334155;
+    line-height: 1.5;
+}
