@@ -52,8 +52,12 @@ export default function Sidebar({
         {/* Brand Header */}
         <div className="p-4 border-b border-slate-100 flex items-center justify-between min-h-[72px]">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-10 h-10 rounded-xl bg-[#037EF3] flex items-center justify-center text-white font-black text-xl shadow-md shadow-blue-500/20 shrink-0">
-              E
+            <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center p-1 shadow-sm shrink-0 overflow-hidden">
+              <img 
+                src="/logo.png" 
+                alt="Logo ExpaLens AIESEC in UNAND" 
+                className="w-full h-full object-contain"
+              />
             </div>
             {(!isCollapsed || isMobileOpen) && (
               <div className="transition-opacity duration-200 truncate">
