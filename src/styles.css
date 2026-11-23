@@ -1,5 +1,5 @@
 /* ==============================================================================
-   EXPALLENS STREAMLIT THEME (AIESEC BLUE BOOK SPECIFICATION)
+   EXPALENS STREAMLIT THEME (AIESEC BLUE BOOK SPECIFICATION)
    ============================================================================== */
 
 /* Impor Font Resmi AIESEC: Lato dari Google Fonts (Blue Book Halaman 15) */
@@ -11,6 +11,13 @@
     font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* Mengurangi padding atas berlebih pada kontainer Streamlit */
+.block-container {
+    padding-top: 1.8rem;
+    padding-bottom: 2.5rem;
+    max-width: 95%;
+}
+
 /* Sidebar Styling */
 section[data-testid="stSidebar"] {
     background-color: #FFFFFF;
@@ -19,101 +26,127 @@ section[data-testid="stSidebar"] {
 
 /* Header Section */
 .header-container {
-    padding-bottom: 1.25rem;
+    padding-bottom: 1rem;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid #CACCD1;
+    border-bottom: 1px solid #E2E8F0;
 }
 .header-title {
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 900;
     color: #0F172A;
     margin-bottom: 4px;
     font-family: 'Lato', sans-serif;
+    letter-spacing: -0.02em;
 }
 .header-subtitle {
     font-size: 14px;
     color: #52565E;
     font-weight: 400;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 /* Hero Metric Card (Midnight Navy #0A2540) */
 .hero-card {
-    background: linear-gradient(135deg, #0A2540 0%, #001F3F 100%);
-    border-radius: 16px;
-    padding: 24px;
+    background: linear-gradient(145deg, #0A2540 0%, #001A35 100%);
+    border-radius: 14px;
+    padding: 22px 24px;
     color: #FFFFFF;
-    box-shadow: 0 10px 15px -3px rgba(10, 37, 64, 0.2);
-    margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 20px -4px rgba(10, 37, 64, 0.25);
+    margin-bottom: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 .hero-card-title {
-    font-size: 13px;
+    font-size: 12px;
     color: #93C5FD;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
 }
 .hero-card-value {
-    font-size: 38px;
+    font-size: 40px;
     font-weight: 900;
     color: #FFFFFF;
-    margin: 8px 0 16px 0;
+    margin: 6px 0 16px 0;
     font-family: 'Lato', sans-serif;
+    line-height: 1.1;
 }
 .hero-card-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 12px;
+    font-size: 13px;
 }
 .hero-card-table td {
-    padding: 4px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* Standard Metric Card */
+/* Standard Metric Scorecard */
 .metric-card {
     background-color: #FFFFFF;
-    border: 1px solid #CACCD1;
+    border: 1px solid #E2E8F0;
     border-radius: 14px;
-    padding: 18px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+    padding: 18px 20px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    margin-bottom: 15px;
+    margin-bottom: 18px;
+    height: 100%;
 }
 .metric-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 12px -2px rgba(3, 126, 243, 0.12);
+    box-shadow: 0 6px 14px -2px rgba(3, 126, 243, 0.12);
     border-color: #037EF3;
 }
 .metric-card-label {
-    font-size: 13px;
-    color: #52565E;
+    font-size: 12px;
+    color: #64748B;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 .metric-card-num {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 900;
     color: #0F172A;
-    margin-top: 4px;
+    margin: 4px 0 2px 0;
     font-family: 'Lato', sans-serif;
+    line-height: 1.2;
+}
+.metric-card-desc {
+    font-size: 12px;
+    color: #64748B;
+    margin-top: 4px;
+}
+.metric-card-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    margin-top: 4px;
 }
 
 /* Card Visual Container untuk Grafik Plotly */
 .chart-container {
     background-color: #FFFFFF;
-    border: 1px solid #CACCD1;
-    border-radius: 16px;
-    padding: 20px;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 20px 22px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.03);
+}
+.chart-header {
+    margin-bottom: 14px;
 }
 .chart-title {
     font-size: 16px;
     font-weight: 700;
     color: #0F172A;
-    margin-bottom: 12px;
     font-family: 'Lato', sans-serif;
+}
+.chart-subtitle {
+    font-size: 12px;
+    color: #64748B;
+    margin-top: 2px;
 }
 
 /* Action Recommendation Box (Halaman 5) */

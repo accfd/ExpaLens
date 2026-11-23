@@ -15,6 +15,9 @@ ENV/
 # Environment variables
 .env
 
+# Agent harness files
+.agents/
+
 # OS generated files
 .DS_Store
 Thumbs.db
