@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import FilterBar from './components/FilterBar';
 import Overview from './pages/Overview';
 import ApplicationTrends from './pages/ApplicationTrends';
 import ConversionFunnel from './pages/ConversionFunnel';
@@ -11,6 +12,9 @@ import { AlertCircle } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const [filters, setFilters] = useState({
     years: [],
     products: [],
@@ -35,8 +39,7 @@ export default function App() {
   const [error, setError] = useState(null);
   const [isDbConnected, setIsDbConnected] = useState(true);
 
-  // Responsive & PWA States
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // PWA States
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [canInstallPwa, setCanInstallPwa] = useState(false);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
@@ -106,7 +109,6 @@ export default function App() {
       setIsDbConnected(true);
     } catch (err) {
       console.error(`Koneksi kueri ${activeTab} gagal:`, err);
-      // Jika offline dan data ada di cache, gunakan data tersimpan
       if (pageData[activeTab]) {
         console.info('Menggunakan data tersimpan dari cache lokal.');
       } else {
@@ -140,14 +142,12 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen bg-[#F8FAFC] font-['Lato',sans-serif] text-slate-800">
-      {/* BILAH SISI (SIDEBAR) RESPONSIVE */}
+      {/* BILAH SISI (SIDEBAR) MURNI NAVIGASI - BISA DIBUKA / DITUTUP */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        filters={filters}
-        setFilters={setFilters}
-        filterOptions={filterOptions}
-        onResetFilters={handleResetFilters}
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
         isMobileOpen={isMobileMenuOpen}
         onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
@@ -160,7 +160,6 @@ export default function App() {
           onRefresh={loadActivePageData}
           isLoading={isLoading}
           onToggleMobileMenu={() => setIsMobileMenuOpen(prev => !prev)}
-          onToggleMobileFilter={() => setIsMobileMenuOpen(true)}
           onInstallPwa={handleInstallPwa}
           canInstallPwa={canInstallPwa}
           isOffline={isOffline}
@@ -173,6 +172,14 @@ export default function App() {
               <span>{error}</span>
             </div>
           )}
+
+          {/* POIN 5: PENYARING DATA & PARAMETER ANALISIS (SLICERS) DI DALAM HALAMAN */}
+          <FilterBar
+            filters={filters}
+            setFilters={setFilters}
+            filterOptions={filterOptions}
+            onResetFilters={handleResetFilters}
+          />
 
           {activeTab === 'overview' && (
             <Overview data={pageData.overview} isLoading={isLoading} />

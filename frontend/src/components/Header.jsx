@@ -3,7 +3,6 @@ import {
   Database,
   RefreshCw,
   Menu,
-  Filter,
   Download,
   WifiOff
 } from 'lucide-react';
@@ -42,7 +41,6 @@ export default function Header({
   onRefresh,
   isLoading,
   onToggleMobileMenu,
-  onToggleMobileFilter,
   onInstallPwa,
   canInstallPwa,
   isOffline
@@ -92,16 +90,6 @@ export default function Header({
 
           {/* Action Tools & Status */}
           <div className="flex items-center gap-2 sm:gap-3 self-end lg:self-center">
-            {/* Mobile Filter Button */}
-            <button
-              onClick={onToggleMobileFilter}
-              className="lg:hidden flex items-center gap-1.5 bg-[#037EF3] text-white px-3 py-2 rounded-xl text-xs font-bold shadow-xs min-h-[44px] cursor-pointer"
-              title="Buka Penyaring Data"
-            >
-              <Filter className="w-4 h-4" />
-              <span>Filter Data</span>
-            </button>
-
             {/* PWA Install Button */}
             {canInstallPwa && (
               <button
