@@ -41,8 +41,8 @@ const formatPercent = (num, decimals = 1) => {
   return Number(num).toFixed(decimals).replace('.', ',') + '%';
 };
 
-// URL TopoJSON lokal dari folder public (mendukung luring/offline PWA)
-const GEO_URL = '/countries-110m.json';
+// Import TopoJSON langsung sebagai objek JS statis terbundel (100% aman, offline-first, tanpa fetch URL)
+import geoData from '../assets/countries-110m.json';
 
 export default function Destinations({ data, isLoading }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -204,9 +204,10 @@ export default function Destinations({ data, isLoading }) {
               center={mapPosition.coordinates}
               onMoveEnd={(pos) => setMapPosition(pos)}
             >
-              <Geographies geography={GEO_URL}>
+              <Geographies geography={geoData}>
                 {({ geographies }) =>
-                  geographies.map((geo) => {
+                  geographies && geographies.length > 0 ? (
+                    geographies.map((geo) => {
                     const geoName = geo.properties.name || '';
                     const countryInfo = countryDataMap.get(geoName.toLowerCase());
                     const isSelected = selectedCountry && countryInfo && 
@@ -271,7 +272,7 @@ export default function Destinations({ data, isLoading }) {
                       />
                     );
                   })
-                }
+                ) : null}
               </Geographies>
             </ZoomableGroup>
           </ComposableMap>

@@ -8,6 +8,7 @@ import ApplicationTrends from './pages/ApplicationTrends';
 import ConversionFunnel from './pages/ConversionFunnel';
 import Destinations from './pages/Destinations';
 import Rejections from './pages/Rejections';
+import ErrorBoundary from './components/ErrorBoundary';
 import { AlertCircle } from 'lucide-react';
 
 export default function App() {
@@ -191,7 +192,9 @@ export default function App() {
           )}
 
           {activeTab === 'destinations' && (
-            <Destinations data={pageData.destinations} isLoading={isLoading} />
+            <ErrorBoundary>
+              <Destinations data={pageData.destinations} isLoading={isLoading} />
+            </ErrorBoundary>
           )}
 
           {activeTab === 'rejections' && (
