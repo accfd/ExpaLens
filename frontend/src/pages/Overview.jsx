@@ -10,7 +10,7 @@ import {
   Target,
   BarChart2,
   Filter,
-  ArrowDown
+  Info
 } from 'lucide-react';
 import {
   BarChart,
@@ -63,7 +63,7 @@ export default function Overview({ data, isLoading }) {
     is_positive: true
   };
 
-  // Funnel 4 Tahapan Kunci Seleksi Sesuai Tabel 3 PRD (Monotonik Turun Mengerucut)
+  // Funnel 5 Tahapan Resmi AIESEC: Applied -> Accepted -> Approved -> Realized -> Finished
   const funnelSteps = [
     {
       stageNumber: 1,
@@ -83,7 +83,7 @@ export default function Overview({ data, isLoading }) {
       stageLabel: 'Lulus Seleksi Berkas',
       count: totalAccepted,
       retention: totalApps > 0 ? (totalAccepted / totalApps) * 100 : 0,
-      widthPercent: 70,
+      widthPercent: 78,
       bgColor: 'bg-[#0A8EA0]',
       textColor: 'text-[#0A8EA0]',
       borderColor: 'border-teal-300',
@@ -95,23 +95,37 @@ export default function Overview({ data, isLoading }) {
       stageLabel: 'Penandatanganan Kontrak',
       count: totalApproved,
       retention: totalApps > 0 ? (totalApproved / totalApps) * 100 : 0,
-      widthPercent: 48,
+      widthPercent: 60,
       bgColor: 'bg-[#F48924]',
       textColor: 'text-[#F48924]',
       borderColor: 'border-orange-300',
-      dropOff: totalApproved > 0 ? ((totalApproved - totalFinished) / totalApproved) * 100 : 0
+      dropOff: totalApproved > 0 ? ((totalApproved - totalRealized) / totalApproved) * 100 : 0
     },
     {
       stageNumber: 4,
+      stageName: 'Realized',
+      stageLabel: 'Berangkat ke Negara Mitra',
+      count: totalRealized,
+      retention: totalApps > 0 ? (totalRealized / totalApps) * 100 : 0,
+      widthPercent: 44,
+      bgColor: 'bg-purple-600',
+      textColor: 'text-purple-600',
+      borderColor: 'border-purple-300',
+      dropOff: null,
+      note: 'Stempel tanggal berangkat diisi Host LC'
+    },
+    {
+      stageNumber: 5,
       stageName: 'Finished',
       stageLabel: 'Menyelesaikan Program',
       count: totalFinished,
       retention: totalApps > 0 ? (totalFinished / totalApps) * 100 : 0,
-      widthPercent: 34,
+      widthPercent: 48,
       bgColor: 'bg-emerald-600',
       textColor: 'text-emerald-600',
       borderColor: 'border-emerald-300',
-      dropOff: null
+      dropOff: null,
+      note: 'Termasuk proyek semi-remote & evaluasi akhir'
     }
   ];
 
@@ -188,7 +202,7 @@ export default function Overview({ data, isLoading }) {
           </div>
         </div>
 
-        {/* Kolom Kanan: Authentic Customer Funnel Visual (Bentuk Corong Bertingkat Simetris) */}
+        {/* Kolom Kanan: Customer Funnel Visual (Lengkap 5 Tahap AIESEC) */}
         <div className="lg:col-span-8 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
@@ -196,7 +210,7 @@ export default function Overview({ data, isLoading }) {
                 Distribusi Peserta pada Tahapan Seleksi (Customer Funnel)
               </h3>
               <p className="text-xs text-slate-500">
-                Corong retensi peserta dari pendaftaran awal hingga menyelesaikan masa program.
+                Alur resmi 5 tahapan AIESEC: Applied, Accepted, Approved, Realized, dan Finished.
               </p>
             </div>
             <span className="text-xs font-bold text-[#037EF3] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
@@ -208,7 +222,7 @@ export default function Overview({ data, isLoading }) {
           <div className="my-4 flex flex-col items-center space-y-1.5 w-full">
             {funnelSteps.map((step, idx) => (
               <React.Fragment key={idx}>
-                {/* Funnel Stage Bar (Centered Trapezoid Container) */}
+                {/* Funnel Stage Bar */}
                 <div
                   style={{ width: `${step.widthPercent}%` }}
                   className="transition-all duration-500 min-w-[280px]"
@@ -246,15 +260,19 @@ export default function Overview({ data, isLoading }) {
                   </div>
                 </div>
 
-                {/* Funnel Downward Connector with Drop-off Callout */}
+                {/* Downward Connector with Callout */}
                 {idx < funnelSteps.length - 1 && (
                   <div className="flex items-center justify-center gap-2 py-0.5">
                     <div className="h-3 w-0.5 bg-slate-300"></div>
-                    {step.dropOff !== null && step.dropOff > 0 && (
+                    {step.dropOff !== null && step.dropOff > 0 ? (
                       <span className="text-[9px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-200">
                         -{formatPercent(step.dropOff)} Penurunan
                       </span>
-                    )}
+                    ) : idx === 3 ? (
+                      <span className="text-[9px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200" title="Host LC langsung menandai Finished pada proyek semi-remote tanpa mencatat tanggal Realized">
+                        Fase Penyelesaian Program
+                      </span>
+                    ) : null}
                     <div className="h-3 w-0.5 bg-slate-300"></div>
                   </div>
                 )}
@@ -262,10 +280,14 @@ export default function Overview({ data, isLoading }) {
             ))}
           </div>
 
-          <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
-            <span>Formula konversi: Akumulasi nilai boolean is_applied s/d is_finished</span>
-            <span className="font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
-              Penyusutan terbesar: Applied ke Accepted (-97,9%)
+          {/* Catatan Transparansi Data CRM */}
+          <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-2">
+            <div className="flex items-center gap-1.5 text-slate-600">
+              <Info className="w-3.5 h-3.5 text-[#037EF3] shrink-0" />
+              <span>Realized (418) mencatat stempel tanggal keberangkatan fisik; Finished (642) mencakup proyek semi-remote.</span>
+            </div>
+            <span className="font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200 text-[10px]">
+              Drop-off terbesar: Applied ke Accepted (-97,9%)
             </span>
           </div>
         </div>
