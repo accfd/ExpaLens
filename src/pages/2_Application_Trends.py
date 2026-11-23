@@ -10,7 +10,7 @@ import plotly.express as px
 import pandas as pd
 from config import (
     PAGE_CONFIG, AIESEC_BLUE, MIDNIGHT_NAVY, CORAL_RED, DARK_TEAL, TEACHER_ORANGE,
-    EXPALENS_PLOTLY_THEME, PRODUCT_COLOR_MAP
+    EXPALENS_PLOTLY_THEME, PRODUCT_COLOR_MAP, apply_plot_theme
 )
 from utils import load_css, render_global_sidebar
 from db_connection import (
@@ -59,8 +59,8 @@ if not trend_df.empty:
         marker=dict(size=6, color=MIDNIGHT_NAVY),
         hovertemplate="<b>%{x|%B %Y}</b><br>Total Aplikasi: %{y:,}<extra></extra>"
     ))
-    fig_line.update_layout(
-        **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+    apply_plot_theme(
+        fig_line,
         height=340,
         xaxis_title="Garis Waktu Bulanan",
         yaxis_title="Jumlah Pendaftaran (Aplikasi)"
@@ -96,8 +96,8 @@ with col_mid1:
             mode="lines", stackgroup="one", name="Rejected",
             line=dict(color="#EF4444", width=1), fillcolor="rgba(239, 68, 68, 0.5)"
         ))
-        fig_area.update_layout(
-            **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+        apply_plot_theme(
+            fig_area,
             height=320,
             xaxis_title="Periode",
             yaxis_title="Volume Peserta"
@@ -128,8 +128,8 @@ with col_mid2:
                 text=sub["total_apps"],
                 textposition="auto"
             ))
-        fig_prod_year.update_layout(
-            **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+        apply_plot_theme(
+            fig_prod_year,
             barmode="group",
             height=320,
             xaxis_title="Tahun Pendaftaran",
@@ -173,8 +173,8 @@ with col_bot1:
             aspect="auto",
             text_auto=True
         )
-        fig_heat.update_layout(
-            **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+        apply_plot_theme(
+            fig_heat,
             height=340
         )
         st.plotly_chart(fig_heat, use_container_width=True)
@@ -199,8 +199,8 @@ with col_bot2:
             color_discrete_sequence=[AIESEC_BLUE, DARK_TEAL, TEACHER_ORANGE],
             labels={"product_name": "Program", "total_apps": "Total Aplikasi", "duration_type": "Tipe Durasi"}
         )
-        fig_dur.update_layout(
-            **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+        apply_plot_theme(
+            fig_dur,
             height=340
         )
         st.plotly_chart(fig_dur, use_container_width=True)

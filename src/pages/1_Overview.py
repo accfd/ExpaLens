@@ -10,7 +10,7 @@ import plotly.express as px
 import pandas as pd
 from config import (
     PAGE_CONFIG, AIESEC_BLUE, MIDNIGHT_NAVY, CORAL_RED, DARK_TEAL, TEACHER_ORANGE,
-    EXPALENS_PLOTLY_THEME, PRODUCT_COLOR_MAP
+    EXPALENS_PLOTLY_THEME, PRODUCT_COLOR_MAP, apply_plot_theme
 )
 from utils import load_css, render_global_sidebar, format_number, format_percent, format_days
 from db_connection import (
@@ -109,8 +109,8 @@ with col_funnel:
         connector=dict(line=dict(color="#E2E8F0", width=1.5)),
         textfont=dict(family="Lato, sans-serif", size=13, color="#FFFFFF")
     ))
-    fig_funnel.update_layout(
-        **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+    apply_plot_theme(
+        fig_funnel,
         height=245,
         margin=dict(t=10, b=10, l=110, r=20)
     )
@@ -210,8 +210,8 @@ with col_chart_left:
             textposition="outside",
             textfont=dict(size=11, family="Lato, sans-serif")
         ))
-        fig_clustered.update_layout(
-            **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+        apply_plot_theme(
+            fig_clustered,
             barmode="group",
             height=320,
             xaxis_title="Program Pertukaran",
@@ -264,8 +264,8 @@ with col_chart_right:
             }
         }
     ))
-    fig_gauge.update_layout(
-        **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+    apply_plot_theme(
+        fig_gauge,
         height=290,
         margin=dict(t=25, b=20, l=30, r=30)
     )

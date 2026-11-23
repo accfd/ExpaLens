@@ -8,7 +8,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
-from config import PAGE_CONFIG, AIESEC_BLUE, MIDNIGHT_NAVY, EXPALENS_PLOTLY_THEME
+from config import PAGE_CONFIG, AIESEC_BLUE, MIDNIGHT_NAVY, EXPALENS_PLOTLY_THEME, apply_plot_theme
 from utils import load_css, render_global_sidebar, format_number
 from db_connection import get_destinations_map_data, get_host_lc_drilldown
 
@@ -68,8 +68,8 @@ if not map_df.empty:
         showcountries=True,
         countrycolor="#E2E8F0"
     )
-    fig_map.update_layout(
-        **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+    apply_plot_theme(
+        fig_map,
         height=420,
         margin=dict(t=10, b=10, l=10, r=10)
     )
@@ -99,8 +99,8 @@ with col_d1:
             labels={"total_apps": "Total Aplikasi", "host_mc": "Negara Tujuan"}
         )
         fig_top_mc.update_traces(texttemplate="%{x:,}", textposition="outside")
-        fig_top_mc.update_layout(
-            **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+        apply_plot_theme(
+            fig_top_mc,
             height=400,
             showlegend=False
         )

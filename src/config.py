@@ -79,6 +79,16 @@ EXPALENS_PLOTLY_THEME = {
     )
 }
 
+def apply_plot_theme(fig, **custom_kwargs):
+    """
+    Menerapkan tema resmi ExpaLens ke objek Figure Plotly tanpa memicu
+    konflik duplikasi keyword argument (misalnya margin atau height).
+    """
+    theme_dict = EXPALENS_PLOTLY_THEME["layout"].to_plotly_json().copy()
+    theme_dict.update(custom_kwargs)
+    fig.update_layout(**theme_dict)
+    return fig
+
 # ==============================================================================
 # 4. KONFIGURASI HALAMAN STREAMLIT
 # ==============================================================================

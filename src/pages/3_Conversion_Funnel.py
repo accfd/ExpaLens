@@ -10,7 +10,7 @@ import plotly.express as px
 import pandas as pd
 from config import (
     PAGE_CONFIG, AIESEC_BLUE, MIDNIGHT_NAVY, CORAL_RED, DARK_TEAL, TEACHER_ORANGE,
-    EXPALENS_PLOTLY_THEME, PRODUCT_COLOR_MAP
+    EXPALENS_PLOTLY_THEME, PRODUCT_COLOR_MAP, apply_plot_theme
 )
 from utils import load_css, render_global_sidebar, format_days, format_number, format_percent
 from db_connection import (
@@ -103,8 +103,8 @@ with col_mid1:
         marker=dict(color=[AIESEC_BLUE, "#0A8EA0", "#30C39E", "#F48924", "#10B981"]),
         connector=dict(line=dict(color="#CACCD1", width=1))
     ))
-    fig_conv.update_layout(
-        **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+    apply_plot_theme(
+        fig_conv,
         height=340,
         margin=dict(t=20, b=20, l=100, r=20)
     )
@@ -136,8 +136,8 @@ with col_mid2:
                 textposition="auto"
             ))
             
-        fig_time.update_layout(
-            **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+        apply_plot_theme(
+            fig_time,
             barmode="group",
             height=340,
             xaxis_title="Program Pertukaran",
@@ -170,8 +170,8 @@ if not speed_df.empty:
         }
     )
     fig_scatter.update_traces(textposition="top center", marker=dict(opacity=0.85, line=dict(width=1, color="#0A2540")))
-    fig_scatter.update_layout(
-        **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+    apply_plot_theme(
+        fig_scatter,
         height=380,
         xaxis_title="Kecepatan Respon / Seleksi Host (Hari)",
         yaxis_title="Volume Aplikasi Terdaftar"

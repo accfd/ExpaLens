@@ -10,7 +10,7 @@ import plotly.express as px
 import pandas as pd
 from config import (
     PAGE_CONFIG, AIESEC_BLUE, MIDNIGHT_NAVY, CORAL_RED, DARK_TEAL, TEACHER_ORANGE,
-    EXPALENS_PLOTLY_THEME, PRODUCT_COLOR_MAP
+    EXPALENS_PLOTLY_THEME, PRODUCT_COLOR_MAP, apply_plot_theme
 )
 from utils import load_css, render_global_sidebar, get_recommendation_action
 from db_connection import get_rejections_ranking, get_rejections_by_product
@@ -57,8 +57,8 @@ with col_r1:
             labels={"Count": "Jumlah Kasus Penolakan", "Reason": "Alasan Penolakan"}
         )
         fig_reason.update_traces(texttemplate="%{x:,}", textposition="outside")
-        fig_reason.update_layout(
-            **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+        apply_plot_theme(
+            fig_reason,
             height=420,
             showlegend=False,
             yaxis=dict(tickfont=dict(size=11))
@@ -97,8 +97,8 @@ with col_r2:
                 textposition="auto"
             ))
             
-        fig_prod_reasons.update_layout(
-            **EXPALENS_PLOTLY_THEME["layout"].to_plotly_json(),
+        apply_plot_theme(
+            fig_prod_reasons,
             barmode="group",
             height=420,
             xaxis=dict(tickangle=-25, tickfont=dict(size=10)),
