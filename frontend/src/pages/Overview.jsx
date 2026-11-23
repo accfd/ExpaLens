@@ -94,11 +94,11 @@ export default function Overview({ data, isLoading }) {
       stageLabel: 'Penandatanganan Kontrak',
       count: totalApproved,
       retention: totalApps > 0 ? (totalApproved / totalApps) * 100 : 0,
-      widthPercent: 60,
+      widthPercent: 62,
       bgColor: 'bg-[#F48924]',
       textColor: 'text-[#F48924]',
       borderColor: 'border-orange-300',
-      dropOff: totalApproved > totalRealized ? ((totalApproved - totalRealized) / totalApproved) * 100 : null
+      dropOff: totalApproved > 0 ? ((totalApproved - totalRealized) / totalApproved) * 100 : null
     },
     {
       stageNumber: 4,
@@ -118,7 +118,7 @@ export default function Overview({ data, isLoading }) {
       stageLabel: 'Menyelesaikan Program',
       count: totalFinished,
       retention: totalApps > 0 ? (totalFinished / totalApps) * 100 : 0,
-      widthPercent: 38,
+      widthPercent: 36,
       bgColor: 'bg-emerald-600',
       textColor: 'text-emerald-600',
       borderColor: 'border-emerald-300',
