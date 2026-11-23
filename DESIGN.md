@@ -1,98 +1,100 @@
 # Design System & UI/UX Guidelines: ExpaLens
+## Berdasarkan AIESEC Brand Guidelines (Blue Book) & Executive Dashboard UI
 
 **Sistem Business Intelligence & Analytics Kinerja Outgoing Exchange**  
 **Organisasi:** AIESEC in Universitas Andalas (UNAND)  
 **Departemen:** Outgoing Exchange (OGX)  
+**Dokumen Referensi Brand:** *AIESEC Brand Guidelines [Blue Book] Global Toolkit*  
 **Warna Utama:** AIESEC Blue (`#037EF3`)  
-**Versi Dokumen:** 1.0  
+**Font Utama:** Lato (Official AIESEC Font)  
+**Versi Dokumen:** 2.0 (Blue Book Aligned)  
 **Tanggal:** 23 November 2026  
 
 ---
 
-## 1. Filosofi Desain & Identitas Visual
+## 1. Filosofi Desain & Identitas Brand (AIESEC Blue Book)
 
-ExpaLens dirancang dengan pendekatan **Executive Modern Dashboard**, memadukan identitas resmi organisasi pemuda global **AIESEC** dengan prinsip antarmuka analitik modern: *Clean, High-Contrast, Data-Dense yet Breathable, dan Action-Oriented*.
+Berdasarkan *AIESEC Brand Guidelines [Blue Book]* (Bab 3.2 – Brand Attributes & Voice), seluruh manifestasi visual AIESEC harus mencerminkan lima atribut utama:
+* **Dynamic:** Menggambarkan pemuda yang aktif, fleksibel, dan terus bergerak.
+* **Impactful:** Berfokus pada hasil nyata, perubahan positif, dan kepemimpinan.
+* **Global:** Mewakili jejaring pemuda di lebih dari 120 negara di seluruh dunia.
+* **Youthful:** Segar, modern, bersih, dan bersemangat.
+* **Passionate:** Memancarkan antusiasme tinggi dalam setiap interaksi dan pengalaman.
 
-### 1.1 Prinsip Desain Utama
-1. **Human-Centric & Professional:** Tampilan yang ramah pengguna namun tetap berwibawa untuk kebutuhan rapat evaluasi dewan pengurus (*Executive Board*) dan pemangku kepentingan.
-2. **Visual Hierarchy yang Tegas:** Pemanfaatan kontras warna yang kuat untuk membedakan antara angka ringkasan utama (*Hero KPI*), grafik tren analitik, dan tabel detail transaksi.
-3. **Card-Based Modular Layout:** Seluruh visualisasi, metrik, dan tabel dibungkus dalam kontainer kartu (*cards*) dengan sudut membulat (*rounded corners*) dan bayangan lembut (*subtle shadows*), mengadopsi struktur dashboard eksekutif modern (seperti pada referensi layout dashboard).
-4. **Zero Visual Noise:** Meminimalkan garis batas yang kaku, mengganti warna latar belakang abu-abu berat dengan warna putih bersih dan latar *off-white* netral, serta memastikan teks selalu mudah dibaca (*accessible contrast ratio* WCAG AA).
+Dalam konteks sistem Business Intelligence **ExpaLens**, nilai-nilai ini diwujudkan melalui antarmuka **Executive Modern Dashboard**: tata letak berbasis kartu (*card-based layout*) yang terstruktur rapi, pemanfaatan hierarki visual kontras tinggi, keterbacaan data numerik yang tajam, serta konsistensi 100% terhadap palet warna dan tipografi resmi *AIESEC Blue Book*.
+
+> **Golden Rule AIESEC Blue Book (Page 14):**  
+> *"If you are not sure what color to choose, make it AIESEC Blue."*
 
 ---
 
-## 2. Palet Warna Resmi (AIESEC Brand Color Palette)
+## 2. Palet Warna Resmi AIESEC (Official Color Swatch)
 
-Sistem warna ExpaLens berpusat pada **AIESEC Blue (`#037EF3`)** yang dikombinasikan dengan warna aksen gelap untuk kontras eksekutif, warna latar lembut untuk kartu metrik, serta palet warna khas program pertukaran AIESEC (GV, GTa, GTe).
+Sistem warna ExpaLens mengadopsi secara ketat **Official Color Swatch** yang tercantum pada *AIESEC Brand Guidelines [Blue Book]* Halaman 14, dipadukan dengan warna netral untuk dashboard analitik:
 
-### 2.1 Warna Utama & Turunan (Primary & Accents)
+### 2.1 Palet Inti (AIESEC Official Swatch)
 
-| Nama Token Warna | Kode HEX | Preview | Peruntukan & Kegunaan |
+| Nama Warna (Blue Book) | Kode HEX | Nilai RGB | Preview | Peruntukan & Pedoman Penggunaan |
+| :--- | :---: | :---: | :---: | :--- |
+| **AIESEC Blue** | `#037EF3` | `3, 126, 243` | ![#037EF3](https://via.placeholder.com/15/037EF3/000000?text=+) | **Warna Utama AIESEC.** Digunakan pada tombol aksi primer, garis tren utama Plotly, indikator aktif, aksen navigasi, dan elemen fokus. |
+| **AIESEC Dark Teal** | `#0A8EA0` | `10, 142, 160` | ![#0A8EA0](https://via.placeholder.com/15/0A8EA0/000000?text=+) | **Resmi untuk program magang & mitra perusahaan (*Global Talent / GTa*).** Digunakan pada bar chart GTa dan elemen analitik korporat. |
+| **AIESEC Red / Orange** | `#F85A40` | `248, 90, 64` | ![#F85A40](https://via.placeholder.com/15/F85A40/000000?text=+) | **Resmi untuk program kesukarelawanan & mitra NGO (*Global Volunteer / GV*).** Digunakan pada bar chart GV dan penanda sosial SDGs. |
+| **AIESEC Orange** | `#F48924` | `244, 137, 36` | ![#F48924](https://via.placeholder.com/15/F48924/000000?text=+) | **Resmi untuk program edukasi (*Global Teacher / GTe* & YouthSpeak).** Digunakan pada bar chart GTe dan indikator pembelajaran. |
+| **AIESEC Teal** | `#30C39E` | `48, 195, 158` | ![#30C39E](https://via.placeholder.com/15/30C39E/000000?text=+) | Mewakili inovasi dan kewirausahaan global. Digunakan untuk variasi aksen positif dan sub-kategori. |
+| **AIESEC Yellow** | `#FFC845` | `255, 200, 69` | ![#FFC845](https://via.placeholder.com/15/FFC845/000000?text=+) | Digunakan untuk status perhatian (*warning*), penanda kuartal, atau sorotan khusus. |
+| **AIESEC Light Gray** | `#F3F4F7` | `243, 244, 247` | ![#F3F4F7](https://via.placeholder.com/15/F3F4F7/000000?text=+) | **Warna Latar Belakang Kanvas.** Memberikan suasana bersih, lembut di mata, dan modern untuk canvas aplikasi. |
+| **AIESEC Mid Gray** | `#CACCD1` | `202, 204, 209` | ![#CACCD1](https://via.placeholder.com/15/CACCD1/000000?text=+) | Garis batas (*border*) kartu, pemisah kolom (*dividers*), dan garis kisi sekunder. |
+| **AIESEC Dark Gray** | `#52565E` | `82, 86, 94` | ![#52565E](https://via.placeholder.com/15/52565E/000000?text=+) | Teks sekunder, label sumbu grafik, satuan metrik, dan keterangan tabel. |
+
+---
+
+### 2.2 Warna Tambahan untuk Kebutuhan Dashboard Eksekutif
+
+Untuk menghadirkan kedalaman visual kontras tinggi sesuai referensi antarmuka dashboard eksekutif:
+
+| Nama Token Warna | Kode HEX | Nilai RGB | Peruntukan Visual |
 | :--- | :---: | :---: | :--- |
-| **AIESEC Blue (Primary)** | `#037EF3` | ![#037EF3](https://via.placeholder.com/15/037EF3/000000?text=+) | Warna identitas utama AIESEC, tombol aksi primer, garis tren utama Plotly, indikator aktif, dan aksen visual penting. |
-| **Midnight Navy (Hero Dark)** | `#0A2540` | ![#0A2540](https://via.placeholder.com/15/0A2540/000000?text=+) | Kartu metrik utama (*Hero Card / Dark Accent Container*), teks judul halaman, dan header tabel navigasi eksekutif. |
-| **Deep Blue (Hover / Shade)** | `#0263C4` | ![#0263C4](https://via.placeholder.com/15/0263C4/000000?text=+) | Status *hover* pada tombol, bar charts interaktif, dan status fokus elemen input. |
-| **Ice Blue Tint (Light Surface)** | `#F0F6FF` | ![#F0F6FF](https://via.placeholder.com/15/F0F6FF/000000?text=+) | Latar belakang kartu metrik sekunder (*Sparkline Metric Cards*), filter aktif, dan *callout box* informasi. |
-| **Soft Blue Border** | `#D4E5FB` | ![#D4E5FB](https://via.placeholder.com/15/D4E5FB/000000?text=+) | Garis tepi (*border*) kartu metrik ringan dan pembatas antar-komponen visual. |
+| **Midnight Navy (Hero Dark)** | `#0A2540` | `10, 37, 64` | Kontainer gelap kartu metrik utama (*Hero Card*), judul header besar, dan tooltip hover Plotly. |
+| **Ice Blue Tint** | `#F0F6FF` | `240, 246, 255` | Latar kartu metrik ringan, hover baris tabel, dan wadah rekomendasi taktis. |
+| **Success Green** | `#10B981` | `16, 185, 129` | Status peserta lulus (*Finished*), delta positif pertumbuhan YoY (+%). |
+| **Critical Red** | `#EF4444` | `239, 68, 68` | Status aplikasi ditolak (*Rejected*), delta penurunan performa (-%). |
+| **Pure White** | `#FFFFFF` | `255, 255, 255` | Latar kartu visualisasi grafik Plotly dan bilah samping (*Sidebar*). |
+| **Heading Black** | `#0F172A` | `15, 23, 42` | Teks judul utama dan nilai numerik besar (Slate-900). |
 
 ---
 
-### 2.2 Warna Lini Produk AIESEC (Official Product Colors)
+## 3. Tipografi Resmi AIESEC (Lato Typography System)
 
-Untuk menjaga konsistensi dengan identitas produk global AIESEC, visualisasi program wajib menggunakan kode warna baku berikut:
+Sesuai **Blue Book Halaman 15**, **`Lato`** adalah font resmi (*official font*) AIESEC yang wajib digunakan pada seluruh materi komunikasi, situs web, dan aplikasi resmi AIESEC.
 
-| Produk Pertukaran | Kode HEX | Preview | Karakter & Kegunaan Visual |
+```
++------------------------------------------------------------------------------------+
+|                         AIESEC OFFICIAL FONT: LATO                                 |
++------------------------------------------------------------------------------------+
+| Lato Light (300)      : Untuk label kecil, sub-keterangan, teks pendukung          |
+| Lato Regular (400)    : Untuk isi teks body, penjelasan tabel, deskripsi narasi    |
+| Lato Bold (700)       : Untuk judul kartu, label header tabel, nama metrik         |
+| Lato Black/Heavy (900): Untuk angka numerik KPI besar (Hero Numbers) & Judul H1   |
++------------------------------------------------------------------------------------+
+```
+
+### 3.1 Skala Ukuran Teks (Type Hierarchy Scale)
+
+| Tingkatan Teks | Ukuran Font | Berat (Weight) | Contoh Penggunaan pada ExpaLens |
 | :--- | :---: | :---: | :--- |
-| **Global Volunteer (GV)** | `#F85A40` | ![#F85A40](https://via.placeholder.com/15/F85A40/000000?text=+) | *AIESEC Coral Red*: Mewakili kerelawanan sosial berdampak (SDGs). Digunakan pada bar chart GV dan penanda kategori GV. |
-| **Global Talent (GTa)** | `#0CB9C1` | ![#0CB9C1](https://via.placeholder.com/15/0CB9C1/000000?text=+) | *AIESEC Teal Cyan*: Mewakili profesionalisme dan magang korporat global. Digunakan pada bar chart GTa dan elemen GTa. |
-| **Global Teacher (GTe)** | `#F48924` | ![#F48924](https://via.placeholder.com/15/F48924/000000?text=+) | *AIESEC Gold Orange*: Mewakili pendidikan formal dan pengajaran internasional. Digunakan pada bar chart GTe. |
+| **Page Title (H1)** | 28px – 32px | Lato Black (900) | Judul Halaman (cth: "Welcome back, OGX Team", "Ringkasan Utama (Overview)") |
+| **Section Subtitle** | 14px – 15px | Lato Regular (400) | Paragraf penjelasan peran halaman di bawah judul utama |
+| **Hero KPI Value** | 36px – 40px | Lato Black (900) | Angka metrik utama pada Hero Card gelap (cth: "75,520", "64.2%") |
+| **Standard KPI Value**| 24px – 28px | Lato Bold (700) | Angka metrik pada kartu putih standar (cth: "14.5 Hari", "3,703") |
+| **Card / Chart Title**| 16px – 18px | Lato Bold (700) | Judul kontainer grafik Plotly (cth: "Perkembangan Jumlah Pendaftaran") |
+| **Body & Table Text** | 13px – 14px | Lato Regular (400) | Isi rekaman tabel data, label sumbu grafik, dan penjelasan rekomendasi |
+| **Badge / Caption**   | 11px – 12px | Lato Bold (700) | Tag status, delta persentase YoY (+14.2%), dan legenda kecil |
 
 ---
 
-### 2.3 Warna Semantik & Status (Feedback & Funnel Stages)
+## 4. Bedah Arsitektur Komponen UI (Executive Grid Layout)
 
-| Status Analitik | Kode HEX | Preview | Kegunaan pada Funnel & Notifikasi |
-| :--- | :---: | :---: | :--- |
-| **Success / Finished** | `#10B981` | ![#10B981](https://via.placeholder.com/15/10B981/000000?text=+) | Peserta lulus program (*Finished*), delta positif YoY, status aman. |
-| **Approved / In Progress** | `#037EF3` | ![#037EF3](https://via.placeholder.com/15/037EF3/000000?text=+) | Peserta disetujui administrasi (*Approved*), status konfirmasi. |
-| **Accepted / Pending** | `#F59E0B` | ![#F59E0B](https://via.placeholder.com/15/F59E0B/000000?text=+) | Peserta diterima tahap awal (*Accepted*), peringatan durasi menengah. |
-| **Rejected / Critical** | `#EF4444` | ![#EF4444](https://via.placeholder.com/15/EF4444/000000?text=+) | Peserta ditolak (*Rejected*), delta negatif YoY, peringatan kegagalan. |
-
----
-
-### 2.4 Warna Netral & Latar Belakang (Neutrals & Backgrounds)
-
-| Elemen Antarmuka | Kode HEX | Kegunaan |
-| :--- | :---: | :--- |
-| **Main Canvas Background** | `#F8FAFC` | Latar belakang seluruh halaman aplikasi (Slate-50: bersih, nyaman di mata). |
-| **Card / Surface Background** | `#FFFFFF` | Latar belakang kontainer kartu visualisasi, tabel, dan grafik Plotly. |
-| **Sidebar Background** | `#FFFFFF` | Latar bilah samping dengan pembatas border kanan `#E2E8F0`. |
-| **Text Primary (Headings)** | `#0F172A` | Warna judul halaman, angka metrik besar, dan label utama (Slate-900). |
-| **Text Secondary (Subtitles)** | `#475569` | Deskripsi sub-judul, teks panduan, dan nama kolom tabel (Slate-600). |
-| **Text Muted / Captions** | `#94A3B8` | Label tanggal, satuan waktu, dan *footnote* grafik (Slate-400). |
-| **Card Borders / Dividers** | `#E2E8F0` | Garis tepi kontainer kartu standar (Slate-200). |
-
----
-
-## 3. Tipografi & Skala Hirarki Teks
-
-ExpaLens menggunakan font standar sans-serif modern (`Inter`, `Plus Jakarta Sans`, atau `system-ui`) yang memiliki keterbacaan tinggi pada angka numerik:
-
-| Tingkatan Teks | Ukuran Font | Berat (Weight) | Contoh Penggunaan |
-| :--- | :---: | :---: | :--- |
-| **Page Title (H1)** | 28px – 32px | Bold (700) | Judul Halaman (cth: "Welcome back, Olivia", "Ringkasan Utama (Overview)") |
-| **Section Subtitle** | 14px – 15px | Regular (400) | Deskripsi konteks di bawah judul halaman |
-| **Hero KPI Value** | 32px – 38px | ExtraBold (800) | Angka metrik utama pada Hero Card gelap (cth: "75,520", "64.2%") |
-| **Card KPI Value** | 24px – 28px | Bold (700) | Angka metrik pada kartu standar (cth: "1,240", "14.5 Hari") |
-| **Chart / Card Title** | 16px – 18px | SemiBold (600) | Judul grafik kontainer kartu (cth: "Monthly Application Trend") |
-| **Body / Table Text** | 13px – 14px | Regular (400) | Isi teks tabel, label sumbu grafik, dan penjelasan rekomendasi |
-| **Badge / Caption** | 11px – 12px | Medium (500) | Tag status, delta persentase YoY (+12.4%), dan legenda kecil |
-
----
-
-## 4. Bedah Arsitektur Komponen UI (Executive Layout Structure)
-
-Mengacu pada komposisi antarmuka referensi yang terbukti efektif, setiap halaman dashboard ExpaLens disusun menggunakan grid terstruktur:
+Mengacu pada referensi dashboard eksekutif yang dibagikan, antarmuka ExpaLens menggunakan sistem grid modular berbasis kartu (*card-based modular layout*):
 
 ```
 +----------------------------------------------------------------------------------------------------+
@@ -102,112 +104,110 @@ Mengacu pada komposisi antarmuka referensi yang terbukti efektif, setiap halaman
 +----------------------------------------------------------------------------------------------------+
 |                                                                                                    |
 | +-----------------------------+  +---------------------------------------------------------------+ |
-| | [LEFT COLUMN: 30% WIDTH]    |  | [RIGHT COLUMN: 70% WIDTH]                                     | |
+| | [KOLOM KIRI: 30% LEBAR]     |  | [KOLOM KANAN: 70% LEBAR]                                      | |
 | |                             |  |                                                               | |
 | | +-------------------------+ |  | +-----------------------------------------------------------+ | |
 | | | HERO METRIC CARD (DARK) | |  | | PRIMARY ANALYTIC CARD (WHITE CONTAINER)                   | | |
-| | | Warna: #0A2540 (Navy)   | |  | | Total Nilai / Volume: 75,520                              | | |
-| | | Nilai Besar: 75,520 Apps| |  | | Grafik Garis Utama / Funnel Interaktif (AIESEC Blue)      | | |
-| | | Breakdown Mini Table:   | |  | | Legenda & Kontrol di Atas                                 | | |
-| | | - GV   : 42,150         | |  | +-----------------------------------------------------------+ | |
-| | | - GTa  : 21,300         | |  |                                                               | |
-| | | - GTe  : 12,070         | |  | +--------------------+ +--------------------+ +-----------------+ | |
+| | | Latar: #0A2540 (Navy)   | |  | | Total Volume: 75,520 Pendaftar                             | | |
+| | | Angka: 75,520 (Putih)   | |  | | Grafik Garis Utama / Funnel Interaktif (AIESEC Blue)      | | |
+| | | Tabel Mini Breakdown:   | |  | | Legenda & Kontrol Horizontal di Kanan Atas                 | | |
+| | | - GV   : 42,150 (#F85A40| |  +-----------------------------------------------------------+ | |
+| | | - GTa  : 21,300 (#0A8EA0| |  |                                                               | |
+| | | - GTe  : 12,070 (#F48924| |  | +--------------------+ +--------------------+ +-----------------+ | |
 | | +-------------------------+ |  | | SPARKLINE METRIC 1 | | SPARKLINE METRIC 2 | | SPARKLINE METRIC| | |
 | |                             |  | | Accepted Rate      | | Avg Process Time   | | Finish Rate     | | |
 | | +-------------------------+ |  | | 64.2%              | | 14.2 Hari          | | 52.8%           | | |
 | | | DUAL KPI CARDS          | |  | | [Mini Sparkline]   | | [Mini Sparkline]   | | [Mini Sparkline]| | |
-| | | YoY Growth: +14.2%      | |  | +--------------------+ +--------------------+ +-----------------+ | |
-| | | Rejection Rate: 28.5%   | |  |                                                               | |
+| | | YoY: +14.2% (Hijau)     | |  | +--------------------+ +--------------------+ +-----------------+ | |
+| | | Finish Rate: 64.2%      | |  |                                                               | |
 | | +-------------------------+ |  | +-----------------------------------------------------------+ | |
 | |                             |  | | DETAILED DATA MATRIX / TABLE CARD                         | | |
 | | +-------------------------+ |  | | Tabel Rincian Data Interaktif (Sticky Header)             | | |
-| | | SIDEBAR / BREAKDOWN BAR | |  | | Search, Filter, Sortable Columns, Clean Zebra Rows         | | |
-| | | Komposisi Hari / Produk | |  | +-----------------------------------------------------------+ | |
+| | | GAUGE / BREAKDOWN BAR   | |  | | Search, Filter, Sortable Columns, Clean Zebra Rows         | | |
+| | | Indikator Keberhasilan  | |  | +-----------------------------------------------------------+ | |
 | | +-------------------------+ |  +---------------------------------------------------------------+ |
 | +-----------------------------+                                                                    |
 +----------------------------------------------------------------------------------------------------+
 ```
 
-### 4.1 Spesifikasi Setiap Komponen
+### 4.1 Spesifikasi Detail Komponen
 
 #### 1. Header Section
-* **Struktur:** Menampilkan salam/judul halaman yang personal dan profesional (*"Welcome back, OGX Team"* atau nama halaman aktif), disertai satu paragraf penjelasan peran halaman tersebut.
-* **Styling:** Margin bawah 20px, font 28px bold warna `#0F172A`, deskripsi font 14px warna `#475569`.
+* **Konten:** Salam profesional (*"Welcome back, OGX Team"*), identitas Departemen Outgoing Exchange AIESEC in UNAND, dan penjelasan singkat konteks halaman aktif.
+* **Styling:** Latar transparan, margin bawah 24px, garis pembatas bawah tipis berwarna `#CACCD1` (AIESEC Mid Gray).
 
 #### 2. Hero Metric Card (Dark Container - Mirip Referensi Kiri Atas)
-* **Warna Latar:** Gradien gelap atau solid Midnight Navy (`#0A2540` / `#001F3F`).
-* **Warna Teks:** Putih (`#FFFFFF`) dengan label aksen Ice Blue (`#93C5FD`).
-* **Komposisi:**
-  * Label Atas: Nama Metrik Induk (misal: *"Total Applications"*).
-  * Nilai Utama: Font 36px ExtraBold putih (`75,520`).
-  * Mini Breakdown Table: Menampilkan tabel ringkasan 3 lini produk (GV, GTa, GTe) dengan volume saat ini vs tahun sebelumnya.
-* **Border Radius:** 16px, padding 24px, bayangan lembut `0 10px 15px -3px rgba(0,0,0,0.1)`.
+* **Warna Latar:** Midnight Navy (`#0A2540` / `#001F3F`).
+* **Warna Teks:** Angka putih (`#FFFFFF`), judul kecil berwarna AIESEC Blue muda (`#93C5FD`).
+* **Fitur Utama:** Angka total pendaftaran ukuran 38px Lato Black, disertai **Mini Breakdown Table** di dalam kartu yang memisahkan volume 3 produk (GV `#F85A40`, GTa `#0A8EA0`, GTe `#F48924`) lengkap dengan perbandingan tahun lalu.
+* **Border Radius:** 16px, padding 24px, bayangan halus `0 10px 15px -3px rgba(10, 37, 64, 0.2)`.
 
-#### 3. Sparkline Metric Cards (Deretan Kartu Metrik dengan Grafik Mini)
-* **Warna Latar:** Putih (`#FFFFFF`) atau Ice Blue Tint (`#F0F6FF`).
-* **Komposisi:**
-  * Judul metrik kecil (13px, `#475569`).
-  * Nilai metrik tebal (26px, warna hijau semantik `#10B981` atau AIESEC Blue `#037EF3`).
-  * Grafik sparkline mini di bagian bawah kartu (garis tren mini tanpa sumbu untuk visualisasi dinamika 6 bulan terakhir).
-* **Border Radius:** 12px, border tipis `#E2E8F0` atau `#D4E5FB`.
+#### 3. Sparkline Metric Cards (Deretan Kartu Metrik dengan Garis Tren Mini)
+* **Warna Latar:** Putih murni (`#FFFFFF`) dengan border halus `#CACCD1`.
+* **Fitur Utama:** Angka metrik tebal 26px, label kecil 13px warna `#52565E`, dan grafik sparkline mini di bagian bawah kartu untuk memperlihatkan arah tren 6 bulan terakhir tanpa sumbu koordinat yang mengganggu.
 
 #### 4. Primary Analytic Chart Container
-* **Warna Latar:** Putih murni (`#FFFFFF`).
-* **Header Kontainer:** Judul grafik di kiri atas (16px semi-bold), legenda interaktif horizontal di kanan atas.
-* **Area Visual:** Canvas Plotly interaktif dengan kurva halus (*spline smoothing*), hover tooltip kustom berwarna navy gelap dengan teks putih.
-* **Garis Kisi (Gridlines):** Abu-abu sangat tipis (`#F1F5F9`) pada sumbu Y, sumbu X tanpa garis vertikal berlebih.
+* **Warna Latar:** Putih murni (`#FFFFFF`), sudut membulat 16px, border halus `#CACCD1`.
+* **Header Kontainer:** Judul grafik tebal 16px warna `#0F172A` di kiri atas, legenda interaktif horizontal di kanan atas.
+* **Garis Kisi Grafik:** Latar transparan, sumbu X tanpa garis vertikal, sumbu Y dengan garis tipis `#F3F4F7`.
+* **Hover Tooltip:** Kotak informasi melayang berlatar Midnight Navy (`#0A2540`) dengan teks putih `Lato` 12px.
 
-#### 5. Detailed Data Matrix / Table Card
-* **Warna Latar:** Putih (`#FFFFFF`), sudut membulat 12px.
-* **Header Tabel:** Latar `#F8FAFC`, teks tebal 13px warna `#475569`, border bawah `#E2E8F0`.
-* **Baris Data:** Font 13px reguler, *hover effect* baris berwarna `#F0F6FF` (Ice Blue lembut), penataan teks angka rata kanan (*align right*) dan teks kategori rata kiri (*align left*).
+#### 5. Interactive Data Table Card
+* **Header Tabel:** Latar `#F3F4F7` (AIESEC Light Gray), teks Lato Bold 13px warna `#52565E`, border bawah `#CACCD1`.
+* **Isi Baris:** Font 13px Lato Regular, efek *zebra striping* halus, efek *hover* baris berwarna `#F0F6FF` (Ice Blue), angka rata kanan dan teks rata kiri.
 
 ---
 
 ## 5. Konfigurasi Tema Plotly Resmi (`expalens_theme`)
 
-Seluruh visualisasi Plotly pada 5 halaman dashboard wajib mengadopsi template konfigurasi Python berikut agar seragam dengan identitas AIESEC Blue:
+Seluruh visualisasi grafik Plotly pada kode Python wajib menggunakan konfigurasi tema baku berikut agar selaras dengan *AIESEC Blue Book*:
 
 ```python
 import plotly.graph_objects as go
 import plotly.express as px
 
-# PALET WARNA RESMI EXPALLENS
+# PALET WARNA RESMI AIESEC BLUE BOOK
 AIESEC_BLUE = "#037EF3"      # Biru Utama AIESEC
-MIDNIGHT_NAVY = "#0A2540"    # Navy Gelap untuk Judul & Hero Card
-ICE_BLUE_BG = "#F0F6FF"      # Ice Blue Latar Kartu
-BORDER_BLUE = "#D4E5FB"      # Garis Pembatas
-SLATE_TEXT = "#0F172A"       # Teks Utama
-MUTED_TEXT = "#64748B"       # Teks Sekunder
-GRID_COLOR = "#F1F5F9"       # Garis Kisi
+DARK_TEAL = "#0A8EA0"        # Resmi: Global Talent & Perusahaan (Blue Book hal. 14)
+CORAL_RED = "#F85A40"        # Resmi: Global Volunteer & NGO (Blue Book hal. 14)
+TEACHER_ORANGE = "#F48924"   # Resmi: Global Teacher & Edukasi (Blue Book hal. 14)
+AIESEC_TEAL = "#30C39E"      # AIESEC Teal (Blue Book hal. 14)
+AIESEC_YELLOW = "#FFC845"    # Aksen Kuning (Blue Book hal. 14)
 
-# WARNA PRODUK AIESEC
-PRODUCT_COLORS = {
-    "GV (New)": "#F85A40",   # AIESEC Red (Volunteer)
-    "GTa": "#0CB9C1",        # AIESEC Teal (Talent)
-    "GTe": "#F48924"         # AIESEC Orange (Teacher)
+# WARNA NETRAL RESMI BLUE BOOK
+CANVAS_BG = "#F3F4F7"        # Latar Utama (Blue Book hal. 14)
+BORDER_GRAY = "#CACCD1"      # Garis Batas / Mid Gray (Blue Book hal. 14)
+TEXT_MUTED = "#52565E"       # Teks Sekunder / Dark Gray (Blue Book hal. 14)
+MIDNIGHT_NAVY = "#0A2540"    # Navy Gelap untuk Hero Card & Tooltip
+HEADING_BLACK = "#0F172A"    # Teks Judul Utama
+
+# PEMETAAN WARNA PRODUK PERTUKARAN AIESEC
+PRODUCT_COLOR_MAP = {
+    "GV (New)": CORAL_RED,      # #F85A40 (Global Volunteer)
+    "GTa": DARK_TEAL,           # #0A8EA0 (Global Talent)
+    "GTe": TEACHER_ORANGE       # #F48924 (Global Teacher)
 }
 
-# TEMA GLOBAL PLOTLY
+# TEMA GLOBAL PLOTLY EXPALLENS
 EXPALENS_PLOTLY_THEME = {
     "layout": go.Layout(
-        font=dict(family="Inter, sans-serif", color=SLATE_TEXT),
+        font=dict(family="Lato, sans-serif", color=HEADING_BLACK),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        colorway=[AIESEC_BLUE, "#0CB9C1", "#F85A40", "#F48924", "#6366F1"],
+        colorway=[AIESEC_BLUE, DARK_TEAL, CORAL_RED, TEACHER_ORANGE, AIESEC_TEAL],
         margin=dict(t=40, r=20, b=40, l=40),
         xaxis=dict(
             showgrid=False,
-            linecolor="#E2E8F0",
-            tickfont=dict(size=12, color=MUTED_TEXT),
-            titlefont=dict(size=13, color=SLATE_TEXT)
+            linecolor=BORDER_GRAY,
+            tickfont=dict(size=12, color=TEXT_MUTED, family="Lato, sans-serif"),
+            titlefont=dict(size=13, color=HEADING_BLACK, family="Lato, sans-serif")
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor=GRID_COLOR,
+            gridcolor="#EBF0F5",
             linecolor="rgba(0,0,0,0)",
-            tickfont=dict(size=12, color=MUTED_TEXT),
-            titlefont=dict(size=13, color=SLATE_TEXT)
+            tickfont=dict(size=12, color=TEXT_MUTED, family="Lato, sans-serif"),
+            titlefont=dict(size=13, color=HEADING_BLACK, family="Lato, sans-serif")
         ),
         legend=dict(
             orientation="h",
@@ -215,12 +215,12 @@ EXPALENS_PLOTLY_THEME = {
             y=1.02,
             xanchor="right",
             x=1,
-            font=dict(size=12, color=MUTED_TEXT)
+            font=dict(size=12, color=TEXT_MUTED, family="Lato, sans-serif")
         ),
         hoverlabel=dict(
             bgcolor=MIDNIGHT_NAVY,
             font_size=12,
-            font_family="Inter, sans-serif",
+            font_family="Lato, sans-serif",
             font_color="#FFFFFF"
         )
     )
@@ -231,116 +231,120 @@ EXPALENS_PLOTLY_THEME = {
 
 ## 6. Blueprint Desain untuk 5 Halaman Dashboard
 
-Menerapkan struktur layout eksekutif (kolom kiri + kanan) pada kelima halaman dashboard yang telah dirumuskan pada PRD:
+Menerapkan tata letak eksekutif (kolom kiri 30% + kolom kanan 70%) pada kelima halaman dashboard sesuai **Tabel 3 Milestone 2 & PRD.md**:
 
 ### 6.1 Halaman 1: Ringkasan Utama (Overview)
-* **Header:** *"Welcome back, OGX Team"* | *"Tinjauan performa kumulatif program pertukaran AIESEC in UNAND periode 2021–2025."*
-* **Kolom Kiri (30%):**
+* **Header:** *"Welcome back, OGX Team"* | *"Tinjauan kinerja kumulatif pendaftaran program pertukaran AIESEC in UNAND periode 2021–2025."*
+* **Kolom Kiri (30% Width):**
   * **Hero Dark Card (`#0A2540`):**
     * Judul: *"Total Applications"*
-    * Angka Utama: `75,520`
-    * Breakdown Table: Menampilkan tabel ringkasan per program (GV: 42.150 | GTa: 21.300 | GTe: 12.070).
+    * Angka Utama: `75,520` (Lato Black 38px putih)
+    * Mini Breakdown Table: Volume pendaftaran per lini produk (GV: 42.150 `#F85A40` | GTa: 21.300 `#0A8EA0` | GTe: 12.070 `#F48924`).
   * **Dual KPI Cards:**
     * *YoY Growth Rate:* `+14.2%` (Badge Hijau `#10B981`)
-    * *Overall Process Time:* `14.5 Hari` (Aksen Biru `#037EF3`)
-  * **Visual No. 4:** *Finish Rate Gauge Chart* (Speedometer jarum Plotly dengan target ≥ 70%).
-* **Kolom Kanan (70%):**
-  * **Visual No. 2 (Primary Analytic Card):** *Overall Customer Funnel Chart* (Plotly Funnel bertingkat dari *Applied* hingga *Finished* berbalut AIESEC Blue).
-  * **Visual No. 3:** *Clustered Column Chart* capaian tahapan (*Accepted, Approved, Finished*) dikelompokkan berdasarkan warna produk AIESEC (Merah GV, Toska GTa, Oranye GTe).
+    * *Overall Process Time:* `14.5 Hari` (Aksen AIESEC Blue `#037EF3`)
+  * **No. 4: Gauge Chart:** Indikator kecepatan kelulusan (*Finish Rate %*) dengan jarum penunjuk Plotly dan zona target hijau ≥ 70%.
+* **Kolom Kanan (70% Width):**
+  * **No. 2: Funnel Chart (Primary Card):** *Overall Customer Funnel* bertingkat dari *Applied* hingga *Finished* berbalut warna utama AIESEC Blue (`#037EF3`).
+  * **No. 3: Clustered Column Chart:** Pencapaian tahapan seleksi (*Accepted, Approved, Finished*) dikelompokkan berdasarkan warna resmi produk AIESEC (Merah GV, Dark Teal GTa, Oranye GTe).
 
 ---
 
 ### 6.2 Halaman 2: Tren Pendaftaran (Application Trends)
-* **Header:** *"Application Trends & Seasonality Analysis"* | *"Analisis dinamika volume pendaftaran bulanan, status kelulusan, dan siklus musim puncak."*
-* **Kolom Kiri (30%):**
-  * **Hero Dark Card:** Total Pendaftar Tahun Berjalan vs Target Tahunan.
-  * **Visual No. 10 (100% Stacked Bar):** Proporsi preferensi peserta (*Semi-Remote vs On-site* dan *Short vs Long-term*).
-* **Kolom Kanan (70%):**
-  * **Visual No. 6 (Top Big Card - Line Chart):** Grafik garis tren pendaftaran bulanan (2021–2025) menggunakan kurva *spline* halus warna `#037EF3` dengan penanda titik puncak (*peak markers*).
-  * **Visual No. 7 & 8 (Dual Cards):**
-    * *Visual No. 7:* Stacked Area Chart sebaran status bulanan (*Accepted, Finished, Rejected*).
-    * *Visual No. 8:* Clustered Column Chart pertumbuhan volume tahunan per produk.
-  * **Visual No. 9 (Bottom Card):** *Seasonality Heatmap* (Matriks 12 Bulan × 5 Tahun dengan skala gradasi AIESEC Blue untuk mendeteksi *Summer Peak* dan *Winter Peak*).
+* **Header:** *"Application Trends & Seasonality Analysis"* | *"Analisis dinamika volume pendaftaran bulanan, komposisi status akhir, dan siklus musim puncak."*
+* **Kolom Kiri (30% Width):**
+  * **Hero Dark Card:** Total Pendaftar Tahun Kalender Terpilih vs Tahun Sebelumnya.
+  * **No. 10: 100% Stacked Bar Chart:** Perbandingan metode pelaksanaan (*Semi-Remote vs On-site*) dan tipe durasi (*Short-term vs Long-term*).
+* **Kolom Kanan (70% Width):**
+  * **No. 6: Line Chart (Top Primary Card):** Garis waktu tren pendaftaran bulanan (2021–2025) menggunakan kurva *spline* halus AIESEC Blue `#037EF3` dengan penanda titik puncak (*peak markers*).
+  * **No. 7 & 8 (Dual Cards):**
+    * *No. 7:* Stacked Area Chart sebaran status bulanan (*Accepted, Finished, Rejected*).
+    * *No. 8:* Clustered Column Chart perkembangan volume pendaftaran tahunan per produk.
+  * **No. 9: Matrix Heatmap (Bottom Card):** Matriks 12 Bulan × 5 Tahun dengan skala gradasi AIESEC Blue untuk memvalidasi *Summer Peak* (Mei–Juli) dan *Winter Peak* (November–Januari).
 
 ---
 
 ### 6.3 Halaman 3: Tahapan Seleksi dan Kelulusan (Conversion Funnel)
-* **Header:** *"Conversion Funnel & Operational Efficiency"* | *"Evaluasi rasio konversi antar-tahap dan analisis kecepatan waktu pemrosesan aplikasi."*
+* **Header:** *"Conversion Funnel & Operational Efficiency"* | *"Evaluasi rasio konversi peserta antartahapan dan analisis durasi waktu pemrosesan aplikasi."*
 * **Top Metric Row (4 Sparkline Cards):**
-  * *Avg Days to Accept* (Card Ice Blue) | *Avg Days to Approve* | *Avg Days to Realize* | *Avg Days to Finish*
-* **Kolom Kiri (35%):**
-  * **Visual No. 11:** *Step-by-Step Funnel Chart* dilengkapi persentase penurunan peserta (*drop-off rate*) di setiap tahapan.
-  * **Visual No. 13:** *Rejection Stage Stacked Bar* (Titik terjadinya penolakan: *Pre-Accepted*, *Post-Accepted*, *Post-Approved*).
-* **Kolom Kanan (65%):**
-  * **Visual No. 12:** *Clustered Horizontal Bar Chart* rata-rata durasi hari per program (GV vs GTa vs GTe).
-  * **Visual No. 14 (Bottom Scatter Plot):** *Scatter Plot Speed vs Volume* (Sumbu X: Durasi Hari, Sumbu Y: Total Aplikasi, Gelembung: Negara Tujuan *Host MC*).
+  * *Avg Days to Accept* | *Avg Days to Approve* | *Avg Days to Realize* | *Avg Days to Finish*
+* **Kolom Kiri (35% Width):**
+  * **No. 11: Funnel Chart:** Rasio konversi antar-tahap bertingkat (*step conversion rate*) disertai angka penurunan peserta (*drop-off*).
+  * **No. 13: Stacked Column Chart:** Titik terjadinya penolakan (*Pre-Accepted*, *Post-Accepted*, *Post-Approved*).
+* **Kolom Kanan (65% Width):**
+  * **No. 12: Clustered Bar Chart:** Rata-rata durasi hari proses per lini produk (GV vs GTa vs GTe).
+  * **No. 14: Scatter Chart (Bottom Card):** Hubungan kecepatan seleksi vs volume pendaftaran antarnegara mitra tujuan (*Host MC*).
 
 ---
 
 ### 6.4 Halaman 4: Peta dan Negara Tujuan (Destinations)
-* **Header:** *"Global Destinations & Entity Performance"* | *"Persebaran geografis mitra global dan penelusuran mendalam performa komite lokal."*
-* **Visual Utama (Top Wide Card - Visual No. 15):**
-  * *Global Choropleth Map (Plotly)* interaktif berskala dunia dengan gradasi warna AIESEC Blue (`#037EF3`).
-  * Hover tooltip memuat: Negara, Total Aplikasi, Diterima, dan Lulus.
-* **Kolom Kiri (40% - Visual No. 16A):**
-  * *Top 10 Host MC Bar Chart* (Peringkat 10 negara tujuan terpopuler asal UNAND).
-* **Kolom Kanan (60% - Visual No. 16B & 16C):**
-  * *Host LC Drill-Down Selector & Matrix:* Dropdown dinamis memilih negara → Tabel interaktif rincian komite universitas mitra (*Host LC*) lengkap dengan *Finish Rate* dan durasi rata-rata hari.
+* **Header:** *"Global Destinations & Entity Performance"* | *"Persebaran geografis mitra internasional dan penelusuran berjenjang komite lokal tujuan."*
+* **Visual Utama (Top Wide Card - No. 15):**
+  * *Choropleth Map (Plotly)* interaktif dunia dengan gradasi warna AIESEC Blue (`#037EF3`), menampilkan intensitas pendaftar ke berbagai belahan dunia.
+* **Kolom Kiri (40% Width - No. 16A):**
+  * *Top 10 Host MC Bar Chart:* Peringkat 10 negara mitra terfavorit asal UNAND.
+* **Kolom Kanan (60% Width - No. 16B & 16C):**
+  * *Host LC Drill-Down Selector & Matrix:* Pemilih negara dinamis → Tabel interaktif performa komite lokal/universitas mitra (*Host LC*) lengkap dengan rasio penyelesaian (*Finish Rate*) dan kecepatan waktu respon.
 
 ---
 
 ### 6.5 Halaman 5: Alasan Penolakan Peserta (Rejections)
-* **Header:** *"Rejections Analysis & Tactical Action Engine"* | *"Identifikasi akar masalah kegagalan seleksi dan rekomendasi solusi taktis terotomatisasi."*
-* **Kolom Kiri (40%):**
-  * **Visual No. 17:** *Top Rejection Reasons Horizontal Bar Chart* (Peringkat alasan penolakan terbanyak di luar label `'Not Rejected'`).
-  * **Visual No. 18A:** *Rejections by Product Clustered Bar* (Penyebab utama penolakan pada GV vs GTa vs GTe).
-* **Kolom Kanan (60%):**
-  * **Visual No. 18B:** *Monthly Rejection Trend Line Chart* (Memantau dinamika penurunan angka penolakan antartahun).
-  * **Visual No. 19 (Dynamic Action Engine Box):**
-    * Kartu rekomendasi cerdas berlatar Ice Blue (`#F0F6FF`) dengan border AIESEC Blue (`#037EF3`).
-    * Menampilkan badge: *"Top Root Cause Detected"* + Saran operasional konkret untuk tim QA & Customer Experience.
+* **Header:** *"Rejections Analysis & Tactical Action Engine"* | *"Identifikasi akar masalah penolakan aplikasi dan rekomendasi solusi taktis terotomatisasi."*
+* **Kolom Kiri (40% Width):**
+  * **No. 17: Clustered Bar Chart:** Peringkat alasan penolakan terbanyak (di luar label `'Not Rejected'`).
+  * **No. 18A: Stacked Column Chart:** Sebaran alasan penolakan berdasarkan program pertukaran.
+* **Kolom Kanan (60% Width):**
+  * **No. 18B: Line Chart:** Fluktuasi tren penolakan bulanan dari waktu ke waktu.
+  * **No. 19: Dynamic Recommendation Engine Box:**
+    * Kontainer kartu Ice Blue (`#F0F6FF`) dengan border aksen AIESEC Blue (`#037EF3`).
+    * Menampilkan badge: *"Top Root Cause Detected"* + Saran operasional taktis untuk tim QA & Customer Experience.
 
 ---
 
-## 7. Implementasi Custom CSS Streamlit (`custom.css`)
+## 7. Injeksi Custom CSS Streamlit (`custom.css`)
 
-Untuk menghasilkan tampilan kartu modern berlatar belakang bersih dan bayangan halus seperti pada referensi UI, kode CSS berikut diinjeksikan ke dalam aplikasi Streamlit:
+Untuk menerapkan gaya visual resmi *AIESEC Blue Book* dan layout kartu eksekutif pada Streamlit:
 
 ```css
 /* ========================================================
-   EXPALLENS STREAMLIT THEME (AIESEC BLUE #037EF3)
+   EXPALLENS STREAMLIT THEME (AIESEC BLUE BOOK SPECIFICATION)
    ======================================================== */
 
-/* Latar Belakang Aplikasi Utama */
+/* Impor Font Resmi AIESEC: Lato dari Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap');
+
+/* Latar Belakang Kanvas Utama (AIESEC Light Gray #F3F4F7) */
 .stApp {
-    background-color: #F8FAFC;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #F3F4F7;
+    font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Sidebar Styling */
 section[data-testid="stSidebar"] {
     background-color: #FFFFFF;
-    border-right: 1px solid #E2E8F0;
+    border-right: 1px solid #CACCD1;
 }
 
 /* Header Section */
 .header-container {
     padding-bottom: 1.5rem;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid #E2E8F0;
+    border-bottom: 1px solid #CACCD1;
 }
 .header-title {
-    font-size: 28px;
-    font-weight: 800;
+    font-size: 30px;
+    font-weight: 900;
     color: #0F172A;
     margin-bottom: 4px;
+    font-family: 'Lato', sans-serif;
 }
 .header-subtitle {
     font-size: 14px;
-    color: #64748B;
+    color: #52565E;
+    font-weight: 400;
 }
 
-/* Hero Metric Card (Dark Navy #0A2540) */
+/* Hero Metric Card (Midnight Navy #0A2540) */
 .hero-card {
     background: linear-gradient(135deg, #0A2540 0%, #001F3F 100%);
     border-radius: 16px;
@@ -348,61 +352,65 @@ section[data-testid="stSidebar"] {
     color: #FFFFFF;
     box-shadow: 0 10px 15px -3px rgba(10, 37, 64, 0.2);
     margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .hero-card-title {
-    font-size: 14px;
+    font-size: 13px;
     color: #93C5FD;
-    font-weight: 500;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 .hero-card-value {
     font-size: 38px;
-    font-weight: 800;
+    font-weight: 900;
     color: #FFFFFF;
     margin: 8px 0 16px 0;
+    font-family: 'Lato', sans-serif;
 }
 
-/* Sparkline / Standard Metric Card */
+/* Standard Metric Card */
 .metric-card {
     background-color: #FFFFFF;
-    border: 1px solid #E2E8F0;
+    border: 1px solid #CACCD1;
     border-radius: 14px;
     padding: 18px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .metric-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(3, 126, 243, 0.08);
-    border-color: #D4E5FB;
+    box-shadow: 0 8px 12px -2px rgba(3, 126, 243, 0.1);
+    border-color: #037EF3;
 }
 .metric-card-label {
     font-size: 13px;
-    color: #64748B;
-    font-weight: 500;
+    color: #52565E;
+    font-weight: 700;
 }
 .metric-card-num {
     font-size: 26px;
-    font-weight: 700;
+    font-weight: 900;
     color: #0F172A;
     margin-top: 4px;
+    font-family: 'Lato', sans-serif;
 }
 
-/* Card Visual Chart Container */
+/* Card Visual Container untuk Grafik Plotly */
 .chart-container {
     background-color: #FFFFFF;
-    border: 1px solid #E2E8F0;
+    border: 1px solid #CACCD1;
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
 }
 .chart-title {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     color: #0F172A;
     margin-bottom: 12px;
+    font-family: 'Lato', sans-serif;
 }
 
 /* Action Recommendation Box (Halaman 5) */
@@ -418,6 +426,7 @@ section[data-testid="stSidebar"] {
     font-weight: 700;
     color: #0A2540;
     margin-bottom: 6px;
+    font-family: 'Lato', sans-serif;
 }
 .action-box-desc {
     font-size: 13px;
@@ -428,16 +437,21 @@ section[data-testid="stSidebar"] {
 
 ---
 
-## 8. Panduan Eksekusi Desain (Design Checklist)
+## 8. Panduan Verifikasi Desain (Blue Book Checklist)
 
-Sebelum merilis halaman dashboard Streamlit, pastikan poin verifikasi visual berikut terpenuhi:
-* [x] Seluruh elemen interaktif dan aksen primer menggunakan kode warna resmi **AIESEC Blue (`#037EF3`)**.
-* [x] Warna produk pertukaran konsisten: **GV (`#F85A40`)**, **GTa (`#0CB9C1`)**, dan **GTe (`#F48924`)**.
-* [x] Menggunakan container kartu (*card-based layout*) dengan `border-radius: 12px–16px` dan border halus `#E2E8F0`.
-* [x] Hero card pada ringkasan utama memanfaatkan kontras gelap Midnight Navy (`#0A2540`).
-* [x] Grafik Plotly memiliki latar belakang transparan (`rgba(0,0,0,0)`), tanpa bingkai luar yang kaku, dan garis kisi sumbu Y sangat tipis (`#F1F5F9`).
-* [x] Tooltip hover Plotly menggunakan font sans-serif putih dengan latar kontainer gelap (`#0A2540`).
-* [x] Seluruh penamaan halaman dan metrik selaras 100% dengan **PRD.md** dan **Tabel 3 Milestone 2**.
+Sebelum merilis antarmuka dashboard, pastikan seluruh kriteria berikut terpenuhi:
+* [x] **Warna Primer:** Menggunakan **AIESEC Blue (`#037EF3`)** sebagai aksen visual utama.
+* [x] **Warna Produk Sesuai Blue Book:**
+  * Global Volunteer (GV): **`#F85A40`** (AIESEC Red/Orange)
+  * Global Talent (GTa): **`#0A8EA0`** (AIESEC Dark Teal - resmi untuk program magang & korporat)
+  * Global Teacher (GTe): **`#F48924`** (AIESEC Orange)
+* [x] **Warna Netral Sesuai Blue Book:**
+  * Latar Aplikasi: **`#F3F4F7`** (AIESEC Light Gray)
+  * Garis Batas / Border: **`#CACCD1`** (AIESEC Mid Gray)
+  * Teks Deskriptif: **`#52565E`** (AIESEC Dark Gray)
+* [x] **Tipografi:** Wajib menggunakan keluarga font **Lato** (`Lato Light`, `Regular`, `Bold`, `Black`).
+* [x] **Layout Eksekutif:** Memadukan Hero Card gelap (`#0A2540`) dengan kartu-kartu visualisasi putih membulat (`border-radius: 14px–16px`).
+* [x] **Format Bersih:** Bebas dari error LaTeX math mode (`'_' allowed only in math mode`).
 
 ---
-*Dokumen DESIGN.md ini menjadi panduan visual baku bagi pengembangan front-end dashboard ExpaLens.*
+*Dokumen DESIGN.md ini menjadi rujukan visual resmi berstandar AIESEC Blue Book untuk pengembangan front-end ExpaLens.*
