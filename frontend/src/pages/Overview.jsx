@@ -1,28 +1,10 @@
 import React from 'react';
 import {
-  Users,
   CheckCircle2,
+  FileCheck2,
   Plane,
-  Award,
-  Clock,
-  TrendingUp,
-  TrendingDown,
-  Target,
-  BarChart2,
-  Filter,
-  Info
+  Award
 } from 'lucide-react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  LabelList
-} from 'recharts';
 
 const formatNumber = (num) => {
   if (num === null || num === undefined) return '0';
@@ -50,17 +32,8 @@ export default function Overview({ data, isLoading }) {
   const totalApproved = kpis.total_approved || 0;
   const totalRealized = kpis.total_realized || 0;
   const totalFinished = kpis.total_finished || 0;
-  const finishRate = kpis.finish_rate || (totalAccepted > 0 ? (totalFinished / totalAccepted) * 100 : 0);
-  const avgDays = kpis.avg_days_to_accept || 0;
 
   const productBreakdown = data?.product_breakdown || [];
-  const programPerformance = data?.achievements || [];
-  const yoy = data?.yoy || {
-    yoy_pct: 0,
-    current_year: 2024,
-    prev_year: 2023,
-    is_positive: true
-  };
 
   // Funnel 5 Tahapan Resmi AIESEC
   const funnelSteps = [
@@ -126,11 +99,8 @@ export default function Overview({ data, isLoading }) {
     }
   ];
 
-  const clampedFinishRate = Math.min(Math.max(finishRate, 0), 100);
-  const gaugeAngle = -90 + (clampedFinishRate / 100) * 180;
-
   return (
-    <div className="space-y-4">
+    <div className="space-y-3.5">
       {/* BARIS 1: HERO CARD & CUSTOMER FUNNEL */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
         {/* Kolom Kiri: Hero Card Midnight Navy */}
@@ -273,9 +243,65 @@ export default function Overview({ data, isLoading }) {
         </div>
       </section>
 
-      {/* BARIS 2: KARTU INDIKATOR KINERJA UTAMA & YOY */}
+      {/* BARIS 2: 4 MILESTONE UTAMA SELEKSI (ACCEPTED, APPROVED, REALIZED, FINISHED) */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-        {/* Kartu 1: Total Realized */}
+        {/* Kartu 1: Total Accepted */}
+        <div className="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+              TOTAL ACCEPTED
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-blue-50 text-[#037EF3] flex items-center justify-center">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="my-1.5">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              {formatNumber(totalAccepted)}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Lolos Seleksi Berkas & Wawancara
+            </p>
+          </div>
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-[10px] font-bold text-[#037EF3] bg-blue-50 px-1.5 py-0.5 rounded">
+              Tahap 2 Seleksi
+            </span>
+            <span className="text-[11px] font-semibold text-slate-500">
+              {formatPercent(totalApps > 0 ? (totalAccepted / totalApps) * 100 : 0)} dari Applied
+            </span>
+          </div>
+        </div>
+
+        {/* Kartu 2: Total Approved */}
+        <div className="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+              TOTAL APPROVED
+            </span>
+            <div className="w-7 h-7 rounded-lg bg-teal-50 text-[#0A8EA0] flex items-center justify-center">
+              <FileCheck2 className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="my-1.5">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              {formatNumber(totalApproved)}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Pembayaran Biaya & TTD Kontrak
+            </p>
+          </div>
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-[10px] font-bold text-[#0A8EA0] bg-teal-50 px-1.5 py-0.5 rounded">
+              Tahap 3 Kontrak
+            </span>
+            <span className="text-[11px] font-semibold text-slate-500">
+              {formatPercent(totalAccepted > 0 ? (totalApproved / totalAccepted) * 100 : 0)} dari Accepted
+            </span>
+          </div>
+        </div>
+
+        {/* Kartu 3: Total Realized */}
         <div className="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
@@ -295,15 +321,15 @@ export default function Overview({ data, isLoading }) {
           </div>
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
             <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded">
-              Realisasi Aktif
+              Tahap 4 Realisasi
             </span>
             <span className="text-[11px] font-semibold text-slate-500">
-              {formatPercent(totalApps ? (totalRealized / totalApps) * 100 : 0)} konversi
+              {formatPercent(totalApproved > 0 ? (totalRealized / totalApproved) * 100 : 0)} dari Approved
             </span>
           </div>
         </div>
 
-        {/* Kartu 2: Total Finished */}
+        {/* Kartu 4: Total Finished */}
         <div className="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
@@ -318,207 +344,16 @@ export default function Overview({ data, isLoading }) {
               {formatNumber(totalFinished)}
             </div>
             <p className="text-[11px] text-slate-500 mt-0.5">
-              Peserta Menyelesaikan Program
+              Menyelesaikan Masa Program
             </p>
           </div>
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
             <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">
-              Kelulusan Evaluasi
+              Kelulusan Akhir
             </span>
             <span className="text-[11px] font-semibold text-slate-500">
-              {formatPercent(totalApps ? (totalFinished / totalApps) * 100 : 0)} kelulusan
+              {formatPercent(totalRealized > 0 ? (totalFinished / totalRealized) * 100 : 0)} dari Realized
             </span>
-          </div>
-        </div>
-
-        {/* Kartu 3: Pertumbuhan Tahunan (YoY Growth) */}
-        <div className="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
-              PERTUMBUHAN TAHUNAN (YOY)
-            </span>
-            <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${yoy.is_positive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-              {yoy.is_positive ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
-            </div>
-          </div>
-          <div className="my-1.5">
-            <div className={`text-2xl sm:text-3xl font-black tracking-tight ${yoy.is_positive ? 'text-emerald-600' : 'text-rose-600'}`}>
-              {yoy.is_positive ? '+' : ''}{formatPercent(yoy.yoy_pct)}
-            </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Perbandingan Aplikasi {yoy.current_year} vs {yoy.prev_year}
-            </p>
-          </div>
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">
-              {formatNumber(yoy.current_val)} vs {formatNumber(yoy.prev_val)}
-            </span>
-            <span className={`text-[11px] font-bold ${yoy.is_positive ? 'text-emerald-600' : 'text-rose-600'}`}>
-              {yoy.is_positive ? 'Meningkat' : 'Menurun'}
-            </span>
-          </div>
-        </div>
-
-        {/* Kartu 4: Rata-Rata Waktu Seleksi */}
-        <div className="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
-              WAKTU PROSES SELEKSI
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-              <Clock className="w-3.5 h-3.5" />
-            </div>
-          </div>
-          <div className="my-1.5">
-            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              {Number(avgDays).toFixed(1).replace('.', ',')} <span className="text-base font-bold text-slate-500">Hari</span>
-            </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Rata-rata Durasi Applied ke Accepted
-            </p>
-          </div>
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded">
-              Days to Accept
-            </span>
-            {yoy?.yoy_pct !== undefined ? (
-              <span className={`text-[11px] font-bold flex items-center gap-1 ${yoy.yoy_pct >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                {yoy.yoy_pct >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                {yoy.yoy_pct >= 0 ? '+' : ''}{formatPercent(yoy.yoy_pct)} YoY
-              </span>
-            ) : (
-              <span className="text-[11px] text-slate-400">Baseline 2021</span>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* BARIS 3: CAPAIAN PROGRAM & GAUGE CHART KELULUSAN */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Kolom Kiri: Clustered Column Chart */}
-        <div className="lg:col-span-7 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="pb-3 border-b border-slate-100">
-            <h3 className="text-base font-bold text-slate-900">
-              Capaian Tahapan Seleksi Berdasarkan Jenis Program
-            </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Perbandingan volume peserta Accepted, Approved, Realized, dan Finished per program pertukaran.
-            </p>
-          </div>
-
-          <div className="h-80 w-full mt-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={programPerformance}
-                margin={{ top: 20, right: 20, left: 0, bottom: 10 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
-                <XAxis
-                  dataKey="product_name"
-                  tick={{ fill: '#334155', fontSize: 12, fontWeight: 700 }}
-                  axisLine={{ stroke: '#CBD5E1' }}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fill: '#64748B', fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(value, name) => [formatNumber(value) + ' Peserta', name]}
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '12px',
-                    border: '1px solid #E2E8F0',
-                    fontSize: '12px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                  }}
-                />
-                <Legend
-                  wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }}
-                />
-                <Bar dataKey="accepted" name="Accepted (Diterima)" fill="#037EF3" radius={[4, 4, 0, 0]}>
-                  <LabelList dataKey="accepted" position="top" style={{ fontSize: '10px', fill: '#037EF3', fontWeight: 'bold' }} />
-                </Bar>
-                <Bar dataKey="approved" name="Approved (Disetujui)" fill="#0A8EA0" radius={[4, 4, 0, 0]}>
-                  <LabelList dataKey="approved" position="top" style={{ fontSize: '10px', fill: '#0A8EA0', fontWeight: 'bold' }} />
-                </Bar>
-                <Bar dataKey="realized" name="Realized (Berangkat)" fill="#F48924" radius={[4, 4, 0, 0]}>
-                  <LabelList dataKey="realized" position="top" style={{ fontSize: '10px', fill: '#F48924', fontWeight: 'bold' }} />
-                </Bar>
-                <Bar dataKey="finished" name="Finished (Selesai)" fill="#10B981" radius={[4, 4, 0, 0]}>
-                  <LabelList dataKey="finished" position="top" style={{ fontSize: '10px', fill: '#10B981', fontWeight: 'bold' }} />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>GTa: Global Talent, GTe: Global Teacher, GV: Global Volunteer</span>
-          </div>
-        </div>
-
-        {/* Kolom Kanan: Radial Gauge Chart */}
-        <div className="lg:col-span-5 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="pb-3 border-b border-slate-100">
-            <h3 className="text-base font-bold text-slate-900">
-              Persentase Keberhasilan Penyelesaian Program (Finish Rate)
-            </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Rasio peserta yang berhasil menyelesaikan program dibandingkan dengan seluruh peserta yang telah diterima.
-            </p>
-          </div>
-
-          {/* Semi-circle Speedometer SVG Gauge */}
-          <div className="my-4 flex flex-col items-center justify-center">
-            <div className="relative w-72 h-40 overflow-hidden flex items-end justify-center">
-              <svg viewBox="0 0 200 110" className="w-full h-full">
-                {/* Latar Belakang Track Netral */}
-                <path
-                  d="M 20 100 A 80 80 0 0 1 180 100"
-                  fill="none"
-                  stroke="#E2E8F0"
-                  strokeWidth="18"
-                  strokeLinecap="round"
-                />
-                {/* Arc Progres AIESEC Blue */}
-                <path
-                  d="M 20 100 A 80 80 0 0 1 180 100"
-                  fill="none"
-                  stroke="#037EF3"
-                  strokeWidth="18"
-                  strokeLinecap="round"
-                  strokeDasharray="251.3"
-                  strokeDashoffset={251.3 * (1 - clampedFinishRate / 100)}
-                  className="transition-all duration-700 ease-out"
-                />
-
-                {/* Jarum Indikator Midnight Navy */}
-                <g transform={`rotate(${gaugeAngle}, 100, 100)`}>
-                  <polygon
-                    points="97,100 103,100 100,28"
-                    fill="#0A2540"
-                  />
-                  <circle cx="100" cy="100" r="7" fill="#0A2540" />
-                  <circle cx="100" cy="100" r="3" fill="#FFFFFF" />
-                </g>
-              </svg>
-            </div>
-
-            {/* Nilai Utama Gauge */}
-            <div className="text-center mt-2">
-              <div className="text-4xl font-black text-slate-900 tracking-tight">
-                {formatPercent(finishRate)}
-              </div>
-              <p className="text-xs font-medium text-slate-500 mt-0.5">
-                {formatNumber(totalFinished)} Selesai dari {formatNumber(totalAccepted)} Diterima
-              </p>
-            </div>
-          </div>
-
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Kalkulasi: (Total Finished / Total Accepted) x 100%</span>
-            <span className="font-semibold text-slate-700">Skala 0% - 100%</span>
           </div>
         </div>
       </section>
