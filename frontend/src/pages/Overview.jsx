@@ -267,17 +267,6 @@ export default function Overview({ data, isLoading }) {
               </React.Fragment>
             ))}
           </div>
-
-          {/* Keterangan Data */}
-          <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-2">
-            <div className="flex items-center gap-1.5 text-slate-600">
-              <Info className="w-3.5 h-3.5 text-[#037EF3] shrink-0" />
-              <span>Realized (418) mencatat stempel tanggal keberangkatan fisik; Finished (642) mencakup proyek semi-remote.</span>
-            </div>
-            <span className="font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200 text-[10px]">
-              Penurunan terbesar: Applied ke Accepted (-97,9%)
-            </span>
-          </div>
         </div>
       </section>
 
