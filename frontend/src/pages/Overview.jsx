@@ -9,7 +9,8 @@ import {
   TrendingDown,
   Target,
   BarChart2,
-  Filter
+  Filter,
+  ArrowDown
 } from 'lucide-react';
 import {
   BarChart,
@@ -62,41 +63,71 @@ export default function Overview({ data, isLoading }) {
     is_positive: true
   };
 
-  // Funnel 5 Tahapan Kunci
+  // Funnel 5 Tahapan Kunci dengan skala proporsi visual corong
   const funnelSteps = [
     {
-      stage: '1. Applied (Pendaftaran)',
+      stageNumber: 1,
+      stageName: 'Applied',
+      stageLabel: 'Pendaftaran Awal',
       count: totalApps,
       retention: 100.0,
-      color: '#037EF3'
+      widthPercent: 100,
+      bgColor: 'bg-[#037EF3]',
+      textColor: 'text-[#037EF3]',
+      borderColor: 'border-blue-300',
+      dropOff: totalApps > 0 ? ((totalApps - totalAccepted) / totalApps) * 100 : 0
     },
     {
-      stage: '2. Accepted (Diterima Seleksi)',
+      stageNumber: 2,
+      stageName: 'Accepted',
+      stageLabel: 'Lulus Seleksi Berkas',
       count: totalAccepted,
       retention: totalApps > 0 ? (totalAccepted / totalApps) * 100 : 0,
-      color: '#0A8EA0'
+      widthPercent: 78,
+      bgColor: 'bg-[#0A8EA0]',
+      textColor: 'text-[#0A8EA0]',
+      borderColor: 'border-teal-300',
+      dropOff: totalAccepted > 0 ? ((totalAccepted - totalApproved) / totalAccepted) * 100 : 0
     },
     {
-      stage: '3. Approved (Disetujui Kontrak)',
+      stageNumber: 3,
+      stageName: 'Approved',
+      stageLabel: 'Penandatanganan Kontrak',
       count: totalApproved,
       retention: totalApps > 0 ? (totalApproved / totalApps) * 100 : 0,
-      color: '#F48924'
+      widthPercent: 60,
+      bgColor: 'bg-[#F48924]',
+      textColor: 'text-[#F48924]',
+      borderColor: 'border-orange-300',
+      dropOff: totalApproved > 0 ? ((totalApproved - totalRealized) / totalApproved) * 100 : 0
     },
     {
-      stage: '4. Realized (Berangkat Luar Negeri)',
+      stageNumber: 4,
+      stageName: 'Realized',
+      stageLabel: 'Berangkat ke Negara Mitra',
       count: totalRealized,
       retention: totalApps > 0 ? (totalRealized / totalApps) * 100 : 0,
-      color: '#8B5CF6'
+      widthPercent: 44,
+      bgColor: 'bg-purple-600',
+      textColor: 'text-purple-600',
+      borderColor: 'border-purple-300',
+      dropOff: 0
     },
     {
-      stage: '5. Finished (Selesai Program)',
+      stageNumber: 5,
+      stageName: 'Finished',
+      stageLabel: 'Menyelesaikan Program',
       count: totalFinished,
       retention: totalApps > 0 ? (totalFinished / totalApps) * 100 : 0,
-      color: '#10B981'
+      widthPercent: 48,
+      bgColor: 'bg-emerald-600',
+      textColor: 'text-emerald-600',
+      borderColor: 'border-emerald-300',
+      dropOff: null
     }
   ];
 
-  // Hitung sudut jarum speedometer gauge (rentang 0-100% dipetakan ke -90 hingga +90 derajat)
+  // Hitung sudut jarum speedometer gauge
   const clampedFinishRate = Math.min(Math.max(finishRate, 0), 100);
   const gaugeAngle = -90 + (clampedFinishRate / 100) * 180;
 
@@ -169,7 +200,7 @@ export default function Overview({ data, isLoading }) {
           </div>
         </div>
 
-        {/* Kolom Kanan: Customer Funnel Visual */}
+        {/* Kolom Kanan: Authentic Customer Funnel Visual (Bentuk Corong Bertingkat Simetris) */}
         <div className="lg:col-span-8 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
@@ -177,49 +208,77 @@ export default function Overview({ data, isLoading }) {
                 Distribusi Peserta pada Tahapan Seleksi (Customer Funnel)
               </h3>
               <p className="text-xs text-slate-500">
-                Retensi dan konversi peserta dari pendaftaran awal hingga menyelesaikan masa program.
+                Corong retensi peserta dari pendaftaran awal hingga menyelesaikan masa program.
               </p>
             </div>
-            <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md">
-              5 Tahapan Kunci
+            <span className="text-xs font-bold text-[#037EF3] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
+              Poin 2: Funnel Chart
             </span>
           </div>
 
-          {/* Funnel Visual Stack */}
-          <div className="my-5 space-y-3">
-            {funnelSteps.map((step, idx) => {
-              const widthPct = Math.max((step.count / (totalApps || 1)) * 100, 3.5);
+          {/* Symmetrical Centered Funnel Tiers */}
+          <div className="my-4 flex flex-col items-center space-y-1.5 w-full">
+            {funnelSteps.map((step, idx) => (
+              <React.Fragment key={idx}>
+                {/* Funnel Stage Bar (Centered Trapezoid Container) */}
+                <div
+                  style={{ width: `${step.widthPercent}%` }}
+                  className="transition-all duration-500 min-w-[280px]"
+                >
+                  <div className={`
+                    rounded-xl p-3 border shadow-xs flex items-center justify-between transition-transform hover:scale-[1.01]
+                    ${step.stageNumber === 1 ? 'bg-blue-50/90 border-blue-200' : 'bg-slate-50 border-slate-200'}
+                  `}>
+                    <div className="flex items-center gap-2.5">
+                      <div className={`w-6 h-6 rounded-lg ${step.bgColor} text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0`}>
+                        {step.stageNumber}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-extrabold text-slate-900">{step.stageName}</span>
+                          <span className="text-[10px] text-slate-500 hidden sm:inline">({step.stageLabel})</span>
+                        </div>
+                      </div>
+                    </div>
 
-              return (
-                <div key={idx} className="bg-slate-50/70 p-3 rounded-xl border border-slate-200/80">
-                  <div className="flex items-center justify-between text-xs font-bold mb-1.5">
-                    <span className="text-slate-800">{step.stage}</span>
                     <div className="flex items-center gap-3">
-                      <span className="text-slate-900 font-extrabold">{formatNumber(step.count)} Peserta</span>
-                      <span className="text-[11px] font-bold text-[#037EF3] bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                        {formatPercent(step.retention)} dari Applied
+                      <div className="text-right">
+                        <div className="text-sm font-black text-slate-900">
+                          {formatNumber(step.count)} <span className="text-[10px] font-semibold text-slate-400">Peserta</span>
+                        </div>
+                      </div>
+                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded border ${
+                        step.stageNumber === 1 
+                          ? 'bg-[#037EF3] text-white border-[#037EF3]' 
+                          : 'bg-white text-slate-700 border-slate-200'
+                      }`}>
+                        {formatPercent(step.retention)}
                       </span>
                     </div>
                   </div>
-
-                  {/* Progress Bar Visual */}
-                  <div className="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-700"
-                      style={{
-                        width: `${Math.min(widthPct, 100)}%`,
-                        backgroundColor: step.color
-                      }}
-                    ></div>
-                  </div>
                 </div>
-              );
-            })}
+
+                {/* Funnel Downward Connector with Drop-off Callout */}
+                {idx < funnelSteps.length - 1 && (
+                  <div className="flex items-center justify-center gap-2 py-0.5">
+                    <div className="h-3 w-0.5 bg-slate-300"></div>
+                    {step.dropOff !== null && step.dropOff > 0 && (
+                      <span className="text-[9px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-200">
+                        -{formatPercent(step.dropOff)} Penurunan
+                      </span>
+                    )}
+                    <div className="h-3 w-0.5 bg-slate-300"></div>
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
           </div>
 
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+          <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
             <span>Formula konversi: Akumulasi nilai boolean is_applied s/d is_finished</span>
-            <span className="font-semibold text-slate-700">Drop-off terbesar: Applied ke Accepted</span>
+            <span className="font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+              Penyusutan terbesar: Applied ke Accepted (-97,9%)
+            </span>
           </div>
         </div>
       </section>
@@ -358,7 +417,7 @@ export default function Overview({ data, isLoading }) {
               </p>
             </div>
             <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md">
-              dim_product
+              Poin 3: Clustered Column
             </span>
           </div>
 
@@ -427,7 +486,7 @@ export default function Overview({ data, isLoading }) {
               </p>
             </div>
             <span className="text-xs font-bold text-[#037EF3] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
-              Gauge Visual
+              Poin 4: Gauge Visual
             </span>
           </div>
 
