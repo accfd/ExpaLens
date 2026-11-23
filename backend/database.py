@@ -451,26 +451,26 @@ def get_destinations_data(years=None, products=None, statuses=None, regions=None
     engine = get_db_engine()
     where_sql, params = _build_filter_clause(years, products, statuses, regions, countries, host_lcs)
     
-    # 1. Top Host MC
-    q_top_mc = f"""
+    # 1. Seluruh Negara Tujuan untuk Choropleth Map Dunia
+    q_all_mc = f"""
     SELECT 
         h.host_mc as country_name,
         h.host_region as region,
         COUNT(f.apl_id) as total_apps,
         COALESCE(SUM(f.is_accepted), 0) as accepted,
         COALESCE(SUM(f.is_approved), 0) as approved,
-        COALESCE(SUM(f.is_finished), 0) as finished
+        COALESCE(SUM(f.is_finished), 0) as finished,
+        ROUND((COALESCE(SUM(f.is_finished), 0)::numeric / NULLIF(COALESCE(SUM(f.is_accepted), 0), 0) * 100), 1) as finish_rate
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
     JOIN dim_product p ON f.product_id = p.product_id
     JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql}
     GROUP BY h.host_mc, h.host_region
-    ORDER BY total_apps DESC
-    LIMIT 15;
+    ORDER BY total_apps DESC;
     """
     
-    # 2. Host LC drilldown
+    # 2. Host LC drilldown lengkap
     q_lc = f"""
     SELECT 
         h.host_mc as country_name,
@@ -486,36 +486,60 @@ def get_destinations_data(years=None, products=None, statuses=None, regions=None
     JOIN dim_host h ON f.host_lc = h.host_lc
     {where_sql}
     GROUP BY h.host_mc, h.host_lc
-    ORDER BY total_apps DESC
-    LIMIT 30;
+    ORDER BY total_apps DESC;
     """
     
     with engine.connect() as conn:
-        df_top_mc = pd.read_sql_query(text(q_top_mc), con=conn, params=params)
+        df_all_mc = pd.read_sql_query(text(q_all_mc), con=conn, params=params)
         df_lc = pd.read_sql_query(text(q_lc), con=conn, params=params)
         
-    # Map country ISO3
+    # Standar ISO Alpha-3 untuk pencocokan peta choropleth
     ISO_MAP = {
-        "Malaysia": "MYS", "India": "IND", "Vietnam": "VNM", "Thailand": "THA",
-        "Taiwan": "TWN", "Egypt": "EGY", "Turkey": "TUR", "Brazil": "BRA",
-        "Japan": "JPN", "Korea": "KOR", "Poland": "POL", "Germany": "DEU",
-        "Italy": "ITA", "Philippines": "PHL", "Morocco": "MAR", "Colombia": "COL",
-        "Mexico": "MEX", "Sri Lanka": "LKA", "Cambodia": "KHM", "China": "CHN"
+        "Turkey": "TUR", "Germany": "DEU", "Vietnam": "VNM", "Malaysia": "MYS",
+        "The Netherlands": "NLD", "Hungary": "HUN", "Belgium": "BEL", "India": "IND",
+        "Hong Kong": "HKG", "Panama": "PAN", "Greece": "GRC", "Tunisia": "TUN",
+        "Poland": "POL", "Thailand": "THA", "Romania": "ROU", "South Korea": "KOR",
+        "Egypt": "EGY", "Brazil": "BRA", "United Kingdom": "GBR", "Sri Lanka": "LKA",
+        "Mainland of China": "CHN", "Czech Republic": "CZE", "Cambodia": "KHM", "Taiwan": "TWN",
+        "Colombia": "COL", "Slovakia": "SVK", "Philippines": "PHL", "Azerbaijan": "AZE",
+        "Morocco": "MAR", "Cote D'Ivoire": "CIV", "Kenya": "KEN", "Tanzania": "TZA",
+        "Indonesia": "IDN", "Japan": "JPN", "Singapore": "SGP", "United States": "USA",
+        "Australia": "AUS", "Canada": "CAN", "France": "FRA", "Italy": "ITA",
+        "Spain": "ESP", "Russia": "RUS", "Austria": "AUT", "Switzerland": "CHE",
+        "Sweden": "SWE", "Norway": "NOR", "Denmark": "DNK", "Finland": "FIN",
+        "Portugal": "PRT", "Mexico": "MEX", "Argentina": "ARG", "Chile": "CHL",
+        "Peru": "PER", "Ecuador": "ECU", "Jordan": "JOR", "Kuwait": "KWT",
+        "United Arab Emirates": "ARE", "Nigeria": "NGA", "Ghana": "GHA", "Uganda": "UGA"
+    }
+    
+    # Mapping nama alternatif untuk TopoJSON world atlas
+    TOPO_MAP = {
+        "The Netherlands": "Netherlands",
+        "Mainland of China": "China",
+        "United States": "United States of America",
+        "Czech Republic": "Czechia",
+        "Bosnia": "Bosnia and Herz.",
+        "Dominican Republic": "Dominican Rep."
     }
     
     choropleth_map = []
-    for _, row in df_top_mc.iterrows():
+    for _, row in df_all_mc.iterrows():
         c_name = row["country_name"]
         choropleth_map.append({
             "country_name": c_name,
+            "topo_name": TOPO_MAP.get(c_name, c_name),
             "country_code_iso3": ISO_MAP.get(c_name, c_name[:3].upper()),
             "total_apps": int(row["total_apps"]),
+            "accepted": int(row["accepted"]),
+            "approved": int(row["approved"]),
+            "finished": int(row["finished"]),
+            "finish_rate": float(row["finish_rate"]) if pd.notnull(row["finish_rate"]) else 0.0,
             "region": row["region"]
         })
         
     return {
         "choropleth_map": choropleth_map,
-        "top_host_mcs": df_top_mc.fillna(0).to_dict(orient="records"),
+        "top_host_mcs": df_all_mc.head(10).fillna(0).to_dict(orient="records"),
         "host_lc_drilldown": df_lc.fillna(0).to_dict(orient="records")
     }
 
