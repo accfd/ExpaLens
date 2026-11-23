@@ -53,14 +53,14 @@ EXPALENS_PLOTLY_THEME = {
             showgrid=False,
             linecolor=BORDER_GRAY,
             tickfont=dict(size=12, color=TEXT_MUTED, family="Lato, sans-serif"),
-            titlefont=dict(size=13, color=HEADING_BLACK, family="Lato, sans-serif")
+            title_font=dict(size=13, color=HEADING_BLACK, family="Lato, sans-serif")
         ),
         yaxis=dict(
             showgrid=True,
             gridcolor="#EBF0F5",
             linecolor="rgba(0,0,0,0)",
             tickfont=dict(size=12, color=TEXT_MUTED, family="Lato, sans-serif"),
-            titlefont=dict(size=13, color=HEADING_BLACK, family="Lato, sans-serif")
+            title_font=dict(size=13, color=HEADING_BLACK, family="Lato, sans-serif")
         ),
         legend=dict(
             orientation="h",
