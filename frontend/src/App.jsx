@@ -3,6 +3,10 @@ import axios from 'axios';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Overview from './pages/Overview';
+import ApplicationTrends from './pages/ApplicationTrends';
+import ConversionFunnel from './pages/ConversionFunnel';
+import Destinations from './pages/Destinations';
+import Rejections from './pages/Rejections';
 import { AlertCircle } from 'lucide-react';
 
 export default function App() {
@@ -25,10 +29,49 @@ export default function App() {
     statuses: ['accepted', 'approved', 'finished', 'rejected']
   });
 
-  const [overviewData, setOverviewData] = useState(null);
+  // State Data Tiap Halaman
+  const [pageData, setPageData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isDbConnected, setIsDbConnected] = useState(true);
+
+  // Responsive & PWA States
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [canInstallPwa, setCanInstallPwa] = useState(false);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+  // Setup PWA Install Prompt & Network Listeners
+  useEffect(() => {
+    const handleBeforeInstall = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setCanInstallPwa(true);
+    };
+
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  const handleInstallPwa = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setCanInstallPwa(false);
+      setDeferredPrompt(null);
+    }
+  };
 
   // Fetch Opsi Filter dari Backend
   const loadFilterOptions = async () => {
@@ -42,30 +85,46 @@ export default function App() {
     }
   };
 
-  // Fetch Data Overview sesuai Slicer
-  const loadOverviewData = useCallback(async () => {
+  // Fetch Data sesuai Halaman Aktif & Filter Slicer
+  const loadActivePageData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
+
+    const endpointMap = {
+      overview: '/api/overview',
+      trends: '/api/trends',
+      funnel: '/api/funnel',
+      destinations: '/api/destinations',
+      rejections: '/api/rejections'
+    };
+
+    const endpoint = endpointMap[activeTab] || '/api/overview';
+
     try {
-      const res = await axios.post('/api/overview', filters);
-      setOverviewData(res.data);
+      const res = await axios.post(endpoint, filters);
+      setPageData(prev => ({ ...prev, [activeTab]: res.data }));
       setIsDbConnected(true);
     } catch (err) {
-      console.error('Koneksi kueri gagal:', err);
-      setError('Gagal memuat data dari PostgreSQL aiesec_dw. Pastikan server backend FastAPI dan PostgreSQL aktif.');
-      setIsDbConnected(false);
+      console.error(`Koneksi kueri ${activeTab} gagal:`, err);
+      // Jika offline dan data ada di cache, gunakan data tersimpan
+      if (pageData[activeTab]) {
+        console.info('Menggunakan data tersimpan dari cache lokal.');
+      } else {
+        setError('Gagal memuat data dari PostgreSQL aiesec_dw. Pastikan peladen FastAPI dan PostgreSQL aktif.');
+        setIsDbConnected(false);
+      }
     } finally {
       setIsLoading(false);
     }
-  }, [filters]);
+  }, [activeTab, filters]);
 
   useEffect(() => {
     loadFilterOptions();
   }, []);
 
   useEffect(() => {
-    loadOverviewData();
-  }, [loadOverviewData]);
+    loadActivePageData();
+  }, [loadActivePageData]);
 
   // Handler reset semua filter
   const handleResetFilters = () => {
@@ -81,7 +140,7 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen bg-[#F8FAFC] font-['Lato',sans-serif] text-slate-800">
-      {/* BILAH SISI (SIDEBAR) */}
+      {/* BILAH SISI (SIDEBAR) RESPONSIVE */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -89,44 +148,50 @@ export default function App() {
         setFilters={setFilters}
         filterOptions={filterOptions}
         onResetFilters={handleResetFilters}
+        isMobileOpen={isMobileMenuOpen}
+        onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
 
       {/* KONTEN UTAMA */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto w-full">
         <Header
-          totalRecords={overviewData?.kpis?.total_applied || 0}
+          activeTab={activeTab}
           isDbConnected={isDbConnected}
-          onRefresh={loadOverviewData}
+          onRefresh={loadActivePageData}
           isLoading={isLoading}
+          onToggleMobileMenu={() => setIsMobileMenuOpen(prev => !prev)}
+          onToggleMobileFilter={() => setIsMobileMenuOpen(true)}
+          onInstallPwa={handleInstallPwa}
+          canInstallPwa={canInstallPwa}
+          isOffline={isOffline}
         />
 
-        <main className="p-8 max-w-7xl w-full mx-auto space-y-6">
+        <main className="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
           {error && (
-            <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-center gap-3 text-rose-800 text-sm font-medium">
-              <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0" />
+            <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-center gap-3 text-rose-800 text-xs sm:text-sm font-medium">
+              <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           {activeTab === 'overview' && (
-            <Overview data={overviewData} isLoading={isLoading} />
+            <Overview data={pageData.overview} isLoading={isLoading} />
           )}
 
-          {activeTab !== 'overview' && (
-            <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-xs">
-              <h2 className="text-xl font-bold text-slate-900 mb-2">
-                Modul Halaman Sedang Disiapkan
-              </h2>
-              <p className="text-sm text-slate-500 max-w-md mx-auto">
-                Halaman Ringkasan Utama telah terhubung secara penuh ke database PostgreSQL aiesec_dw. Modul navigasi ini siap diintegrasikan pada langkah berikutnya.
-              </p>
-              <button
-                onClick={() => setActiveTab('overview')}
-                className="mt-5 px-4 py-2 bg-[#037EF3] hover:bg-blue-600 text-white text-xs font-bold rounded-lg transition-colors cursor-pointer"
-              >
-                Kembali ke Ringkasan Utama
-              </button>
-            </div>
+          {activeTab === 'trends' && (
+            <ApplicationTrends data={pageData.trends} isLoading={isLoading} />
+          )}
+
+          {activeTab === 'funnel' && (
+            <ConversionFunnel data={pageData.funnel} isLoading={isLoading} />
+          )}
+
+          {activeTab === 'destinations' && (
+            <Destinations data={pageData.destinations} isLoading={isLoading} />
+          )}
+
+          {activeTab === 'rejections' && (
+            <Rejections data={pageData.rejections} isLoading={isLoading} />
           )}
         </main>
       </div>
