@@ -114,7 +114,7 @@ def get_overview_data(years=None, products=None, statuses=None, regions=None, co
         COUNT(f.apl_id) as total_applications,
         COALESCE(SUM(f.is_accepted), 0) as total_accepted,
         COALESCE(SUM(f.is_approved), 0) as total_approved,
-        COALESCE(SUM(f.is_realized), 0) as total_realized,
+        COALESCE(SUM(CASE WHEN f.is_realized = 1 OR f.is_finished = 1 THEN 1 ELSE 0 END), 0) as total_realized,
         COALESCE(SUM(f.is_finished), 0) as total_finished,
         COALESCE(SUM(f.is_rejected), 0) as total_rejected,
         AVG(f.days_to_accept) as avg_days_to_accept
@@ -143,7 +143,7 @@ def get_overview_data(years=None, products=None, statuses=None, regions=None, co
         p.product_name,
         COALESCE(SUM(f.is_accepted), 0) as accepted,
         COALESCE(SUM(f.is_approved), 0) as approved,
-        COALESCE(SUM(f.is_realized), 0) as realized,
+        COALESCE(SUM(CASE WHEN f.is_realized = 1 OR f.is_finished = 1 THEN 1 ELSE 0 END), 0) as realized,
         COALESCE(SUM(f.is_finished), 0) as finished
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
@@ -333,7 +333,7 @@ def get_funnel_data(years=None, products=None, statuses=None, regions=None, coun
         COUNT(f.apl_id) as applied,
         COALESCE(SUM(f.is_accepted), 0) as accepted,
         COALESCE(SUM(f.is_approved), 0) as approved,
-        COALESCE(SUM(f.is_realized), 0) as realized,
+        COALESCE(SUM(CASE WHEN f.is_realized = 1 OR f.is_finished = 1 THEN 1 ELSE 0 END), 0) as realized,
         COALESCE(SUM(f.is_finished), 0) as finished
     FROM fact_exchange_application f
     JOIN dim_date d ON f.applied_date_id = d.date_id
@@ -426,14 +426,14 @@ def get_funnel_data(years=None, products=None, statuses=None, regions=None, coun
             "from_count": apr,
             "to_count": rea,
             "conversion_rate": round((rea / apr * 100), 1) if apr > 0 else 0,
-            "drop_rate": round(((apr - rea) / apr * 100), 1) if apr > 0 else 0
+            "drop_rate": round(((apr - rea) / apr * 100), 1) if apr > rea else 0.0
         },
         {
             "stage": "Realized ke Finished",
             "from_count": rea,
             "to_count": fin,
             "conversion_rate": round((fin / rea * 100), 1) if rea > 0 else 0,
-            "drop_rate": 0.0
+            "drop_rate": round(((rea - fin) / rea * 100), 1) if rea > 0 else 0.0
         }
     ]
     

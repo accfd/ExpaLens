@@ -98,7 +98,7 @@ export default function Overview({ data, isLoading }) {
       bgColor: 'bg-[#F48924]',
       textColor: 'text-[#F48924]',
       borderColor: 'border-orange-300',
-      dropOff: totalApproved > 0 ? ((totalApproved - totalRealized) / totalApproved) * 100 : 0
+      dropOff: totalApproved > totalRealized ? ((totalApproved - totalRealized) / totalApproved) * 100 : null
     },
     {
       stageNumber: 4,
@@ -106,11 +106,11 @@ export default function Overview({ data, isLoading }) {
       stageLabel: 'Berangkat ke Negara Mitra',
       count: totalRealized,
       retention: totalApps > 0 ? (totalRealized / totalApps) * 100 : 0,
-      widthPercent: 44,
+      widthPercent: 48,
       bgColor: 'bg-purple-600',
       textColor: 'text-purple-600',
       borderColor: 'border-purple-300',
-      dropOff: null
+      dropOff: totalRealized > 0 ? ((totalRealized - totalFinished) / totalRealized) * 100 : null
     },
     {
       stageNumber: 5,
@@ -118,7 +118,7 @@ export default function Overview({ data, isLoading }) {
       stageLabel: 'Menyelesaikan Program',
       count: totalFinished,
       retention: totalApps > 0 ? (totalFinished / totalApps) * 100 : 0,
-      widthPercent: 48,
+      widthPercent: 38,
       bgColor: 'bg-emerald-600',
       textColor: 'text-emerald-600',
       borderColor: 'border-emerald-300',
@@ -253,14 +253,14 @@ export default function Overview({ data, isLoading }) {
                   <div className="flex items-center justify-center gap-2 py-0.5">
                     <div className="h-3 w-0.5 bg-slate-300"></div>
                     {step.dropOff !== null && step.dropOff > 0 ? (
-                      <span className="text-[9px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-200">
+                      <span className="text-[9px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
                         -{formatPercent(step.dropOff)} Penurunan
                       </span>
-                    ) : idx === 3 ? (
-                      <span className="text-[9px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200">
-                        Fase Penyelesaian Program
+                    ) : (
+                      <span className="text-[9px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                        Kelanjutan Tahap
                       </span>
-                    ) : null}
+                    )}
                     <div className="h-3 w-0.5 bg-slate-300"></div>
                   </div>
                 )}
