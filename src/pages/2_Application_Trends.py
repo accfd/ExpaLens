@@ -18,7 +18,6 @@ from db_connection import (
     get_seasonality_heatmap_data, get_duration_preferences
 )
 
-st.set_page_config(**PAGE_CONFIG)
 load_css()
 sidebar_filters = render_global_sidebar()
 

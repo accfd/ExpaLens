@@ -5,33 +5,91 @@
 /* Impor Font Resmi AIESEC: Lato dari Google Fonts (Blue Book Halaman 15) */
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap');
 
+/* Sembunyikan Tombol Deploy dan Menu Bawaan Streamlit */
+.stDeployButton, #MainMenu, footer {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+header[data-testid="stHeader"] {
+    background-color: transparent !important;
+}
+
+/* Sembunyikan ikon anchor link (#) pada judul */
+a.anchorjs-link {
+    display: none !important;
+}
+
 /* Latar Belakang Kanvas Utama (AIESEC Light Gray #F3F4F7) */
 .stApp {
-    background-color: #F3F4F7;
-    font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #F8FAFC !important;
+    font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
 /* Mengurangi padding atas berlebih pada kontainer Streamlit */
 .block-container {
-    padding-top: 1.8rem;
-    padding-bottom: 2.5rem;
-    max-width: 95%;
+    padding-top: 2rem !important;
+    padding-bottom: 3rem !important;
+    max-width: 95% !important;
 }
 
-/* Sidebar Styling */
+/* Sidebar Styling Bersih */
 section[data-testid="stSidebar"] {
-    background-color: #FFFFFF;
-    border-right: 1px solid #CACCD1;
+    background-color: #FFFFFF !important;
+    border-right: 1px solid #E2E8F0 !important;
+    padding-top: 1rem !important;
+}
+
+/* Styling Menu Navigasi Modern di Sidebar */
+section[data-testid="stSidebar"] nav ul li a {
+    border-radius: 8px !important;
+    font-family: 'Lato', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 8px 12px !important;
+    color: #475569 !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+section[data-testid="stSidebar"] nav ul li a:hover {
+    background-color: #F1F5F9 !important;
+    color: #037EF3 !important;
+}
+
+section[data-testid="stSidebar"] nav ul li a[aria-current="page"] {
+    background-color: #EBF5FF !important;
+    color: #037EF3 !important;
+    font-weight: 700 !important;
+    border-left: 3px solid #037EF3 !important;
+}
+
+/* Custom Tag Chips pada Multiselect Slicers (Mengubah Merah Bawaan ke Aksen Biru Elegan) */
+span[data-baseweb="tag"] {
+    background-color: #EBF5FF !important;
+    border: 1px solid #BFDBFE !important;
+    border-radius: 6px !important;
+    padding: 2px 6px !important;
+    margin: 2px !important;
+}
+
+span[data-baseweb="tag"] span {
+    color: #037EF3 !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    font-family: 'Lato', sans-serif !important;
+}
+
+span[data-baseweb="tag"] svg {
+    fill: #037EF3 !important;
 }
 
 /* Header Section */
 .header-container {
-    padding-bottom: 1rem;
+    padding-bottom: 1.2rem;
     margin-bottom: 1.5rem;
     border-bottom: 1px solid #E2E8F0;
 }
 .header-title {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 900;
     color: #0F172A;
     margin-bottom: 4px;
@@ -40,7 +98,7 @@ section[data-testid="stSidebar"] {
 }
 .header-subtitle {
     font-size: 14px;
-    color: #52565E;
+    color: #64748B;
     font-weight: 400;
     line-height: 1.5;
 }
@@ -49,26 +107,27 @@ section[data-testid="stSidebar"] {
 .hero-card {
     background: linear-gradient(145deg, #0A2540 0%, #001A35 100%);
     border-radius: 14px;
-    padding: 22px 24px;
+    padding: 24px;
     color: #FFFFFF;
-    box-shadow: 0 8px 20px -4px rgba(10, 37, 64, 0.25);
+    box-shadow: 0 10px 25px -5px rgba(10, 37, 64, 0.25);
     margin-bottom: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .hero-card-title {
-    font-size: 12px;
+    font-size: 11px;
     color: #93C5FD;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
 }
 .hero-card-value {
-    font-size: 40px;
+    font-size: 42px;
     font-weight: 900;
     color: #FFFFFF;
     margin: 6px 0 16px 0;
     font-family: 'Lato', sans-serif;
     line-height: 1.1;
+    letter-spacing: -0.02em;
 }
 .hero-card-table {
     width: 100%;
@@ -77,7 +136,7 @@ section[data-testid="stSidebar"] {
 }
 .hero-card-table td {
     padding: 6px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Standard Metric Scorecard */
@@ -85,26 +144,26 @@ section[data-testid="stSidebar"] {
     background-color: #FFFFFF;
     border: 1px solid #E2E8F0;
     border-radius: 14px;
-    padding: 18px 20px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+    padding: 20px 22px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     margin-bottom: 18px;
     height: 100%;
 }
 .metric-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 14px -2px rgba(3, 126, 243, 0.12);
+    box-shadow: 0 8px 16px -2px rgba(3, 126, 243, 0.12);
     border-color: #037EF3;
 }
 .metric-card-label {
-    font-size: 12px;
+    font-size: 11px;
     color: #64748B;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
 }
 .metric-card-num {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 900;
     color: #0F172A;
     margin: 4px 0 2px 0;
@@ -120,9 +179,9 @@ section[data-testid="stSidebar"] {
     display: inline-block;
     font-size: 11px;
     font-weight: 700;
-    padding: 2px 8px;
+    padding: 3px 10px;
     border-radius: 9999px;
-    margin-top: 4px;
+    margin-top: 6px;
 }
 
 /* Card Visual Container untuk Grafik Plotly */
@@ -130,12 +189,12 @@ section[data-testid="stSidebar"] {
     background-color: #FFFFFF;
     border: 1px solid #E2E8F0;
     border-radius: 14px;
-    padding: 20px 22px;
+    padding: 22px 24px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.03);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.04);
 }
 .chart-header {
-    margin-bottom: 14px;
+    margin-bottom: 16px;
 }
 .chart-title {
     font-size: 16px;
@@ -154,7 +213,7 @@ section[data-testid="stSidebar"] {
     background-color: #F0F6FF;
     border-left: 4px solid #037EF3;
     border-radius: 0 12px 12px 0;
-    padding: 20px;
+    padding: 22px;
     margin-top: 15px;
 }
 .action-box-title {

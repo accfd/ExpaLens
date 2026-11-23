@@ -15,7 +15,6 @@ from config import (
 from utils import load_css, render_global_sidebar, get_recommendation_action
 from db_connection import get_rejections_ranking, get_rejections_by_product
 
-st.set_page_config(**PAGE_CONFIG)
 load_css()
 sidebar_filters = render_global_sidebar()
 

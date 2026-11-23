@@ -12,7 +12,6 @@ from config import PAGE_CONFIG, AIESEC_BLUE, MIDNIGHT_NAVY, EXPALENS_PLOTLY_THEM
 from utils import load_css, render_global_sidebar, format_number
 from db_connection import get_destinations_map_data, get_host_lc_drilldown
 
-st.set_page_config(**PAGE_CONFIG)
 load_css()
 sidebar_filters = render_global_sidebar()
 

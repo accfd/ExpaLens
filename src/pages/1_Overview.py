@@ -17,8 +17,7 @@ from db_connection import (
     get_overview_data, get_product_breakdown_overview, get_program_achievements
 )
 
-# 1. Konfigurasi Halaman & Injeksi Desain CSS
-st.set_page_config(**PAGE_CONFIG)
+# 1. Injeksi Desain CSS & Filter Sidebar
 load_css()
 sidebar_filters = render_global_sidebar()
 

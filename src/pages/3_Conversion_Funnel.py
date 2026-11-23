@@ -17,7 +17,6 @@ from db_connection import (
     get_funnel_durations, get_durations_by_product, get_country_speed_vs_volume, get_overview_data
 )
 
-st.set_page_config(**PAGE_CONFIG)
 load_css()
 sidebar_filters = render_global_sidebar()
 
