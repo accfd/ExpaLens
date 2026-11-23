@@ -308,7 +308,7 @@ def get_trends_data(years=None, products=None, statuses=None, regions=None, coun
                 "total_apps": int(total_prod)
             })
             
-    monthly_trend = df_monthly[["year_month", "total_apps"]].to_dict(orient="records") if not df_monthly.empty else []
+    monthly_trend = df_monthly[["year_month", "year", "month", "month_name", "total_apps"]].to_dict(orient="records") if not df_monthly.empty else []
     status_dynamics = df_monthly[["year_month", "accepted", "finished", "rejected"]].to_dict(orient="records") if not df_monthly.empty else []
     seasonality_matrix = df_monthly[["year", "month", "month_name", "total_apps"]].to_dict(orient="records") if not df_monthly.empty else []
     

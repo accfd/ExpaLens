@@ -55,6 +55,26 @@ export default function ApplicationTrends({ data, isLoading }) {
     return (item.total_apps || 0) > (max?.total_apps || 0) ? item : max;
   }, null);
 
+  const formatPeakMonth = (item) => {
+    if (!item) return '-';
+    if (item.month_name && item.year) {
+      return `${item.month_name} ${item.year}`;
+    }
+    if (item.year_month) {
+      const parts = item.year_month.split('-');
+      if (parts.length === 2) {
+        const yr = parts[0];
+        const mIdx = parseInt(parts[1], 10) - 1;
+        const idMonths = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        if (mIdx >= 0 && mIdx < 12) {
+          return `${idMonths[mIdx]} ${yr}`;
+        }
+      }
+      return item.year_month;
+    }
+    return '-';
+  };
+
   const topProduct = preferenceMethod.reduce((max, item) => {
     return (item.total_apps || 0) > (max?.total_apps || 0) ? item : max;
   }, null);
@@ -65,7 +85,14 @@ export default function ApplicationTrends({ data, isLoading }) {
   const totalShortTerm = preferenceMethod.reduce((sum, item) => sum + (item.short_term_count || 0), 0);
   const totalLongTerm = preferenceMethod.reduce((sum, item) => sum + (item.long_term_count || 0), 0);
   const totalDuration = totalShortTerm + totalLongTerm;
-  const shortTermPct = totalDuration > 0 ? (totalShortTerm / totalDuration) * 100 : 0;
+  const isLongTermDominant = totalLongTerm >= totalShortTerm;
+  const dominantDurationName = isLongTermDominant ? 'Long-Term' : 'Short-Term';
+  const dominantDurationPct = totalDuration > 0 
+    ? ((isLongTermDominant ? totalLongTerm : totalShortTerm) / totalDuration) * 100 
+    : 0;
+  const dominantDurationDesc = isLongTermDominant 
+    ? 'Durasi Program Minimal 12 Minggu' 
+    : 'Durasi Program Kurang dari 12 Minggu';
 
   // 2. Heatmap Matriks Seasonality
   const maxSeasonalityVal = seasonalityMatrix.reduce((max, cur) => Math.max(max, cur.total_apps || 0), 1);
@@ -127,7 +154,7 @@ export default function ApplicationTrends({ data, isLoading }) {
           </div>
           <div className="my-2">
             <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              {peakMonth ? `${peakMonth.month_name} ${peakMonth.year}` : '-'}
+              {formatPeakMonth(peakMonth)}
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
               All-Time Peak Volume Pendaftaran
@@ -183,10 +210,10 @@ export default function ApplicationTrends({ data, isLoading }) {
           </div>
           <div className="my-2">
             <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Short-Term
+              {dominantDurationName}
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Durasi Program Kurang dari 12 Minggu
+              {dominantDurationDesc}
             </p>
           </div>
           <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between">
@@ -194,7 +221,7 @@ export default function ApplicationTrends({ data, isLoading }) {
               Mayoritas
             </span>
             <span className="text-xs font-semibold text-slate-500">
-              {formatPercent(shortTermPct)} Dominasi
+              {formatPercent(dominantDurationPct)} Dominasi
             </span>
           </div>
         </div>
