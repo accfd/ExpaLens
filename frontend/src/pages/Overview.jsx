@@ -381,7 +381,7 @@ export default function Overview({ data, isLoading }) {
       {/* =========================================================================
           BARIS 3: GRAFIK CAPAIAN PROGRAM & TINGKAT KELULUSAN
       ========================================================================= */}
-      <section className="pt-5 border-t border-slate-200/80">
+      <section className="pt-8 mt-6 border-t border-slate-200">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Kolom Kiri (Lebar 7/12): Clustered Column Chart */}
           <div className="lg:col-span-7 bg-white rounded-2xl p-5 sm:p-6 shadow-xs border border-slate-200 flex flex-col justify-between">

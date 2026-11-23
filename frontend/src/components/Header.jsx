@@ -53,7 +53,7 @@ export default function Header({
         </div>
       )}
 
-      <header className="bg-white border-b border-slate-200 px-4 sm:px-6 py-2 sm:py-2.5 sticky top-0 z-20 shadow-xs">
+      <header className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3.5 sm:py-4 sticky top-0 z-20 shadow-xs">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
           <div className="flex items-start gap-3">
             {/* Mobile Hamburger Menu Toggle */}
@@ -67,10 +67,10 @@ export default function Header({
             </button>
 
             <div>
-              <h1 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight leading-tight">
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-tight">
                 {meta.title}
               </h1>
-              <p className="text-[11px] text-slate-500 mt-0.5 hidden sm:block">
+              <p className="text-xs sm:text-sm text-slate-500 mt-1 hidden sm:block leading-relaxed max-w-4xl">
                 {meta.desc}
               </p>
             </div>
