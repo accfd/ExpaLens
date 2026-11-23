@@ -63,7 +63,7 @@ export default function Overview({ data, isLoading }) {
     is_positive: true
   };
 
-  // Funnel 5 Tahapan Kunci dengan skala proporsi visual corong
+  // Funnel 4 Tahapan Kunci Seleksi Sesuai Tabel 3 PRD (Monotonik Turun Mengerucut)
   const funnelSteps = [
     {
       stageNumber: 1,
@@ -83,7 +83,7 @@ export default function Overview({ data, isLoading }) {
       stageLabel: 'Lulus Seleksi Berkas',
       count: totalAccepted,
       retention: totalApps > 0 ? (totalAccepted / totalApps) * 100 : 0,
-      widthPercent: 78,
+      widthPercent: 70,
       bgColor: 'bg-[#0A8EA0]',
       textColor: 'text-[#0A8EA0]',
       borderColor: 'border-teal-300',
@@ -95,31 +95,19 @@ export default function Overview({ data, isLoading }) {
       stageLabel: 'Penandatanganan Kontrak',
       count: totalApproved,
       retention: totalApps > 0 ? (totalApproved / totalApps) * 100 : 0,
-      widthPercent: 60,
+      widthPercent: 48,
       bgColor: 'bg-[#F48924]',
       textColor: 'text-[#F48924]',
       borderColor: 'border-orange-300',
-      dropOff: totalApproved > 0 ? ((totalApproved - totalRealized) / totalApproved) * 100 : 0
+      dropOff: totalApproved > 0 ? ((totalApproved - totalFinished) / totalApproved) * 100 : 0
     },
     {
       stageNumber: 4,
-      stageName: 'Realized',
-      stageLabel: 'Berangkat ke Negara Mitra',
-      count: totalRealized,
-      retention: totalApps > 0 ? (totalRealized / totalApps) * 100 : 0,
-      widthPercent: 44,
-      bgColor: 'bg-purple-600',
-      textColor: 'text-purple-600',
-      borderColor: 'border-purple-300',
-      dropOff: 0
-    },
-    {
-      stageNumber: 5,
       stageName: 'Finished',
       stageLabel: 'Menyelesaikan Program',
       count: totalFinished,
       retention: totalApps > 0 ? (totalFinished / totalApps) * 100 : 0,
-      widthPercent: 48,
+      widthPercent: 34,
       bgColor: 'bg-emerald-600',
       textColor: 'text-emerald-600',
       borderColor: 'border-emerald-300',
