@@ -174,7 +174,7 @@ export default function App() {
           activeFiltersCount={activeFiltersCount}
         />
 
-        <main className="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+        <main className="p-3 sm:p-4 max-w-7xl w-full mx-auto space-y-4">
           {error && (
             <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-center gap-3 text-rose-800 text-xs sm:text-sm font-medium">
               <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />

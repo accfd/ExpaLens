@@ -130,34 +130,34 @@ export default function Overview({ data, isLoading }) {
   const gaugeAngle = -90 + (clampedFinishRate / 100) * 180;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* BARIS 1: HERO CARD & CUSTOMER FUNNEL */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
         {/* Kolom Kiri: Hero Card Midnight Navy */}
-        <div className="lg:col-span-4 bg-[#0A2540] text-white rounded-2xl p-6 shadow-md border border-slate-800 flex flex-col justify-between">
+        <div className="lg:col-span-4 bg-[#0A2540] text-white rounded-xl p-4 shadow-xs border border-slate-800 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-700/80">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-700/80">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300">
                 TOTAL PENDAFTARAN
               </span>
             </div>
 
-            <div className="mt-5">
-              <div className="text-4xl lg:text-5xl font-black tracking-tight text-white">
+            <div className="mt-2.5">
+              <div className="text-3xl lg:text-4xl font-black tracking-tight text-white">
                 {formatNumber(totalApps)}
               </div>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-[11px] text-slate-400 mt-0.5">
                 Seluruh aplikasi pelamar pertukaran pemuda yang terekam pada sistem CRM Expa.
               </p>
             </div>
           </div>
 
           {/* Tabel Rincian Program */}
-          <div className="mt-8 pt-5 border-t border-slate-700/80">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+          <div className="mt-3 pt-3 border-t border-slate-700/80">
+            <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
               Distribusi Volume Program
             </h4>
-            <div className="space-y-2.5">
+            <div className="space-y-1.5">
               {productBreakdown.map((item, idx) => {
                 const prodName = item.product_name || item.product || '';
                 const count = item.total_apps || item.count || 0;
@@ -177,14 +177,14 @@ export default function Overview({ data, isLoading }) {
                 }
 
                 return (
-                  <div key={idx} className="flex items-center justify-between bg-slate-900/60 px-3.5 py-2.5 rounded-xl border border-slate-800">
+                  <div key={idx} className="flex items-center justify-between bg-slate-900/60 px-2.5 py-1.5 rounded-lg border border-slate-800">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: accentColor }}></span>
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: accentColor }}></span>
                       <span className="text-xs font-bold text-slate-200">{prodName}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-black text-white">{formatNumber(count)}</span>
-                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${badgeColor}`}>
+                      <span className="text-xs font-black text-white">{formatNumber(count)}</span>
+                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${badgeColor}`}>
                         {formatPercent(pct)}
                       </span>
                     </div>
@@ -196,51 +196,51 @@ export default function Overview({ data, isLoading }) {
         </div>
 
         {/* Kolom Kanan: Customer Funnel Visual */}
-        <div className="lg:col-span-8 bg-white rounded-2xl p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="pb-3 border-b border-slate-100">
-            <h3 className="text-base font-bold text-slate-900">
+        <div className="lg:col-span-8 bg-white rounded-xl p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
+          <div className="pb-2 border-b border-slate-100">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900">
               Distribusi Peserta pada Tahapan Seleksi (Customer Funnel)
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5">
               Alur retensi peserta dari pendaftaran awal hingga menyelesaikan masa program.
             </p>
           </div>
 
           {/* Symmetrical Centered Funnel Tiers */}
-          <div className="my-4 flex flex-col items-center space-y-1.5 w-full">
+          <div className="my-1.5 flex flex-col items-center space-y-0.5 w-full">
             {funnelSteps.map((step, idx) => (
               <React.Fragment key={idx}>
                 {/* Funnel Stage Bar */}
                 <div
                   style={{ width: `${step.widthPercent}%` }}
-                  className="transition-all duration-500 min-w-[280px]"
+                  className="transition-all duration-500 min-w-[240px]"
                 >
                   <div className={`
-                    rounded-xl p-3 border shadow-xs flex items-center justify-between transition-transform hover:scale-[1.01]
+                    rounded-lg px-2.5 py-1.5 border shadow-xs flex items-center justify-between transition-transform hover:scale-[1.01]
                     ${step.stageNumber === 1 ? 'bg-blue-50/90 border-blue-200' : 'bg-slate-50 border-slate-200'}
                   `}>
-                    <div className="flex items-center gap-2.5">
-                      <div className={`w-6 h-6 rounded-lg ${step.bgColor} text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0`}>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-4 h-4 rounded-md ${step.bgColor} text-white flex items-center justify-center text-[10px] font-black shadow-xs shrink-0`}>
                         {step.stageNumber}
                       </div>
                       <div className="relative group">
-                        <span className="text-xs font-extrabold text-slate-900 cursor-help">
+                        <span className="text-xs font-bold text-slate-900 cursor-help">
                           {step.stageName}
                         </span>
                         {/* Tooltip Hover/Fokus Penjelasan Tahap */}
-                        <div className="absolute left-0 bottom-full mb-1.5 hidden group-hover:flex items-center z-20 whitespace-nowrap bg-slate-900 text-white text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-lg pointer-events-none transition-opacity">
+                        <div className="absolute left-0 bottom-full mb-1 hidden group-hover:flex items-center z-20 whitespace-nowrap bg-slate-900 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-lg pointer-events-none transition-opacity">
                           {step.stageLabel}
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <div className="text-right">
-                        <div className="text-sm font-black text-slate-900">
-                          {formatNumber(step.count)} <span className="text-[10px] font-semibold text-slate-400">Peserta</span>
+                        <div className="text-xs font-black text-slate-900">
+                          {formatNumber(step.count)} <span className="text-[9px] font-semibold text-slate-400">Peserta</span>
                         </div>
                       </div>
-                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded border ${
+                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${
                         step.stageNumber === 1 
                           ? 'bg-[#037EF3] text-white border-[#037EF3]' 
                           : 'bg-white text-slate-700 border-slate-200'
@@ -253,18 +253,18 @@ export default function Overview({ data, isLoading }) {
 
                 {/* Downward Connector with Callout */}
                 {idx < funnelSteps.length - 1 && (
-                  <div className="flex items-center justify-center gap-2 py-0.5">
-                    <div className="h-3 w-0.5 bg-slate-300"></div>
+                  <div className="flex items-center justify-center gap-1.5 py-0">
+                    <div className="h-1.5 w-0.5 bg-slate-300"></div>
                     {step.dropOff !== null && step.dropOff > 0 ? (
-                      <span className="text-[9px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
+                      <span className="text-[8px] font-bold text-rose-600 bg-rose-50 px-1 py-0 rounded border border-rose-200">
                         -{formatPercent(step.dropOff)} Penurunan
                       </span>
                     ) : (
-                      <span className="text-[9px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                      <span className="text-[8px] font-semibold text-slate-500 bg-slate-100 px-1 py-0 rounded border border-slate-200">
                         Kelanjutan Tahap
                       </span>
                     )}
-                    <div className="h-3 w-0.5 bg-slate-300"></div>
+                    <div className="h-1.5 w-0.5 bg-slate-300"></div>
                   </div>
                 )}
               </React.Fragment>
@@ -274,120 +274,120 @@ export default function Overview({ data, isLoading }) {
       </section>
 
       {/* BARIS 2: KARTU INDIKATOR KINERJA UTAMA & YOY */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         {/* Kartu 1: Total Realized */}
-        <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200 flex flex-col justify-between">
+        <div className="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
               TOTAL REALIZED
             </span>
-            <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-              <Plane className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+              <Plane className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="my-3">
-            <div className="text-3xl font-black text-slate-900 tracking-tight">
+          <div className="my-1.5">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               {formatNumber(totalRealized)}
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-[11px] text-slate-500 mt-0.5">
               Peserta Berangkat ke Luar Negeri
             </p>
           </div>
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[11px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded">
               Realisasi Aktif
             </span>
-            <span className="text-xs font-semibold text-slate-500">
+            <span className="text-[11px] font-semibold text-slate-500">
               {formatPercent(totalApps ? (totalRealized / totalApps) * 100 : 0)} konversi
             </span>
           </div>
         </div>
 
         {/* Kartu 2: Total Finished */}
-        <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200 flex flex-col justify-between">
+        <div className="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
               TOTAL FINISHED
             </span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <Award className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <Award className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="my-3">
-            <div className="text-3xl font-black text-slate-900 tracking-tight">
+          <div className="my-1.5">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               {formatNumber(totalFinished)}
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-[11px] text-slate-500 mt-0.5">
               Peserta Menyelesaikan Program
             </p>
           </div>
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">
               Kelulusan Evaluasi
             </span>
-            <span className="text-xs font-semibold text-slate-500">
+            <span className="text-[11px] font-semibold text-slate-500">
               {formatPercent(totalApps ? (totalFinished / totalApps) * 100 : 0)} kelulusan
             </span>
           </div>
         </div>
 
         {/* Kartu 3: Pertumbuhan Tahunan (YoY Growth) */}
-        <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200 flex flex-col justify-between">
+        <div className="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
               PERTUMBUHAN TAHUNAN (YOY)
             </span>
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${yoy.is_positive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-              {yoy.is_positive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+            <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${yoy.is_positive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+              {yoy.is_positive ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
             </div>
           </div>
-          <div className="my-3">
-            <div className={`text-3xl font-black tracking-tight ${yoy.is_positive ? 'text-emerald-600' : 'text-rose-600'}`}>
+          <div className="my-1.5">
+            <div className={`text-2xl sm:text-3xl font-black tracking-tight ${yoy.is_positive ? 'text-emerald-600' : 'text-rose-600'}`}>
               {yoy.is_positive ? '+' : ''}{formatPercent(yoy.yoy_pct)}
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-[11px] text-slate-500 mt-0.5">
               Perbandingan Aplikasi {yoy.current_year} vs {yoy.prev_year}
             </p>
           </div>
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">
               {formatNumber(yoy.current_val)} vs {formatNumber(yoy.prev_val)}
             </span>
-            <span className={`text-xs font-bold ${yoy.is_positive ? 'text-emerald-600' : 'text-rose-600'}`}>
+            <span className={`text-[11px] font-bold ${yoy.is_positive ? 'text-emerald-600' : 'text-rose-600'}`}>
               {yoy.is_positive ? 'Meningkat' : 'Menurun'}
             </span>
           </div>
         </div>
 
         {/* Kartu 4: Rata-Rata Waktu Seleksi */}
-        <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200 flex flex-col justify-between">
+        <div className="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
               WAKTU PROSES SELEKSI
             </span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-              <Clock className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+              <Clock className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="my-3">
-            <div className="text-3xl font-black text-slate-900 tracking-tight">
-              {Number(avgDays).toFixed(1).replace('.', ',')} <span className="text-lg font-bold text-slate-500">Hari</span>
+          <div className="my-1.5">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              {Number(avgDays).toFixed(1).replace('.', ',')} <span className="text-base font-bold text-slate-500">Hari</span>
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-[11px] text-slate-500 mt-0.5">
               Rata-rata Durasi Applied ke Accepted
             </p>
           </div>
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[11px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded">
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded">
               Days to Accept
             </span>
             {yoy?.yoy_pct !== undefined ? (
-              <span className={`text-xs font-bold flex items-center gap-1 ${yoy.yoy_pct >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+              <span className={`text-[11px] font-bold flex items-center gap-1 ${yoy.yoy_pct >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                 {yoy.yoy_pct >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                 {yoy.yoy_pct >= 0 ? '+' : ''}{formatPercent(yoy.yoy_pct)} YoY
               </span>
             ) : (
-              <span className="text-xs text-slate-400">Baseline 2021</span>
+              <span className="text-[11px] text-slate-400">Baseline 2021</span>
             )}
           </div>
         </div>
