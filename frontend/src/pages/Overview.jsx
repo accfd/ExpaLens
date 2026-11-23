@@ -30,7 +30,7 @@ const formatPercent = (num, decimals = 1) => {
 export default function Overview({ data, isLoading }) {
   if (isLoading && !data) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3 text-slate-500">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-3 text-slate-500 font-sans">
         <div className="w-8 h-8 border-4 border-[#037EF3] border-t-transparent rounded-full animate-spin"></div>
         <p className="text-sm font-semibold">Memuat data analitik...</p>
       </div>
@@ -43,12 +43,14 @@ export default function Overview({ data, isLoading }) {
   const totalApproved = kpis.total_approved || 0;
   const totalRealized = kpis.total_realized || 0;
   const totalFinished = kpis.total_finished || 0;
-  const finishRate = kpis.finish_rate || (totalAccepted > 0 ? (totalFinished / totalAccepted) * 100 : 0);
+
+  // Formula kalkulasi baku: (Total Finished / Total Accepted) * 100
+  const finishRate = totalAccepted > 0 ? (totalFinished / totalAccepted) * 100 : 0;
 
   const productBreakdown = data?.product_breakdown || [];
   const programPerformance = data?.achievements || [];
 
-  // Funnel 5 Tahapan Resmi AIESEC
+  // Alur Retensi 5 Tahapan Resmi Funnel
   const funnelSteps = [
     {
       stageNumber: 1,
@@ -59,55 +61,55 @@ export default function Overview({ data, isLoading }) {
       widthPercent: 100,
       bgColor: 'bg-[#037EF3]',
       textColor: 'text-[#037EF3]',
-      borderColor: 'border-blue-300',
+      borderColor: 'border-blue-200',
       dropOff: totalApps > 0 ? ((totalApps - totalAccepted) / totalApps) * 100 : 0
     },
     {
       stageNumber: 2,
       stageName: 'Accepted',
-      stageLabel: 'Lulus Seleksi Berkas',
+      stageLabel: 'Lolos Seleksi Berkas & Wawancara',
       count: totalAccepted,
       retention: totalApps > 0 ? (totalAccepted / totalApps) * 100 : 0,
-      widthPercent: 78,
+      widthPercent: 82,
       bgColor: 'bg-[#0A8EA0]',
       textColor: 'text-[#0A8EA0]',
-      borderColor: 'border-teal-300',
+      borderColor: 'border-teal-200',
       dropOff: totalAccepted > 0 ? ((totalAccepted - totalApproved) / totalAccepted) * 100 : 0
     },
     {
       stageNumber: 3,
       stageName: 'Approved',
-      stageLabel: 'Penandatanganan Kontrak',
+      stageLabel: 'Pembayaran Biaya & TTD Kontrak',
       count: totalApproved,
       retention: totalApps > 0 ? (totalApproved / totalApps) * 100 : 0,
-      widthPercent: 62,
-      bgColor: 'bg-[#F48924]',
-      textColor: 'text-[#F48924]',
-      borderColor: 'border-orange-300',
-      dropOff: totalApproved > 0 ? ((totalApproved - totalRealized) / totalApproved) * 100 : null
+      widthPercent: 66,
+      bgColor: 'bg-[#0A2540]',
+      textColor: 'text-[#0A2540]',
+      borderColor: 'border-slate-300',
+      dropOff: totalApproved > 0 ? ((totalApproved - totalRealized) / totalApproved) * 100 : 0
     },
     {
       stageNumber: 4,
       stageName: 'Realized',
-      stageLabel: 'Berangkat ke Negara Mitra',
+      stageLabel: 'Peserta Berangkat ke Luar Negeri',
       count: totalRealized,
       retention: totalApps > 0 ? (totalRealized / totalApps) * 100 : 0,
-      widthPercent: 48,
-      bgColor: 'bg-purple-600',
-      textColor: 'text-purple-600',
-      borderColor: 'border-purple-300',
-      dropOff: totalRealized > 0 ? ((totalRealized - totalFinished) / totalRealized) * 100 : null
+      widthPercent: 50,
+      bgColor: 'bg-[#F48924]',
+      textColor: 'text-[#F48924]',
+      borderColor: 'border-orange-200',
+      dropOff: totalRealized > 0 ? ((totalRealized - totalFinished) / totalRealized) * 100 : 0
     },
     {
       stageNumber: 5,
       stageName: 'Finished',
-      stageLabel: 'Menyelesaikan Program',
+      stageLabel: 'Menyelesaikan Masa Program',
       count: totalFinished,
       retention: totalApps > 0 ? (totalFinished / totalApps) * 100 : 0,
-      widthPercent: 36,
-      bgColor: 'bg-emerald-600',
-      textColor: 'text-emerald-600',
-      borderColor: 'border-emerald-300',
+      widthPercent: 38,
+      bgColor: 'bg-[#10B981]',
+      textColor: 'text-[#10B981]',
+      borderColor: 'border-emerald-200',
       dropOff: null
     }
   ];
@@ -116,17 +118,20 @@ export default function Overview({ data, isLoading }) {
   const gaugeAngle = -90 + (clampedFinishRate / 100) * 180;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4 font-sans text-slate-800">
       {/* =========================================================================
-          BARIS 1: HERO CARD & CORONG SELEKSI (CUSTOMER FUNNEL)
+          LAYAR PERTAMA (ABOVE THE FOLD): HERO CARD & RETENTION FUNNEL
       ========================================================================= */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* Kolom Kiri: Hero Card Midnight Navy */}
-        <div className="lg:col-span-4 bg-[#0A2540] text-white rounded-2xl p-5 shadow-xs border border-slate-800 flex flex-col justify-between">
+        {/* Kolom Kiri (Lebar 5/12): Hero Card Midnight Navy (#0A2540) */}
+        <div className="lg:col-span-5 bg-[#0A2540] text-white rounded-2xl p-5 shadow-xs border border-slate-800 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-2.5 border-b border-slate-700/80">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-700/80">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300">
                 TOTAL PENDAFTARAN
+              </span>
+              <span className="text-[10px] font-semibold text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded">
+                CRM Expa
               </span>
             </div>
 
@@ -135,12 +140,12 @@ export default function Overview({ data, isLoading }) {
                 {formatNumber(totalApps)}
               </div>
               <p className="text-xs text-slate-400 mt-1">
-                Total pelamar pertukaran pemuda terdata pada CRM Expa.
+                Seluruh aplikasi pelamar pertukaran pemuda terdata pada sistem CRM Expa.
               </p>
             </div>
           </div>
 
-          {/* Tabel Rincian Program */}
+          {/* Rincian Distribusi Volume Program */}
           <div className="mt-4 pt-3.5 border-t border-slate-700/80">
             <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
               Distribusi Volume Program
@@ -152,22 +157,22 @@ export default function Overview({ data, isLoading }) {
                 const pct = totalApps > 0 ? (count / totalApps) * 100 : 0;
 
                 let badgeColor = 'bg-slate-700 text-slate-200';
-                let accentColor = '#0A8EA0';
+                let dotColor = '#0A8EA0';
                 if (prodName.includes('GTa') || prodName.includes('Talent')) {
                   badgeColor = 'bg-[#0A8EA0]/20 text-[#0A8EA0] border border-[#0A8EA0]/30';
-                  accentColor = '#0A8EA0';
+                  dotColor = '#0A8EA0';
                 } else if (prodName.includes('GTe') || prodName.includes('Teacher')) {
                   badgeColor = 'bg-[#F48924]/20 text-[#F48924] border border-[#F48924]/30';
-                  accentColor = '#F48924';
+                  dotColor = '#F48924';
                 } else if (prodName.includes('GV') || prodName.includes('Volunteer')) {
                   badgeColor = 'bg-[#F85A40]/20 text-[#F85A40] border border-[#F85A40]/30';
-                  accentColor = '#F85A40';
+                  dotColor = '#F85A40';
                 }
 
                 return (
                   <div key={idx} className="flex items-center justify-between bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-800">
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: accentColor }}></span>
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dotColor }}></span>
                       <span className="text-xs font-bold text-slate-200">{prodName}</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -183,15 +188,20 @@ export default function Overview({ data, isLoading }) {
           </div>
         </div>
 
-        {/* Kolom Kanan: Corong Seleksi Peserta */}
-        <div className="lg:col-span-8 bg-white rounded-2xl p-5 shadow-xs border border-slate-200 flex flex-col justify-between">
-          <div className="pb-2.5 border-b border-slate-100">
-            <h3 className="text-sm font-bold text-slate-900">
-              Distribusi Peserta pada Tahapan Seleksi
-            </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Alur retensi peserta dari pendaftaran hingga menyelesaikan masa program.
-            </p>
+        {/* Kolom Kanan (Lebar 7/12): Alur Retensi Seleksi Peserta (Customer Funnel) */}
+        <div className="lg:col-span-7 bg-white rounded-2xl p-5 shadow-xs border border-slate-200 flex flex-col justify-between">
+          <div className="pb-2 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900">
+                Distribusi Peserta pada Tahapan Seleksi
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Alur retensi peserta dari pendaftaran awal hingga menyelesaikan masa program.
+              </p>
+            </div>
+            <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+              5 Tahap Seleksi
+            </span>
           </div>
 
           {/* Symmetrical Centered Funnel Tiers */}
@@ -215,8 +225,8 @@ export default function Overview({ data, isLoading }) {
                         <span className="text-xs font-bold text-slate-900 cursor-help">
                           {step.stageName}
                         </span>
-                        {/* Tooltip Hover/Fokus Penjelasan Tahap */}
-                        <div className="absolute left-0 bottom-full mb-1 hidden group-hover:flex items-center z-20 whitespace-nowrap bg-slate-900 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-lg pointer-events-none transition-opacity">
+                        {/* Tooltip Hover Keterangan Tahap */}
+                        <div className="absolute left-0 bottom-full mb-1 hidden group-hover:flex items-center z-20 whitespace-nowrap bg-slate-900 text-white text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-lg pointer-events-none">
                           {step.stageLabel}
                         </div>
                       </div>
@@ -239,7 +249,7 @@ export default function Overview({ data, isLoading }) {
                   </div>
                 </div>
 
-                {/* Downward Connector with Callout */}
+                {/* Downward Connector with Drop-Off Callout */}
                 {idx < funnelSteps.length - 1 && (
                   <div className="flex items-center justify-center gap-1.5 py-0">
                     <div className="h-1.5 w-0.5 bg-slate-300"></div>
@@ -262,7 +272,7 @@ export default function Overview({ data, isLoading }) {
       </section>
 
       {/* =========================================================================
-          BARIS 2: 4 MILESTONE UTAMA SELEKSI (ACCEPTED, APPROVED, REALIZED, FINISHED)
+          BARIS BAWAH LAYAR PERTAMA: 4 KARTU MILESTONE SELEKSI
       ========================================================================= */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Kartu 1: Total Accepted */}
@@ -327,7 +337,7 @@ export default function Overview({ data, isLoading }) {
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
               TOTAL REALIZED
             </span>
-            <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#F48924] flex items-center justify-center">
               <Plane className="w-4 h-4" />
             </div>
           </div>
@@ -340,7 +350,7 @@ export default function Overview({ data, isLoading }) {
             </p>
           </div>
           <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-bold text-[#F48924] bg-orange-50 px-2 py-0.5 rounded">
               Tahap 4 Realisasi
             </span>
             <span className="text-xs font-semibold text-slate-500">
@@ -355,7 +365,7 @@ export default function Overview({ data, isLoading }) {
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">
               TOTAL FINISHED
             </span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-[#10B981] flex items-center justify-center">
               <Award className="w-4 h-4" />
             </div>
           </div>
@@ -368,7 +378,7 @@ export default function Overview({ data, isLoading }) {
             </p>
           </div>
           <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-bold text-[#10B981] bg-emerald-50 px-2 py-0.5 rounded">
               Kelulusan Akhir
             </span>
             <span className="text-xs font-semibold text-slate-500">
@@ -379,11 +389,11 @@ export default function Overview({ data, isLoading }) {
       </section>
 
       {/* =========================================================================
-          BARIS 3: GRAFIK CAPAIAN PROGRAM & TINGKAT KELULUSAN
+          LAYAR KEDUA (BELOW THE FOLD): GRAFIK KOMPARASI & SPEEDOMETER GAUGE
       ========================================================================= */}
       <section className="pt-8 mt-6 border-t border-slate-200">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          {/* Kolom Kiri (Lebar 7/12): Clustered Column Chart */}
+          {/* Kolom Kiri (Lebar 7/12): Clustered Column Bar Chart */}
           <div className="lg:col-span-7 bg-white rounded-2xl p-5 sm:p-6 shadow-xs border border-slate-200 flex flex-col justify-between">
             <div className="pb-3 border-b border-slate-100">
               <h3 className="text-base font-bold text-slate-900">
@@ -461,7 +471,7 @@ export default function Overview({ data, isLoading }) {
             <div className="my-4 flex flex-col items-center justify-center">
               <div className="relative w-64 sm:w-72 h-36 sm:h-40 overflow-hidden flex items-end justify-center">
                 <svg viewBox="0 0 200 110" className="w-full h-full">
-                  {/* Latar Belakang Track Netral */}
+                  {/* Track Latar Belakang */}
                   <path
                     d="M 20 100 A 80 80 0 0 1 180 100"
                     fill="none"
@@ -481,7 +491,7 @@ export default function Overview({ data, isLoading }) {
                     className="transition-all duration-700 ease-out"
                   />
 
-                  {/* Jarum Indikator Midnight Navy */}
+                  {/* Jarum Indikator Midnight Navy (#0A2540) */}
                   <g transform={`rotate(${gaugeAngle}, 100, 100)`}>
                     <polygon
                       points="97,100 103,100 100,28"
@@ -505,7 +515,7 @@ export default function Overview({ data, isLoading }) {
             </div>
 
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-              <span>Kalkulasi: (Finished / Accepted) x 100%</span>
+              <span>Formula: (Total Finished / Total Accepted) x 100%</span>
               <span className="font-semibold text-slate-700">Skala 0% - 100%</span>
             </div>
           </div>
