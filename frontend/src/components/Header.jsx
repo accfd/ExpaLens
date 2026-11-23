@@ -3,7 +3,8 @@ import {
   RefreshCw,
   Menu,
   Download,
-  WifiOff
+  WifiOff,
+  SlidersHorizontal
 } from 'lucide-react';
 
 const PAGE_META = {
@@ -36,7 +37,9 @@ export default function Header({
   onToggleMobileMenu,
   onInstallPwa,
   canInstallPwa,
-  isOffline
+  isOffline,
+  onOpenFilter,
+  activeFiltersCount = 0
 }) {
   const meta = PAGE_META[activeTab] || PAGE_META.overview;
 
@@ -86,6 +89,25 @@ export default function Header({
                 <span className="hidden sm:inline">Pasang Aplikasi</span>
               </button>
             )}
+
+            {/* Filter Toggle Button */}
+            <button
+              onClick={onOpenFilter}
+              className={`relative flex items-center justify-center w-10 h-10 rounded-xl border transition-colors cursor-pointer ${
+                activeFiltersCount > 0 
+                  ? 'bg-blue-50 border-[#037EF3] text-[#037EF3]' 
+                  : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700'
+              }`}
+              title="Buka Penyaring Data"
+              aria-label="Buka Penyaring Data"
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+              {activeFiltersCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#037EF3] text-white text-[9px] font-black flex items-center justify-center shadow-xs">
+                  {activeFiltersCount}
+                </span>
+              )}
+            </button>
 
             {/* Refresh Button (Icon Only) */}
             <button

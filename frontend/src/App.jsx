@@ -15,6 +15,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const [filters, setFilters] = useState({
     years: [],
@@ -127,6 +128,14 @@ export default function App() {
     loadActivePageData();
   }, [loadActivePageData]);
 
+  // Hitung jumlah filter aktif
+  const activeFiltersCount = 
+    (filters.years?.length || 0) +
+    (filters.products?.length || 0) +
+    (filters.regions?.length || 0) +
+    (filters.countries?.length || 0) +
+    (filters.host_lcs?.length || 0);
+
   // Handler reset semua filter
   const handleResetFilters = () => {
     setFilters({
@@ -161,6 +170,8 @@ export default function App() {
           onInstallPwa={handleInstallPwa}
           canInstallPwa={canInstallPwa}
           isOffline={isOffline}
+          onOpenFilter={() => setIsFilterModalOpen(true)}
+          activeFiltersCount={activeFiltersCount}
         />
 
         <main className="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
@@ -171,8 +182,10 @@ export default function App() {
             </div>
           )}
 
-          {/* POIN 5: PENYARING DATA & PARAMETER ANALISIS (SLICERS) DI DALAM HALAMAN */}
+          {/* MODAL PENYARING DATA (DIBUKA LEWAT TOMBOL DI SEBELAH REFRESH) */}
           <FilterBar
+            isOpen={isFilterModalOpen}
+            onClose={() => setIsFilterModalOpen(false)}
             filters={filters}
             setFilters={setFilters}
             filterOptions={filterOptions}

@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Filter,
   RotateCcw,
-  ChevronDown,
-  ChevronUp,
-  SlidersHorizontal
+  SlidersHorizontal,
+  X,
+  Check
 } from 'lucide-react';
 
 export default function FilterBar({
+  isOpen,
+  onClose,
   filters,
   setFilters,
   filterOptions,
   onResetFilters
 }) {
-  const [isOpen, setIsOpen] = useState(true);
+  if (!isOpen) return null;
 
   const handleYearToggle = (year) => {
     const current = filters.years || [];
@@ -43,12 +44,16 @@ export default function FilterBar({
     setFilters(prev => ({ ...prev, countries: updated, host_lcs: [] }));
   };
 
-  // Determine available countries based on selected regions
+  const handleLcChange = (e) => {
+    const val = e.target.value;
+    const updated = val ? [val] : [];
+    setFilters(prev => ({ ...prev, host_lcs: updated }));
+  };
+
   const availableCountries = filters.regions && filters.regions.length > 0
     ? (filterOptions.countries_by_region?.[filters.regions[0]] || [])
     : Object.keys(filterOptions.lcs_by_country || {}).sort();
 
-  // Determine available LCs based on selected country
   const availableLcs = filters.countries && filters.countries.length > 0
     ? (filterOptions.lcs_by_country?.[filters.countries[0]] || [])
     : [];
@@ -61,55 +66,45 @@ export default function FilterBar({
     (filters.host_lcs?.length || 0);
 
   return (
-    <section className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden transition-all">
-      {/* Header Bar */}
-      <div className="px-6 py-4 flex items-center justify-between bg-slate-50/70 border-b border-slate-100">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#037EF3] flex items-center justify-center">
-            <SlidersHorizontal className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-slate-900">
-                Penyaring Data & Parameter Analisis
-              </h3>
-              {activeFiltersCount > 0 && (
-                <span className="text-[10px] font-extrabold text-white bg-[#037EF3] px-2 py-0.5 rounded-full">
-                  {activeFiltersCount} Aktif
-                </span>
-              )}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-200">
+      <div 
+        className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-4xl overflow-hidden animate-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header Modal */}
+        <div className="px-6 py-4 flex items-center justify-between bg-slate-50 border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#037EF3] flex items-center justify-center">
+              <SlidersHorizontal className="w-4 h-4" />
             </div>
-            <p className="text-xs text-slate-500 hidden sm:block">
-              Saring metrik berdasarkan waktu, jenis program, kawasan, negara, dan komite lokal tujuan.
-            </p>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-slate-900">
+                  Penyaring Data & Parameter Analisis
+                </h3>
+                {activeFiltersCount > 0 && (
+                  <span className="text-[10px] font-extrabold text-white bg-[#037EF3] px-2 py-0.5 rounded-full">
+                    {activeFiltersCount} Aktif
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-slate-500">
+                Pilih parameter waktu, program, kawasan, dan negara tujuan analitik.
+              </p>
+            </div>
           </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {activeFiltersCount > 0 && (
-            <button
-              onClick={onResetFilters}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-[#037EF3] px-2.5 py-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-              title="Reset Semua Penyaring"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Reset</span>
-            </button>
-          )}
 
           <button
-            onClick={() => setIsOpen(prev => !prev)}
-            className="flex items-center gap-1 text-xs font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+            onClick={onClose}
+            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-200/50 transition-colors cursor-pointer"
+            aria-label="Tutup Penyaring"
           >
-            <span>{isOpen ? 'Sembunyikan' : 'Buka Penyaring'}</span>
-            {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            <X className="w-5 h-5" />
           </button>
         </div>
-      </div>
 
-      {/* Slicers Grid Container (Clean 5 Kolom) */}
-      {isOpen && (
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        {/* Isi Filter (5 Kolom Seimbang) */}
+        <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-h-[70vh] overflow-y-auto">
           {/* 1. Slicer Tahun Pendaftaran */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-2">
@@ -122,10 +117,10 @@ export default function FilterBar({
                   <button
                     key={year}
                     onClick={() => handleYearToggle(year)}
-                    className={`py-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${
+                    className={`py-1.5 text-xs font-bold rounded-lg border text-center transition-all cursor-pointer ${
                       active
                         ? 'bg-[#037EF3] text-white border-[#037EF3] shadow-xs'
-                        : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
                     }`}
                   >
                     {year}
@@ -140,32 +135,32 @@ export default function FilterBar({
             <label className="block text-xs font-bold text-slate-700 mb-2">
               Program Pertukaran
             </label>
-            <div className="grid grid-cols-3 gap-1">
+            <div className="grid grid-cols-3 gap-1.5">
               {[
-                { id: 'GTa', label: 'GTa', color: '#0A8EA0' },
-                { id: 'GTe', label: 'GTe', color: '#F48924' },
-                { id: 'GV (New)', label: 'GV', color: '#F85A40' }
+                { id: 'GTa', label: 'GTa', color: 'bg-[#0A8EA0]' },
+                { id: 'GTe', label: 'GTe', color: 'bg-[#F48924]' },
+                { id: 'GV (New)', label: 'GV', color: 'bg-[#F85A40]' },
               ].map(prod => {
                 const active = (filters.products || []).includes(prod.id);
                 return (
                   <button
                     key={prod.id}
                     onClick={() => handleProductToggle(prod.id)}
-                    className={`py-1.5 px-2 text-[11px] font-bold rounded-lg border transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                    className={`flex items-center justify-center gap-1.5 py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
                       active
                         ? 'bg-[#0A2540] text-white border-[#0A2540] shadow-xs'
-                        : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
                     }`}
                   >
-                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: prod.color }}></span>
-                    <span>{prod.label}</span>
+                    <span className={`w-2 h-2 rounded-full ${prod.color}`}></span>
+                    {prod.label}
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* 3. Slicer Kawasan Tujuan */}
+          {/* 3. Slicer Kawasan Global */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-2">
               Kawasan Tujuan
@@ -173,7 +168,7 @@ export default function FilterBar({
             <select
               value={filters.regions?.[0] || ''}
               onChange={handleRegionChange}
-              className="w-full text-xs font-semibold px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-semibold py-2 px-3 bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:border-[#037EF3]"
             >
               <option value="">Semua Kawasan</option>
               {(filterOptions.regions || []).map(reg => (
@@ -185,12 +180,12 @@ export default function FilterBar({
           {/* 4. Slicer Negara Tujuan */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-2">
-              Negara Tujuan
+              Negara Tujuan (Host MC)
             </label>
             <select
               value={filters.countries?.[0] || ''}
               onChange={handleCountryChange}
-              className="w-full text-xs font-semibold px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full text-xs font-semibold py-2 px-3 bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:border-[#037EF3]"
             >
               <option value="">Semua Negara</option>
               {availableCountries.map(c => (
@@ -202,22 +197,44 @@ export default function FilterBar({
           {/* 5. Slicer Komite Lokal */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-2">
-              Komite Lokal
+              Komite Lokal (Host LC)
             </label>
             <select
               value={filters.host_lcs?.[0] || ''}
-              onChange={(e) => setFilters(prev => ({ ...prev, host_lcs: e.target.value ? [e.target.value] : [] }))}
-              className="w-full text-xs font-semibold px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={availableLcs.length === 0}
+              onChange={handleLcChange}
+              disabled={!filters.countries || filters.countries.length === 0}
+              className="w-full text-xs font-semibold py-2 px-3 bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:border-[#037EF3] disabled:bg-slate-100 disabled:text-slate-400"
             >
-              <option value="">{availableLcs.length > 0 ? 'Semua Komite Lokal' : 'Pilih Negara Dulu'}</option>
+              <option value="">
+                {filters.countries && filters.countries.length > 0 ? 'Semua Komite Lokal' : 'Pilih Negara Dulu'}
+              </option>
               {availableLcs.map(lc => (
                 <option key={lc} value={lc}>{lc}</option>
               ))}
             </select>
           </div>
         </div>
-      )}
-    </section>
+
+        {/* Footer Tombol Aksi */}
+        <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <button
+            onClick={onResetFilters}
+            disabled={activeFiltersCount === 0}
+            className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-rose-600 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Reset Semua Filter</span>
+          </button>
+
+          <button
+            onClick={onClose}
+            className="flex items-center gap-2 bg-[#037EF3] hover:bg-blue-600 text-white px-5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs"
+          >
+            <Check className="w-4 h-4" />
+            <span>Terapkan Parameter</span>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
