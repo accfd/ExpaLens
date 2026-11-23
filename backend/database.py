@@ -522,13 +522,40 @@ def get_destinations_data(years=None, products=None, statuses=None, regions=None
         "Dominican Republic": "Dominican Rep."
     }
     
+    # Koordinat geografis [Lintang, Bujur] untuk Leaflet Circle Marker
+    COUNTRY_COORDS = {
+        "Turkey": [38.9637, 35.2433], "Germany": [51.1657, 10.4515], "Vietnam": [14.0583, 108.2772],
+        "Malaysia": [4.2105, 101.9758], "The Netherlands": [52.1326, 5.2913], "Hungary": [47.1625, 19.5033],
+        "Belgium": [50.5039, 4.4699], "India": [20.5937, 78.9629], "Hong Kong": [22.3193, 114.1694],
+        "Panama": [8.5379, -80.7821], "Greece": [39.0742, 21.8243], "Tunisia": [33.8869, 9.5375],
+        "Poland": [51.9194, 19.1451], "Thailand": [15.8700, 100.9925], "Romania": [45.9432, 24.9668],
+        "South Korea": [35.9078, 127.7669], "Egypt": [26.8206, 30.8025], "Brazil": [-14.2350, -51.9253],
+        "United Kingdom": [55.3781, -3.4360], "Sri Lanka": [7.8731, 80.7718], "Mainland of China": [35.8617, 104.1954],
+        "Czech Republic": [49.8175, 15.4730], "Cambodia": [12.5657, 104.9910], "Taiwan": [23.6978, 120.9605],
+        "Colombia": [4.5709, -74.2973], "Slovakia": [48.6690, 19.6990], "Philippines": [12.8797, 121.7740],
+        "Azerbaijan": [40.1431, 47.5769], "Morocco": [31.7917, -7.0926], "Cote D'Ivoire": [7.5400, -5.5471],
+        "Kenya": [-0.0236, 37.9062], "Tanzania": [-6.3690, 34.8888], "Indonesia": [-0.7893, 113.9213],
+        "Japan": [36.2048, 138.2529], "Singapore": [1.3521, 103.8198], "United States": [37.0902, -95.7129],
+        "Australia": [-25.2744, 133.7751], "Canada": [56.1304, -106.3468], "France": [46.2276, 2.2137],
+        "Italy": [41.8719, 12.5674], "Spain": [40.4637, -3.7492], "Russia": [61.5240, 105.3188],
+        "Austria": [47.5162, 14.5501], "Switzerland": [46.8182, 8.2275], "Sweden": [60.1282, 18.6435],
+        "Norway": [60.4720, 8.4689], "Denmark": [56.2639, 9.5018], "Finland": [61.9241, 25.7482],
+        "Portugal": [39.3999, -8.2245], "Mexico": [23.6345, -102.5528], "Argentina": [-38.4161, -63.6167],
+        "Chile": [-35.6751, -71.5430], "Peru": [-9.1900, -75.0152], "Ecuador": [-1.8312, -78.1834],
+        "Jordan": [30.5852, 36.2384], "Kuwait": [29.3117, 47.4818], "United Arab Emirates": [23.4241, 53.8478],
+        "Nigeria": [9.0820, 8.6753], "Ghana": [7.9465, -1.0232], "Uganda": [1.3733, 32.2903]
+    }
+    
     choropleth_map = []
     for _, row in df_all_mc.iterrows():
         c_name = row["country_name"]
+        coords = COUNTRY_COORDS.get(c_name, [0.0, 0.0])
         choropleth_map.append({
             "country_name": c_name,
             "topo_name": TOPO_MAP.get(c_name, c_name),
             "country_code_iso3": ISO_MAP.get(c_name, c_name[:3].upper()),
+            "lat": coords[0],
+            "lng": coords[1],
             "total_apps": int(row["total_apps"]),
             "accepted": int(row["accepted"]),
             "approved": int(row["approved"]),
