@@ -31,14 +31,6 @@ export default function FilterBar({
     setFilters(prev => ({ ...prev, products: updated }));
   };
 
-  const handleStatusToggle = (status) => {
-    const current = filters.statuses || [];
-    const updated = current.includes(status)
-      ? current.filter(s => s !== status)
-      : [...current, status];
-    setFilters(prev => ({ ...prev, statuses: updated }));
-  };
-
   const handleRegionChange = (e) => {
     const val = e.target.value;
     const updated = val ? [val] : [];
@@ -66,8 +58,7 @@ export default function FilterBar({
     (filters.products?.length || 0) +
     (filters.regions?.length || 0) +
     (filters.countries?.length || 0) +
-    (filters.host_lcs?.length || 0) +
-    (filters.statuses?.length || 0);
+    (filters.host_lcs?.length || 0);
 
   return (
     <section className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden transition-all">
@@ -89,7 +80,7 @@ export default function FilterBar({
               )}
             </div>
             <p className="text-xs text-slate-500 hidden sm:block">
-              Saring metrik berdasarkan waktu, program, kawasan, negara, komite lokal, dan status aplikasi.
+              Saring metrik berdasarkan waktu, jenis program, kawasan, negara, dan komite lokal tujuan.
             </p>
           </div>
         </div>
@@ -116,9 +107,9 @@ export default function FilterBar({
         </div>
       </div>
 
-      {/* Slicers Grid Container */}
+      {/* Slicers Grid Container (Clean 5 Kolom) */}
       {isOpen && (
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {/* 1. Slicer Tahun Pendaftaran */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-2">
@@ -224,36 +215,6 @@ export default function FilterBar({
                 <option key={lc} value={lc}>{lc}</option>
               ))}
             </select>
-          </div>
-
-          {/* 6. Slicer Status Pendaftaran */}
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-2">
-              Status Pendaftaran
-            </label>
-            <div className="grid grid-cols-2 gap-1">
-              {[
-                { id: 'accepted', label: 'Accepted' },
-                { id: 'approved', label: 'Approved' },
-                { id: 'finished', label: 'Finished' },
-                { id: 'rejected', label: 'Rejected' },
-              ].map(st => {
-                const active = (filters.statuses || []).includes(st.id);
-                return (
-                  <button
-                    key={st.id}
-                    onClick={() => handleStatusToggle(st.id)}
-                    className={`py-1 text-[10px] font-bold rounded-lg border text-center transition-all cursor-pointer ${
-                      active
-                        ? 'bg-blue-50 text-[#037EF3] border-blue-300 font-extrabold'
-                        : 'bg-white text-slate-400 border-slate-200 hover:bg-slate-50'
-                    }`}
-                  >
-                    {st.label}
-                  </button>
-                );
-              })}
-            </div>
           </div>
         </div>
       )}

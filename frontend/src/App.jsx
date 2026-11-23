@@ -20,8 +20,7 @@ export default function App() {
     products: [],
     regions: [],
     countries: [],
-    host_lcs: [],
-    statuses: []
+    host_lcs: []
   });
 
   const [filterOptions, setFilterOptions] = useState({
@@ -29,8 +28,7 @@ export default function App() {
     products: ['GTa', 'GTe', 'GV (New)'],
     regions: [],
     countries_by_region: {},
-    lcs_by_country: {},
-    statuses: ['accepted', 'approved', 'finished', 'rejected']
+    lcs_by_country: {}
   });
 
   // State Data Tiap Halaman
@@ -135,8 +133,7 @@ export default function App() {
       products: [],
       regions: [],
       countries: [],
-      host_lcs: [],
-      statuses: []
+      host_lcs: []
     });
   };
 
