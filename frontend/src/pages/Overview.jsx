@@ -223,10 +223,13 @@ export default function Overview({ data, isLoading }) {
                       <div className={`w-6 h-6 rounded-lg ${step.bgColor} text-white flex items-center justify-center text-xs font-black shadow-xs shrink-0`}>
                         {step.stageNumber}
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-extrabold text-slate-900">{step.stageName}</span>
-                          <span className="text-[10px] text-slate-500 hidden sm:inline">({step.stageLabel})</span>
+                      <div className="relative group">
+                        <span className="text-xs font-extrabold text-slate-900 cursor-help">
+                          {step.stageName}
+                        </span>
+                        {/* Tooltip Hover/Fokus Penjelasan Tahap */}
+                        <div className="absolute left-0 bottom-full mb-1.5 hidden group-hover:flex items-center z-20 whitespace-nowrap bg-slate-900 text-white text-[10px] font-semibold px-2.5 py-1 rounded-lg shadow-lg pointer-events-none transition-opacity">
+                          {step.stageLabel}
                         </div>
                       </div>
                     </div>
